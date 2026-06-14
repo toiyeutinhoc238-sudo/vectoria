@@ -307,7 +307,7 @@
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
 
         let API_BASE = (location.hostname === "127.0.0.1" || location.hostname === "localhost") 
-                          ? "http://127.0.0.1:5000" : "https://visualization-rr5v.onrender.com";
+                          ? "http://127.0.0.1:5000" : "https://vectoria-3fdh.onrender.com";
 
         const makeRequest = async (baseUrl) => {
             if (type === 'register') {
@@ -368,7 +368,7 @@
             console.error(err);
             if (API_BASE.includes("127.0.0.1") || API_BASE.includes("localhost")) {
                 console.log("Thử gửi yêu cầu xác thực đến Production Backend...");
-                const fallbackBase = "https://visualization-rr5v.onrender.com";
+                const fallbackBase = "https://vectoria-3fdh.onrender.com";
                 try {
                     await makeRequest(fallbackBase);
                     API_BASE = fallbackBase;
@@ -391,7 +391,7 @@
         const token = response.credential;
         
         let API_BASE = (location.hostname === "127.0.0.1" || location.hostname === "localhost") 
-                          ? "http://127.0.0.1:5000" : "https://visualization-rr5v.onrender.com";
+                          ? "http://127.0.0.1:5000" : "https://vectoria-3fdh.onrender.com";
 
         const makeGoogleRequest = async (baseUrl) => {
             const res = await fetch(`${baseUrl}/api/google_login`, {
@@ -428,7 +428,7 @@
             console.error(err);
             if (API_BASE.includes("127.0.0.1") || API_BASE.includes("localhost")) {
                 console.log("Thử gửi xác thực Google đến Production Backend...");
-                const fallbackBase = "https://visualization-rr5v.onrender.com";
+                const fallbackBase = "https://vectoria-3fdh.onrender.com";
                 try {
                     await makeGoogleRequest(fallbackBase);
                 } catch (fallbackErr) {

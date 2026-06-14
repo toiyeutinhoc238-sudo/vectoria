@@ -484,7 +484,7 @@
       ) {
         App.API_BASE = "http://127.0.0.1:5000";
       } else {
-        App.API_BASE = "https://visualization-rr5v.onrender.com";
+        App.API_BASE = "https://vectoria-3fdh.onrender.com";
       }
       console.log(">> Backend URL hiện tại:", App.API_BASE);
 
@@ -578,7 +578,7 @@
                 console.error("Lỗi:", err);
                 if (App.API_BASE.includes("127.0.0.1") || App.API_BASE.includes("localhost")) {
                   console.log("Thử gửi liên hệ đến Production Backend...");
-                  const fallbackBase = "https://visualization-rr5v.onrender.com";
+                  const fallbackBase = "https://vectoria-3fdh.onrender.com";
                   sendRequest(fallbackBase)
                     .then(() => {
                       App.API_BASE = fallbackBase;

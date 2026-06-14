@@ -21,7 +21,7 @@
       
       // Nếu đang dùng localhost/127.0.0.1 nhưng lỗi kết nối, tự động fallback về Render Production
       if (App.API_BASE.includes("127.0.0.1") || App.API_BASE.includes("localhost")) {
-        const fallbackBase = "https://visualization-rr5v.onrender.com";
+        const fallbackBase = "https://vectoria-3fdh.onrender.com";
         App.log(`Thử kết nối đến Production Backend: ${fallbackBase}`);
         try {
           const r = await fetch(`${fallbackBase}/api/health`, { mode: "cors" });
