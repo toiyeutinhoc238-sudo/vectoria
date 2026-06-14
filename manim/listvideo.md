@@ -1,0 +1,5 @@
+- Video 1: Mở đầu về Vector
+- Video 2: Định nghĩa KGVT
+- Video 3: Độc lập tuyến tính - phụ thuộc tuyến tính
+- Video 4: Cơ sở số chiều
+- Video 5: Tọa độ theo cơ sở

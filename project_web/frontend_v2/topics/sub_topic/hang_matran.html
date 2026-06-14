@@ -1,0 +1,2678 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Vector ở phổ thông - Vectoria Knowledge</title>
+
+    <link rel="stylesheet" href="../../css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="../../js/utils/theme-manager.js"></script>
+
+    <style>
+      /* =================== 1. CẤU HÌNH CƠ BẢN =================== */
+      :root {
+        --primary: #3a78ff;
+        --accent: #3a78ff;
+        --bg-body: #f1f5f9;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-sub: #64748b;
+        --border: #e2e8f0;
+        --sidebar-width: 250px;
+        --topbar-h: 60px;
+        --fg: #0f1117;
+        --bg: #ffffff;
+        --card: #ffffff;
+        --muted: #6b6f76;
+        --shadow-lg: 0 10px 30px rgba(16, 24, 40, 0.1);
+        --hover-bg: rgba(0, 0, 0, 0.05);
+      }
+
+      body.dark {
+        --bg-body: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --border: #334155;
+        --fg: #e9e9ef;
+        --bg: #0f1116;
+        --card: #1e293b;
+        --muted: #a8acb4;
+        --shadow-lg: 0 16px 44px rgba(0, 0, 0, 0.45);
+        --hover-bg: rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        height: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        padding-top: var(--topbar-h);
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      /* =================== 2. FIX CÔNG THỨC TOÁN (QUAN TRỌNG) =================== */
+
+      /* Cấu hình chung để văn bản và công thức tự xuống dòng */
+      .chapter-card,
+      .pdf-box,
+      p,
+      li,
+      td,
+      .math-center {
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
+        white-space: normal !important;
+        /* Cho phép xuống dòng */
+        max-width: 100%;
+      }
+
+      /* Can thiệp trực tiếp vào MathJax */
+      mjx-container {
+        white-space: normal !important;
+        /* Bắt buộc xuống dòng */
+        display: inline-block !important;
+        /* Để ứng xử như văn bản */
+        overflow-wrap: break-word !important;
+        max-width: 100% !important;
+        font-size: 100% !important;
+      }
+
+      /* Với công thức dài (Display Math), nếu không xuống dòng được thì hiện thanh cuộn */
+      /* Thay vì bị cắt mất (hidden), nó sẽ cho phép lướt ngang */
+      mjx-container[display="true"],
+      .math-center {
+        display: block !important;
+        overflow-x: auto !important;
+        /* Hiện thanh cuộn nếu quá dài */
+        overflow-y: hidden;
+        text-align: center;
+      }
+
+      /* Làm đẹp thanh cuộn công thức */
+      mjx-container::-webkit-scrollbar,
+      .math-center::-webkit-scrollbar {
+        height: 5px;
+      }
+
+      mjx-container::-webkit-scrollbar-thumb,
+      .math-center::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+      }
+
+      /* =================== 3. GIAO DIỆN CHUNG =================== */
+      #topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topbar-h);
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 1000;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .topbar-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+      }
+
+      #topbar .brand {
+        text-align: center;
+        font-weight: 800;
+        font-size: 18px;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      .topbar-icon,
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-sub);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        text-decoration: none;
+        margin-right: 0px;
+      }
+
+      .topbar-icon:hover,
+      .icon-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .settings-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .settings-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 260px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      .settings-dropdown.show {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .setting-item:hover {
+        background: var(--hover-bg);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        opacity: 0.5;
+        transition: 0.3s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--accent);
+        opacity: 1;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      .theme-transition-icons {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(100px) scale(0.5);
+      }
+
+      #sunIcon,
+      #moonIcon {
+        font-size: 8rem;
+        position: absolute;
+      }
+
+      #sunIcon {
+        color: #f59e0b;
+      }
+
+      #moonIcon {
+        color: #f8fafc;
+      }
+
+      .animate-rise-fade {
+        animation: riseAndFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes riseAndFade {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(150px) scale(0.5);
+        }
+
+        40% {
+          opacity: 1;
+          transform: translate(-50%, -50%) translateY(0px) scale(1.2);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(-100px) scale(0.8);
+        }
+      }
+
+      .container {
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        gap: 30px;
+        position: relative;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      .sidebar h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.1rem;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 10px;
+        color: var(--text-main);
+      }
+
+      .menu-link {
+        display: block;
+        padding: 10px 12px;
+        color: var(--text-sub);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: 0.2s;
+        border-left: 3px solid transparent;
+      }
+
+      .menu-link:hover,
+      .menu-link.active {
+        background: #eff6ff;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      body.dark .menu-link:hover,
+      body.dark .menu-link.active {
+        background: #2d3748;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      /* [ĐÃ SỬA] Bỏ overflow: hidden để không bị cắt nội dung */
+      .chapter-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 40px;
+        margin-bottom: 30px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      h1.lesson-title {
+        font-size: 2rem;
+        margin: 0 0 10px;
+        color: var(--primary);
+      }
+
+      h2.section-title {
+        font-size: 1.4rem;
+        margin: 0 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+      }
+
+      .cinema-container {
+        display: flex;
+        flex-direction: row;
+        background: #0f172a;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        min-height: 400px;
+      }
+
+      .video-box {
+        flex: 2.2;
+        position: relative;
+        background: #000;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      #youtube-player {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .playlist-box {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #1e293b;
+        border-left: 1px solid #334155;
+        height: auto;
+        max-height: 100%;
+      }
+
+      .playlist-header {
+        padding: 15px 20px;
+        background: #0f172a;
+        border-bottom: 1px solid #334155;
+        color: #fff;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .chapter-list {
+        overflow-y: auto;
+        flex-grow: 1;
+        scrollbar-width: thin;
+        scrollbar-color: #475569 #1e293b;
+      }
+
+      .chapter-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        border-bottom: 1px solid #334155;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #fff;
+      }
+
+      .chapter-item:hover {
+        background: #334155;
+      }
+
+      .chapter-item.playing {
+        background: #253346;
+        border-left: 4px solid var(--primary);
+      }
+
+      .time-badge {
+        background: rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        font-family: monospace;
+        font-size: 0.8rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .chapter-info {
+        flex-grow: 1;
+      }
+
+      .chapter-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .chapter-desc {
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+
+      .chapter-icon {
+        color: var(--primary);
+        opacity: 0;
+        transition: 0.3s;
+      }
+
+      .chapter-item.playing .chapter-icon {
+        opacity: 1;
+      }
+
+      .pdf-h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 30px 0 15px 0;
+        color: #000;
+      }
+
+      .pdf-h3 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin: 25px 0 10px 0;
+        color: #000;
+      }
+
+      .pdf-note {
+        color: #3a78ff;
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      .pdf-box {
+        border: 2px solid #3a78ff;
+        background-color: #eff6ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        color: #000;
+      }
+
+      .pdf-box-title {
+        color: #3a78ff;
+        font-weight: bold;
+      }
+
+      .pdf-sol-title {
+        color: #3a78ff;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 15px 0;
+        font-size: 1.1rem;
+        text-decoration: underline;
+      }
+
+      .pdf-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 1rem;
+        table-layout: fixed;
+      }
+
+      .pdf-table th,
+      .pdf-table td {
+        border: 1px solid #666;
+        padding: 8px 10px;
+        vertical-align: top;
+        word-wrap: break-word;
+      }
+
+      .pdf-table th {
+        background-color: #f8fafc;
+        text-align: center;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .pdf-list li {
+        margin-bottom: 6px;
+      }
+
+      body.dark .pdf-h2,
+      body.dark .pdf-h3 {
+        color: #fff;
+      }
+
+      body.dark #ly-thuyet {
+        color: #e2e8f0;
+      }
+
+      body.dark .pdf-box {
+        background-color: rgba(58, 120, 255, 0.1);
+        border-color: #60a5fa;
+        color: #e2e8f0;
+      }
+
+      body.dark .pdf-box-title {
+        color: #60a5fa;
+      }
+
+      body.dark .pdf-note {
+        color: #60a5fa;
+      }
+
+      body.dark .pdf-sol-title {
+        color: #93c5fd;
+      }
+
+      body.dark .pdf-table th {
+        background-color: #1e293b;
+        color: #fff;
+        border-color: #475569;
+      }
+
+      body.dark .pdf-table td {
+        border-color: #475569;
+      }
+
+      body.dark mjx-container path {
+        fill: #e2e8f0 !important;
+        stroke: #e2e8f0 !important;
+      }
+
+      /* =================== 5. BỘ ĐIỀU KHIỂN GIAO DIỆN MOBILE =================== */
+      @media screen and (max-width: 960px) {
+        .container {
+          flex-direction: column !important;
+          padding: 0 !important;
+          gap: 0 !important;
+          display: block !important;
+        }
+
+        .main-content {
+          padding: 15px !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          overflow-x: hidden !important;
+        }
+
+        /* 1. Biến Sidebar thành thanh ngang dính sát Topbar */
+        .sidebar {
+          width: 100% !important;
+          height: auto !important;
+          max-height: none !important;
+          z-index: 990 !important;
+          position: sticky !important;
+          top: var(--topbar-h) !important;
+          border-radius: 0 !important;
+          border: none !important;
+          border-bottom: 1px solid var(--border) !important;
+          background-color: var(--bg-body) !important;
+          padding: 10px 15px !important;
+          margin: 0 !important;
+          overflow-y: visible !important;
+        }
+
+        /* 2. Cục "Mục lục" hiện ra như một nút bấm */
+        .sidebar h3.nav-title {
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          background: var(--bg-card) !important;
+          padding: 15px 20px !important;
+          margin: 0 !important;
+          border-radius: 12px !important;
+          border: 1px solid var(--border) !important;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+          cursor: pointer !important;
+          color: var(--primary) !important;
+          transition: all 0.3s ease !important;
+        }
+
+        .sidebar h3.nav-title i:not(.fa-list-ul) {
+          display: none !important;
+        }
+        .sidebar h3.nav-title::after {
+          content: "\f054";
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          transition: transform 0.3s ease;
+        }
+        .sidebar.mobile-open h3.nav-title::after {
+          transform: rotate(90deg) !important;
+        }
+
+        /* 3. BẢNG DANH SÁCH MỤC LỤC XỔ XUỐNG */
+        .custom-nav .nav-list {
+          display: none !important;
+          flex-direction: column !important;
+          background: var(--bg-card) !important;
+          padding: 10px 0 15px 0 !important;
+          margin: -5px 0 0 0 !important;
+          border-radius: 0 0 12px 12px !important;
+          border: 1px solid var(--border) !important;
+          border-top: none !important;
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1) !important;
+          max-height: 50vh !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+        }
+
+        .custom-nav .nav-list::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-nav .nav-list::-webkit-scrollbar-thumb {
+          background-color: var(--border);
+          border-radius: 10px;
+        }
+
+        .sidebar.mobile-open h3.nav-title {
+          border-radius: 12px 12px 0 0 !important;
+          border-bottom: 1px dashed var(--border) !important;
+        }
+        .sidebar.mobile-open .nav-list {
+          display: flex !important;
+        }
+
+        .custom-nav .sub-menu {
+          display: none !important;
+          flex-direction: column !important;
+        }
+        .custom-nav .has-dropdown.open > .sub-menu {
+          display: flex !important;
+        }
+        .custom-nav .sub-heading,
+        .custom-nav div.toggle-btn,
+        .custom-nav .arrow-icon {
+          display: flex !important;
+        }
+
+        .custom-nav a.nav-link,
+        .custom-nav a.sub-link,
+        .custom-nav a.sub-sub-link {
+          background: transparent !important;
+          border: none !important;
+          border-left: 3px solid transparent !important;
+          border-radius: 0 !important;
+          margin-bottom: 0 !important;
+          padding-top: 12px !important;
+          padding-bottom: 12px !important;
+          padding-right: 15px !important;
+        }
+
+        .custom-nav a.nav-link {
+          padding-left: 20px !important;
+        }
+        .custom-nav a.sub-link {
+          padding-left: 40px !important;
+        }
+        .custom-nav a.sub-sub-link {
+          padding-left: 60px !important;
+        }
+
+        .custom-nav a.nav-link.active,
+        .custom-nav a.sub-link.active,
+        .custom-nav a.sub-sub-link.active {
+          background: #eff6ff !important;
+          color: var(--primary) !important;
+          border-left-color: var(--primary) !important;
+        }
+
+        .custom-nav a.sub-heading,
+        .custom-nav li.sub-heading,
+        .custom-nav a.group-label {
+          padding-top: 15px !important;
+          padding-bottom: 5px !important;
+          padding-left: 20px !important;
+          pointer-events: none !important;
+          border: none !important;
+          background: transparent !important;
+        }
+
+        body.dark .sidebar {
+          background-color: var(--bg-body) !important;
+        }
+        body.dark .sidebar h3.nav-title {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+        }
+        body.dark .custom-nav .nav-list {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+        }
+        body.dark .custom-nav .nav-list::-webkit-scrollbar-thumb {
+          background-color: #475569 !important;
+        }
+        body.dark .custom-nav a.nav-link.active,
+        body.dark .custom-nav a.sub-link.active,
+        body.dark .custom-nav a.sub-sub-link.active {
+          background: #1e293b !important;
+          color: #60a5fa !important;
+          border-left-color: #60a5fa !important;
+        }
+        body.dark .sidebar.mobile-open h3.nav-title {
+          border-bottom-color: #334155 !important;
+        }
+
+        /* 7. XÓA SẠCH VẠCH KẺ MẢNH - CHỈNH LẠI SCROLL LÝ THUYẾT */
+        .chapter-card {
+          scroll-margin-top: 130px !important;
+          padding: 20px !important;
+        }
+        .cinema-container {
+          flex-direction: column !important;
+        }
+        .video-box {
+          aspect-ratio: 16/9 !important;
+          width: 100% !important;
+        }
+        .playlist-box {
+          height: 300px !important;
+          border-left: none !important;
+          border-top: 1px solid #334155 !important;
+        }
+
+        /* BÍ QUYẾT XÓA VẠCH LÀ ĐÂY: Không ép `#ly-thuyet` scroll nữa, để nó tự nhiên! */
+        #ly-thuyet {
+          overflow-x: hidden !important; /* TRỊ BỆNH LẰN KẺ */
+          overflow-y: hidden !important;
+          max-width: 100%;
+          display: block !important;
+        }
+
+        /* Chỉ cho phép cuộn ngang ở NHỮNG VÙNG THẬT SỰ CẦN THIẾT (ví dụ đoạn công thức) */
+        .math-center,
+        mjx-container[display="true"],
+        .math-scroll {
+          overflow-x: auto !important;
+          max-width: 100vw !important;
+          padding-bottom: 8px !important;
+        }
+      }
+
+      /* =================== 6. STYLE CHO PHẦN BÀI TẬP (MỚI) =================== */
+      /* Khung viền đen giống PDF */
+      .box-black {
+        border: 2px solid #000;
+        background-color: #f9fafb;
+        /* Nền xám rất nhạt cho dịu mắt */
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        color: #000;
+      }
+
+      /* Chữ màu đỏ đậm cho tiêu đề bài tập (VD: Bài 1.1) */
+      .text-red-bold {
+        color: #dc2626;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+
+      /* Danh sách câu hỏi a, b, c... */
+      .exercise-list {
+        list-style: none;
+        padding-left: 5px;
+        margin-top: 10px;
+      }
+
+      .exercise-list li {
+        margin-bottom: 12px;
+        line-height: 1.6;
+      }
+
+      /* Vùng cuộn ngang cho các câu hỏi dài */
+      .math-scroll {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+        margin-top: 5px;
+        margin-left: 15px;
+      }
+
+      /* Dark mode cho khung bài tập */
+      body.dark .box-black {
+        background-color: #1e293b;
+        border-color: #475569;
+        color: #e2e8f0;
+      }
+
+      body.dark .text-red-bold {
+        color: #fb7185;
+        /* Đỏ sáng hơn trên nền tối */
+      }
+
+      /* 1. Tiêu đề mục lớn (VD: 1. Định nghĩa...) */
+      .pdf-h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        color: #000;
+      }
+
+      /* 2. Dòng Nhận xét (Chữ màu nâu đỏ) */
+      .pdf-remark {
+        color: #9f1239;
+        /* Màu đỏ thẫm */
+        font-weight: bold;
+        font-style: italic;
+        margin-bottom: 15px;
+      }
+
+      /* 3. Khung Ví dụ (Viền Đỏ - Nền Hồng nhạt) */
+      .box-blue {
+        border: 2px solid #2563eb;
+        /* Viền xanh dương đậm */
+        background-color: #eff6ff;
+        /* Nền xanh cực nhạt */
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        color: #000;
+      }
+
+      /* Tiêu đề Ví dụ (cũng chuyển sang xanh) */
+      .text-example-blue {
+        color: #2563eb;
+        font-weight: bold;
+        font-style: italic;
+        margin-right: 5px;
+      }
+
+      /* Chữ Lời giải (Màu xanh dương, căn giữa) */
+      .text-blue-sol {
+        color: #2563eb;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 20px 0;
+        font-size: 1.1rem;
+      }
+
+      body.dark .pdf-remark {
+        color: #fb7185;
+      }
+
+      body.dark .box-blue {
+        background-color: rgba(58, 120, 255, 0.1);
+        border-color: #60a5fa;
+        color: #e2e8f0;
+      }
+
+      body.dark .text-example-blue {
+        color: #60a5fa;
+      }
+
+      body.dark .text-blue-sol {
+        color: #60a5fa;
+      }
+
+      /* =================== 7. NÚT TẢI ĐÁP ÁN (NEW) =================== */
+      .download-container {
+        margin-top: 40px;
+        text-align: center;
+        padding-bottom: 20px;
+        border-top: 1px dashed var(--border);
+        /* Đường kẻ ngăn cách nhẹ */
+        padding-top: 30px;
+      }
+
+      .btn-download {
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        /* Màu gradient xanh */
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 50px;
+        /* Bo tròn hình viên thuốc */
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(58, 120, 255, 0.3);
+        /* Bóng đổ xanh */
+        text-decoration: none;
+        /* Bỏ gạch chân nếu dùng thẻ a */
+      }
+
+      .btn-download:hover {
+        transform: translateY(-3px);
+        /* Bay lên nhẹ */
+        box-shadow: 0 8px 25px rgba(58, 120, 255, 0.5);
+      }
+
+      .btn-download:active {
+        transform: translateY(-1px);
+      }
+
+      /* --- DARK MODE CHO NÚT TẢI --- */
+      body.dark .download-container {
+        border-top-color: #334155;
+      }
+
+      body.dark .btn-download {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        /* Xanh sáng hơn trên nền tối */
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        /* Bóng đen sâu */
+      }
+
+      body.dark .btn-download:hover {
+        background: linear-gradient(135deg, #60a5fa, #2563eb);
+        box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+        /* Hiệu ứng phát sáng (Glow) */
+      }
+
+      /* 1. Xóa dấu chấm tròn và căn lề gốc */
+      .custom-nav ul,
+      .custom-nav li {
+        list-style: none !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* 2. Định dạng thẻ Link chuẩn để ăn màu xanh và Hover */
+      .custom-nav .nav-link,
+      .custom-nav .sub-link {
+        display: flex !important;
+        justify-content: flex-start;
+        /* FIX: Ép các phần tử dính lại bên trái */
+        align-items: center;
+        gap: 5px;
+        /* Tạo khoảng cách nhỏ 5px giữa chữ và công thức cho đẹp */
+        padding: 12px 20px;
+        color: var(--text-sub);
+        text-decoration: none;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: none !important;
+      }
+
+      .custom-nav .nav-link:hover,
+      .custom-nav .sub-link:hover {
+        background: #f8fafc;
+        color: var(--primary);
+      }
+
+      /* 3. Phân cấp thụt lề cho 3 cấp độ */
+      .custom-nav .sub-menu .sub-link {
+        padding-left: 40px;
+      }
+
+      /* Cấp 2 */
+      .custom-nav .sub-menu .sub-menu .sub-link {
+        padding-left: 60px !important;
+        font-size: 0.85rem;
+      }
+
+      /* Cấp 3 */
+
+      /* 4. Trạng thái Active màu xanh */
+      .custom-nav .active {
+        background-color: #eff6ff !important;
+        color: var(--primary) !important;
+        font-weight: 600;
+        border-left: 3px solid var(--primary) !important;
+      }
+
+      body.dark .custom-nav .active {
+        background-color: #1e293b !important;
+      }
+
+      /* Mặc định ẩn tất cả sub-menu */
+      .custom-nav .sub-menu {
+        display: none;
+        list-style: none !important;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* Chỉ hiển thị sub-menu khi thẻ li cha có class .open */
+      .custom-nav .has-dropdown.open > .sub-menu {
+        display: block !important;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      /* Hiệu ứng xoay mũi tên chuẩn */
+      .custom-nav .has-dropdown.open > .toggle-btn .arrow-icon {
+        transform: rotate(180deg);
+        /* Hoặc 90deg tùy ông muốn xoay hướng nào */
+      }
+
+      /* Xóa dấu chấm tròn cho tất cả li */
+      .custom-nav li {
+        list-style: none !important;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 1. Mặc định ẩn các menu con */
+      .custom-nav .sub-menu {
+        display: none;
+        list-style: none !important;
+      }
+
+      /* Trạng thái mặc định: Mũi tên trỏ sang phải > */
+      .custom-nav .arrow-icon {
+        margin-left: auto;
+        /* MAGIC: Tự động đẩy mũi tên ra tít mép phải */
+        transition: transform 0.3s ease;
+        transform: rotate(0deg);
+        font-size: 0.7rem;
+      }
+
+      /* Khi mục cha có class .open: Tự xoay 90 độ thành trỏ xuống v */
+      .custom-nav .has-dropdown.open > .nav-link .arrow-icon,
+      .custom-nav .has-dropdown.open > .toggle-btn .arrow-icon {
+        transform: rotate(90deg) !important;
+      }
+
+      /* 4. Thụt lề phân cấp 3 lớp chuẩn đét */
+      .custom-nav .sub-menu .sub-link {
+        padding-left: 35px;
+      }
+
+      .custom-nav .sub-menu .sub-menu .sub-link {
+        padding-left: 55px !important;
+        font-size: 0.85rem;
+      }
+
+      /* 1. Đưa border-left từ thẻ a sang thẻ li để nó nằm ngoài rìa */
+      .custom-nav .nav-item,
+      .custom-nav .sub-menu li {
+        position: relative;
+        border-left: 3px solid transparent;
+        /* Thanh dọc mặc định ẩn */
+        transition: all 0.2s;
+      }
+
+      /* 2. Khi mục đó active, hiện thanh dọc ở sát mép trái Sidebar */
+      .custom-nav .nav-item:has(> .active),
+      .custom-nav .sub-menu li:has(> .active) {
+        border-left: 3px solid var(--primary);
+        background-color: var(--hover-bg);
+        /* Nền xanh nhạt cho cả dòng */
+      }
+
+      /* 3. Bỏ border-left cũ ở thẻ a để không bị trùng */
+      .custom-nav .active {
+        border-left: none !important;
+        background-color: transparent !important;
+        /* Reset lại để không bị đè nền */
+        color: var(--primary) !important;
+      }
+
+      /* 4. Chỉnh lại thụt lề chữ cho đẹp */
+      .custom-nav .sub-link {
+        padding-left: 40px !important;
+        /* Con cấp 1 */
+      }
+
+      .custom-nav .sub-menu .sub-menu .sub-link {
+        padding-left: 60px !important;
+        /* Con cấp 2 (3.1, 5.1) */
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        max-height: calc(100vh - 140px); /* BẬT SCROLL CHO DESKTOP */
+        overflow-y: auto; /* BẬT SCROLL CHO DESKTOP */
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px 0; /* Thu lề để thanh scroll mượt hơn */
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+      }
+      body.dark .sidebar::-webkit-scrollbar-thumb {
+        background-color: #475569;
+      }
+
+      .sidebar h3,
+      .custom-nav .nav-title {
+        margin: 0;
+        padding: 0 20px 15px 20px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-main);
+      }
+
+      /* Style cho Tiêu đề phân nhóm (h1) trong Menu */
+      .custom-nav .group-label {
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--primary);
+        padding-left: 20px !important;
+        /* Thụt vào ít hơn so với mục con */
+        margin-top: 10px;
+        /* Cách cụm trên ra một chút cho thoáng */
+        letter-spacing: 0.5px;
+      }
+      /* =========================================================================
+         XỬ LÝ HOVER & ACTIVE CHO MENU (FIX LỖI BÔI NỀN)
+         ========================================================================= */
+
+      /* 1. HOVER BÌNH THƯỜNG (Chỉ áp dụng cho các link có thể click) */
+      /* Sử dụng :not() để loại trừ hoàn toàn các thẻ chứa toggle-btn và group-label khỏi hiệu ứng hover nền */
+      .custom-nav .nav-link:not(.toggle-btn):hover,
+      .custom-nav .sub-link:not(.group-label):not(.toggle-btn):hover {
+        background: var(--hover-bg);
+        color: var(--primary);
+      }
+
+      /* 2. ACTIVE BÌNH THƯỜNG */
+      .custom-nav .nav-link.active,
+      .custom-nav .sub-link.active {
+        background-color: #eff6ff !important;
+        color: var(--primary) !important;
+        font-weight: 600;
+        border-left-color: var(--primary) !important;
+      }
+
+      /* 3. XỬ LÝ RIÊNG CHO TIÊU ĐỀ CHỮ XANH (.group-label) */
+      .custom-nav .group-label {
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        pointer-events: none; /* Khóa click */
+        border-left: none !important;
+        background-color: transparent !important;
+        color: var(--primary) !important;
+      }
+
+      /* 4. XỬ LÝ RIÊNG CHO DÒNG CÓ MŨI TÊN (.toggle-btn) */
+      .custom-nav .toggle-btn,
+      .custom-nav .toggle-btn.active {
+        border-left: none !important;
+        background-color: transparent !important; /* Luôn vô hiệu hóa nền */
+      }
+
+      /* Khi hover vào dòng có mũi tên (Light mode) */
+      .custom-nav .toggle-btn:hover {
+        background-color: transparent !important; /* Đảm bảo không bôi nền */
+        color: var(--primary) !important;
+      }
+
+      /* --- CHẾ ĐỘ DARK MODE --- */
+      body.dark .custom-nav .nav-link,
+      body.dark .custom-nav .sub-link {
+        color: #94a3b8;
+      }
+
+      /* Hover cho link bình thường trong Dark Mode */
+      body.dark .custom-nav .nav-link:not(.toggle-btn):hover,
+      body.dark .custom-nav .sub-link:not(.group-label):not(.toggle-btn):hover {
+        background: #1e293b;
+        color: #60a5fa;
+      }
+
+      /* Active cho link bình thường trong Dark Mode */
+      body.dark .custom-nav .active {
+        background-color: #1e293b !important;
+        color: #60a5fa !important;
+        border-left-color: #60a5fa !important;
+      }
+
+      /* Đặt lại màu cho tiêu đề tĩnh (.group-label) trong Dark Mode */
+      body.dark .custom-nav .group-label {
+        color: #60a5fa !important;
+        background-color: transparent !important;
+      }
+
+      /* Hover vào dòng mũi tên trong Dark Mode: Glow chữ, Không nền */
+      body.dark .custom-nav .toggle-btn:hover {
+        background-color: transparent !important; /* Bắt buộc không nền */
+        color: #93c5fd !important;
+        text-shadow: 0 0 10px rgba(147, 197, 253, 0.6); /* Hiệu ứng Glow chữ */
+      }
+      /* =================== MÀN CHE VIDEO SCI-FI =================== */
+      .temp-video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #050b14;
+        /* Nền xanh đen sâu thẳm */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        overflow: hidden;
+        border-right: 1px solid #334155;
+      }
+
+      /* Vẽ lưới Grid Toán học nền sau */
+      .temp-video-overlay::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background-image:
+          linear-gradient(rgba(58, 120, 255, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(58, 120, 255, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 0;
+        animation: panGrid 20s linear infinite;
+      }
+
+      /* Quả cầu phát sáng lơ lửng */
+      .temp-video-overlay::after {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: var(--primary);
+        filter: blur(90px);
+        opacity: 0.4;
+        z-index: 0;
+        animation: floatOrb 6s infinite alternate ease-in-out;
+      }
+
+      /* Khung kính mờ Glassmorphism */
+      .tv-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        padding: 35px 50px;
+        border-radius: 20px;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(58, 120, 255, 0.05);
+      }
+
+      /* Vòng xoay quanh Icon */
+      .tv-icon-wrapper {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+      }
+
+      .tv-icon-wrapper i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        text-shadow: 0 0 15px var(--primary);
+      }
+
+      .tv-spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px dashed rgba(96, 165, 250, 0.6);
+        border-radius: 50%;
+        animation: spinDash 12s linear infinite;
+      }
+
+      /* Định dạng chữ */
+      .tv-content h4 {
+        margin: 0 0 12px;
+        color: #f8fafc;
+        font-size: 1.3rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 800;
+      }
+
+      .tv-content p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 1rem;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      /* Animations */
+      @keyframes panGrid {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-40px, -40px);
+        }
+      }
+
+      @keyframes floatOrb {
+        0% {
+          transform: translate(-50px, -30px) scale(0.8);
+        }
+        100% {
+          transform: translate(50px, 30px) scale(1.2);
+        }
+      }
+
+      @keyframes spinDash {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ÉP BUỘC XOAY MŨI TÊN CHUẨN XÁC 100% */
+      .custom-nav .arrow-icon {
+        transition: transform 0.3s ease !important;
+        transform: rotate(0deg) !important;
+        display: inline-block;
+      }
+
+      .custom-nav .has-dropdown.open > .toggle-btn .arrow-icon,
+      .custom-nav .has-dropdown.open > .nav-link .arrow-icon {
+        transform: rotate(90deg) !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <div id="topbar">
+      <div class="topbar-left">
+        <a
+          href="../../knowledge_info.html"
+          class="topbar-icon"
+          title="Quay lại thư viện"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <a href="../../index.html" class="topbar-icon" title="Về trang chủ">
+          <i class="fa-solid fa-house"></i>
+        </a>
+        <a
+          href="../../tltk.html"
+          class="topbar-icon"
+          title="Tài liệu tham khảo"
+        >
+          <i class="fa-solid fa-file-lines"></i>
+        </a>
+      </div>
+
+      <div class="brand">Vectoria Knowledge</div>
+
+      <div class="topbar-right" style="margin-right: 25px">
+        <div class="settings-container">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <hr
+              style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0;
+                opacity: 0.5;
+              "
+            />
+
+            <a
+              href="../../hdsd.html"
+              class="setting-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span
+                ><i class="fa-solid fa-book-open-reader"></i> Hướng dẫn sử
+                dụng</span
+              >
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+            <a
+              href="../../contact.html"
+              class="setting-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <aside class="sidebar custom-nav">
+        <h3 class="nav-title"><i class="fa-solid fa-list-ul"></i> Mục lục</h3>
+        <ul class="nav-list">
+          <li class="nav-item has-dropdown open">
+            <div class="nav-link toggle-btn">
+              <a
+                href="#ly-thuyet"
+                style="text-decoration: none; color: inherit; font-weight: 700"
+                >Lý thuyết</a
+              >
+              <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            </div>
+            <ul class="sub-menu">
+              <li
+                style="
+                  padding: 15px 20px 5px 20px;
+                  font-size: 0.8rem;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  color: var(--primary);
+                  letter-spacing: 0.5px;
+                "
+              >
+                Hạng ma trận
+              </li>
+              <li>
+                <a href="#ma-tran-con" class="sub-link active"
+                  >1. Ma trận con</a
+                >
+              </li>
+              <li>
+                <a href="#dinh-nghia" class="sub-link"
+                  >2. Định nghĩa hạng ma trận
+                </a>
+              </li>
+              <li>
+                <a href="#ma-tran-bac-thang" class="sub-link"
+                  >3. Ma trận bậc thang</a
+                >
+              </li>
+              <li>
+                <a href="#phep-bien-doi" class="sub-link"
+                  >4. Các phép biến đổi sơ cấp trên ma trận</a
+                >
+              </li>
+              <li>
+                <a href="#phuong-phap-gauss" class="sub-link"
+                  >5. Quy tắc tìm hạng ma trận bằng phương pháp Gauss</a
+                >
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="#coming-soon" class="nav-link" style="font-weight: 700"
+              >Video trực quan</a
+            >
+          </li>
+
+          <li class="nav-item">
+            <a href="#bai-tap" class="nav-link" style="font-weight: 700"
+              >Bài tập</a
+            >
+          </li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <div class="chapter-card" id="ly-thuyet">
+          <script>
+            window.MathJax = {
+              tex: {
+                inlineMath: [
+                  ["\\(", "\\)"],
+                  ["$", "$"],
+                ],
+                displayMath: [["\\[", "\\]"]],
+                processEscapes: true,
+              },
+              // Thêm cấu hình output để xử lý xuống dòng tốt hơn
+              chtml: {
+                scale: 0.95, // Thu nhỏ xíu để đỡ tràn
+                displayAlign: "center",
+              },
+              svg: {
+                fontCache: "global",
+                scale: 0.95,
+              },
+            };
+          </script>
+          <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+          ></script>
+
+          <style>
+            /* === LIGHT MODE (Mặc định) === */
+            #ly-thuyet {
+              font-family: "Inter", sans-serif;
+              color: #000;
+              font-size: 1.15rem;
+              line-height: 1.6;
+            }
+
+            /* Tiêu đề mục */
+            .pdf-h2 {
+              font-size: 1.5rem;
+              font-weight: bold;
+              margin: 30px 0 15px 0;
+              color: #000;
+            }
+
+            .pdf-h3 {
+              font-size: 1.25rem;
+              font-weight: bold;
+              margin: 25px 0 10px 0;
+              color: #000;
+            }
+
+            /* Chữ Nhận xét (Chuyển sang Xanh chủ đạo) */
+            .pdf-note {
+              color: #3a78ff;
+              font-weight: bold;
+              font-style: italic;
+            }
+
+            /* Khung Bài Toán (ĐÃ SỬA: Viền Xanh - Nền Xanh Nhạt) */
+            .pdf-box {
+              border: 2px solid #3a78ff;
+              /* Viền xanh */
+              background-color: #eff6ff;
+              /* Nền xanh rất nhạt */
+              padding: 15px;
+              border-radius: 8px;
+              margin: 20px 0;
+              color: #000;
+            }
+
+            .pdf-box-title {
+              color: #3a78ff;
+              font-weight: bold;
+            }
+
+            /* Chữ Lời giải */
+            .pdf-sol-title {
+              color: #3a78ff;
+              font-weight: bold;
+              text-align: center;
+              display: block;
+              margin: 15px 0;
+              font-size: 1.1rem;
+              text-decoration: underline;
+            }
+
+            /* Bảng Tiên đề */
+            .pdf-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 15px 0;
+              font-size: 1rem;
+            }
+
+            .pdf-table th,
+            .pdf-table td {
+              border: 1px solid #666;
+              padding: 8px 10px;
+              vertical-align: top;
+            }
+
+            .pdf-table th {
+              background-color: #f8fafc;
+              text-align: center;
+              font-weight: bold;
+              color: #000;
+            }
+
+            /* Danh sách */
+            .pdf-list li {
+              margin-bottom: 6px;
+            }
+
+            .math-center {
+              text-align: center;
+              margin: 8px 0;
+            }
+
+            /* === DARK MODE (Tương phản cao) === */
+            body.dark #ly-thuyet {
+              color: #e2e8f0;
+            }
+
+            /* Chữ chính màu trắng xám */
+            body.dark .pdf-h2,
+            body.dark .pdf-h3 {
+              color: #fff;
+            }
+
+            /* Tiêu đề trắng tinh */
+
+            /* Dark mode: Khung bài toán */
+            body.dark .pdf-box {
+              background-color: rgba(58, 120, 255, 0.1);
+              /* Nền xanh trong suốt */
+              border-color: #60a5fa;
+              /* Viền xanh sáng */
+              color: #e2e8f0;
+            }
+
+            body.dark .pdf-box-title {
+              color: #60a5fa;
+            }
+
+            body.dark .pdf-note {
+              color: #60a5fa;
+            }
+
+            body.dark .pdf-sol-title {
+              color: #93c5fd;
+            }
+
+            /* Dark mode: Bảng */
+            body.dark .pdf-table th {
+              background-color: #1e293b;
+              color: #fff;
+              border-color: #475569;
+            }
+
+            body.dark .pdf-table td {
+              border-color: #475569;
+            }
+
+            /* [QUAN TRỌNG] Ép màu MathJax sang trắng trong Dark Mode */
+            body.dark mjx-container path {
+              fill: #e2e8f0 !important;
+              stroke: #e2e8f0 !important;
+            }
+          </style>
+          <div class="chapter-card" id="ly-thuyet">
+            <script>
+              window.MathJax = {
+                tex: {
+                  inlineMath: [
+                    ["\\(", "\\)"],
+                    ["$", "$"],
+                  ],
+                  displayMath: [["\\[", "\\]"]],
+                  processEscapes: true,
+                },
+                chtml: { scale: 0.95, displayAlign: "center" },
+              };
+            </script>
+            <script
+              id="MathJax-script"
+              async
+              src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            ></script>
+
+            <style>
+              /* === STYLE NỘI BỘ CHO PHẦN LÝ THUYẾT === */
+              #ly-thuyet {
+                font-family: "Inter", sans-serif;
+                color: var(--text-main);
+                font-size: 1.15rem;
+                line-height: 1.7;
+              }
+
+              /* Xử lý ảnh thông minh: Tự đảo màu khi sang Dark Mode */
+              .single-vector-img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+                transition: filter 0.3s ease;
+                background-color: #fff;
+                /* Light mode giữ nền trắng */
+                padding: 10px;
+                display: block;
+                margin: 0 auto;
+              }
+
+              body.dark .single-vector-img {
+                filter: invert(0.9) hue-rotate(180deg) brightness(1.1);
+                background-color: transparent;
+                /* Dark mode hòa vào nền web */
+              }
+
+              .img-caption {
+                font-style: italic;
+                font-size: 0.95rem;
+                color: var(--text-sub);
+                margin-top: 10px;
+                display: block;
+                text-align: center;
+                font-family: "Inter", sans-serif;
+              }
+
+              .pdf-h1 {
+                font-size: 1.6rem;
+                font-weight: 700;
+                margin-top: 40px;
+                margin-bottom: 20px;
+                color: var(--primary);
+                border-bottom: 2px solid var(--primary);
+                display: inline-block;
+              }
+
+              body.dark .pdf-h1 {
+                color: var(--accent);
+              }
+
+              .pdf-h2 {
+                font-size: 1.4rem;
+                font-weight: 700;
+                margin: 30px 0 15px;
+              }
+
+              .pdf-h3 {
+                font-size: 1.2rem;
+                font-weight: 700;
+                margin: 20px 0 10px;
+              }
+
+              .math-center {
+                text-align: center;
+                margin: 15px 0;
+              }
+
+              .pdf-note {
+                color: #dc2626;
+                font-weight: bold;
+              }
+
+              body.dark .pdf-note {
+                color: #fb7185;
+              }
+
+              .pdf-remark {
+                color: #2563eb;
+                font-weight: bold;
+                font-style: italic;
+              }
+
+              body.dark .pdf-remark {
+                color: #60a5fa;
+              }
+            </style>
+
+            <h2 class="section-title" style="margin-bottom: 20px">
+              <i class="fa-solid fa-book-open"></i> Lý thuyết
+            </h2>
+
+            <div class="pdf-h1">Hạng ma trận</div>
+
+            <div class="pdf-h2" id="ma-tran-con">1 &nbsp; Ma trận con</div>
+            <p>
+              Cho \( A \) là ma trận cấp \( m \times n \). Ma trận được tạo
+              thành từ các phần tử nằm ở phần giao giữa \( r \) hàng và \( r \)
+              cột của ma trận \( A \) được gọi là ma trận con cấp \( r \) của \(
+              A \). Định thức của ma trận con cấp \( r \) của \( A \) được gọi
+              là định thức con cấp \( r \) của \( A \).
+            </p>
+
+            <div class="box-black">
+              <span class="text-red-bold">Ví dụ:</span> Ma trận \( A =
+              \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{pmatrix}
+              \) sẽ có ma trận con cấp \( 2 \times 2 \) là \( B =
+              \begin{pmatrix} 1 & 2 \\ 4 & 5 \end{pmatrix} \)
+            </div>
+
+            <div class="pdf-h2" id="dinh-nghia">
+              2 &nbsp; Định nghĩa hạng ma trận
+            </div>
+            <p>
+              Hạng của một ma trận \( A \) là <strong>cấp cao nhất</strong> của
+              các <strong>định thức con khác không</strong> có trong \( A \). Ta
+              ký hiệu hạng ma trận là \( rank(A) \) hay ngắn gọn là \( r(A) \).
+            </p>
+
+            <p>
+              <span class="pdf-note" style="color: #9f1239">Lưu ý:</span> Nếu đã
+              biết \( r(A) = k \) thì ta biết \( A \) có ít nhất một định thức
+              con cấp \( k \) khác không và mọi định thức con cấp lớn hơn \( k
+              \) của \( A \) đều bằng không và ngược lại.
+            </p>
+
+            <p>Các tính chất quan trọng:</p>
+            <ul class="pdf-list" style="list-style-type: none">
+              <li>i) Ma trận \( O \) có hạng bằng 0 hay \( rank(O) = 0 \)</li>
+              <li>
+                ii) Hạng của ma trận không thay đổi qua phép chuyển vị, tức là
+                \( rank(A^T) = rank(A) \).
+              </li>
+              <li>
+                iii) Nếu \( A \) là ma trận <strong>vuông</strong> cấp \( n \)
+                thì sẽ có 2 trường hợp xảy ra:
+                <ul
+                  style="
+                    list-style-type: none;
+                    padding-left: 20px;
+                    margin-top: 10px;
+                  "
+                >
+                  <li>
+                    TH1:
+                    <div class="math-center">
+                      \( rank(A) = n \Leftrightarrow detA \neq 0 \)
+                    </div>
+                    Ta nói \( A \) là ma trận không suy biến hay ma trận khả
+                    nghịch (<em
+                      >tồn tại ma trận nghịch đảo, sẽ tìm hiểu ở bài sau</em
+                    >).
+                  </li>
+                  <li style="margin-top: 10px">
+                    TH2:
+                    <div class="math-center">
+                      \( rank(A) < n \Leftrightarrow detA=0 \)
+                    </div>
+                    Ta nói \( A \) là ma trận suy biến hay \( A \) không tồn tại
+                    ma trận nghịch đảo.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                iv) Cho \( A, B \) là các ma trận sao cho tồn tại ma trận tích
+                \( AB \). Khi đó:
+                <ul
+                  style="
+                    list-style-type: disc;
+                    padding-left: 20px;
+                    margin-top: 10px;
+                  "
+                >
+                  <li>\( 0 \le r(AB) \le \min\{r(A), r(B)\} \)</li>
+                  <li>
+                    Nếu \( A \) là ma trận không suy biến thì \( r(AB) = r(B)
+                    \).
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <div class="pdf-h2" id="ma-tran-bac-thang">
+              3 &nbsp; Ma trận bậc thang
+            </div>
+            <p>
+              Ma trận \( A \) cấp \( m \times n \) khác không được gọi là ma
+              trận bậc thang nếu tồn tại số tự nhiên \( r \) sao cho:
+            </p>
+            <div class="math-center">\( 1 \le r \le \min\{m, n\} \)</div>
+            <p>thỏa các điều kiện sau:</p>
+
+            <ul class="pdf-list" style="list-style-type: none">
+              <li>
+                i) Các hàng bằng không (nếu có) nằm ở dưới các hàng khác không.
+              </li>
+              <li>
+                ii) Phần tử khác 0 đầu tiên của hàng dưới nằm về bên phải phần
+                tử khác 0 đầu tiên của hàng trên.
+              </li>
+            </ul>
+
+            <div class="box-black">
+              <span class="text-red-bold">Ví dụ:</span> Các ma trận \(
+              \begin{pmatrix} 2 & 6 & 1 & 0 \\ 0 & 3 & 0 & 1 \\ 0 & 0 & 1 & 1
+              \end{pmatrix} ; \quad \begin{pmatrix} 1 & -1 & 2 \\ 0 & 0 & 1 \\ 0
+              & 0 & 0 \end{pmatrix} \) là các ma trận bậc thang
+            </div>
+
+            <div class="pdf-h2" id="phep-bien-doi">
+              4 &nbsp; Các phép biến đổi sơ cấp trên ma trận
+            </div>
+            <ol class="pdf-list" style="padding-left: 20px">
+              <li>
+                Nhân một số \( \lambda \neq 0 \) với một hàng (cột) thứ \( i \)
+                của ma trận. Ký hiệu: \( A \xrightarrow{h_i = \lambda h_i} B \)
+              </li>
+              <li>
+                Đổi chỗ hai hàng (cột) \( i \) và \( j \) của ma trận. Ký hiệu:
+                \( A \xrightarrow{h_i \leftrightarrow h_j} B \)
+              </li>
+              <li>
+                Cộng vào một hàng (cột) với một hàng (cột) khác đã nhân thêm một
+                số \( \lambda \) khác không. Ký hiệu: \( A \xrightarrow{h_i =
+                h_i + \lambda h_j} B \)
+              </li>
+            </ol>
+
+            <p>
+              <span class="pdf-note" style="color: #9f1239">Lưu ý:</span> Hạng
+              của ma trận không thay đổi qua các phép biến đổi sơ cấp. Cụ thể,
+              nếu \( A \) là một ma trận bậc thang thì \( r(A) \) bằng số hàng
+              khác không của \( A \).
+            </p>
+
+            <div class="pdf-h2" id="phuong-phap-gauss">
+              5 &nbsp; Quy tắc tìm hạng ma trận bằng phương pháp Gauss
+            </div>
+            <p>
+              Để tìm hạng của một ma trận \( A \) tùy ý khác không cấp \( m
+              \times n \ (m, n \ge 2) \) Ta dùng các phép biến đổi sơ cấp để đưa
+              ma trận \( A \) về ma trận bậc thang \( B \). Lúc đó hạng của ma
+              trận \( A \) bằng số hàng khác không của ma trận \( B \).
+            </p>
+            <div class="math-center">
+              \( A \xrightarrow{\text{Biến đổi sơ cấp}} B \ (\text{có dạng bậc
+              thang}) \)
+            </div>
+            <p>
+              Lúc này \( r(A) = r(B) \) (số hàng khác không của ma trận \( B
+              \)).
+            </p>
+
+            <div class="box-black">
+              <span class="text-red-bold">Ví dụ:</span> Tìm hạng của ma trận \(
+              A = \begin{pmatrix} 1 & 1 & 2 & 0 \\ 2 & 1 & -1 & 3 \\ -4 & 5 & 2
+              & -1 \\ -1 & 7 & 3 & 2 \end{pmatrix} \)
+
+              <span class="text-blue-sol">Lời giải</span>
+
+              <div class="math-center" style="overflow-x: auto">
+                \( A \xrightarrow[h_4 = h_4 + h_1]{h_3 = h_3 + 4h_1 \atop h_2 =
+                h_2 - 2h_1} \begin{pmatrix} 1 & 1 & 2 & 0 \\ 0 & -1 & -5 & 3 \\
+                0 & 9 & 10 & -1 \\ 0 & 8 & 5 & 2 \end{pmatrix} \xrightarrow[h_4
+                = h_4 + 8h_2]{h_3 = h_3 + 9h_1} \begin{pmatrix} 1 & 1 & 2 & 0 \\
+                0 & -1 & -5 & 3 \\ 0 & 0 & -35 & 26 \\ 0 & 0 & -35 & 26
+                \end{pmatrix} \xrightarrow{h_4 = h_4 - h_3} \begin{pmatrix} 1 &
+                1 & 2 & 0 \\ 0 & -1 & -5 & 3 \\ 0 & 0 & -35 & 26 \\ 0 & 0 & 0 &
+                0 \end{pmatrix} \)
+              </div>
+              <p style="margin-top: 15px">
+                Sau các phép biến đổi, nhận thấy ma trận có 3 hàng khác không
+                nên hạng của ma trận ban đầu là 3 hay \( r(A) = 3 \).
+              </p>
+            </div>
+
+            <script>
+              if (window.MathJax && window.MathJax.typeset) {
+                window.MathJax.typeset();
+              }
+            </script>
+          </div>
+        </div>
+
+        <div class="video-box" id="coming-soon">
+          <div class="temp-video-overlay">
+            <div class="tv-content">
+              <div class="tv-icon-wrapper">
+                <div class="tv-spinner"></div>
+                <i class="fa-solid fa-hourglass-half"></i>
+              </div>
+              <h4>Sắp ra mắt</h4>
+              <p>
+                Video trực quan đang trong quá trình biên tập.<br />Hệ thống sẽ
+                cập nhật trong thời gian tới.
+              </p>
+            </div>
+          </div>
+
+          <div id="youtube-player"></div>
+        </div>
+
+        <div class="chapter-card" id="bai-tap">
+          <h2 class="section-title">
+            <i class="fa-solid fa-pen-to-square"></i> Bài tập
+          </h2>
+
+          <div class="box-blue">
+            <p id="bai-1">
+              <span class="text-red-bold">Bài 1.</span> Tìm hạng của ma trận:
+            </p>
+
+            <div class="math-scroll">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(3, 1fr);
+                  gap: 20px;
+                  text-align: left;
+                  margin-top: 15px;
+                "
+              >
+                <div>
+                  a) \( A = \begin{pmatrix} 1 & 3 & 5 & -1 \\ 2 & -1 & -1 & 4 \\
+                  5 & 1 & -1 & 7 \\ 4 & 5 & 5 & 2 \end{pmatrix} \)
+                </div>
+                <div>
+                  b) \( A = \begin{pmatrix} 1 & 3 & 5 & -1 \\ 2 & -1 & -1 & 4 \\
+                  5 & 1 & -1 & 7 \\ 7 & 7 & 9 & 1 \end{pmatrix} \)
+                </div>
+                <div>
+                  c) \( A = \begin{pmatrix} 4 & 3 & -5 & 2 & 3 \\ 8 & 6 & -7 & 4
+                  & 2 \\ 4 & 3 & -8 & 2 & 7 \\ 4 & 3 & 1 & 2 & -5 \\ 8 & 6 & -1
+                  & 4 & 6 \end{pmatrix} \)
+                </div>
+              </div>
+            </div>
+
+            <p id="bai-2" style="margin-top: 25px">
+              <span class="text-red-bold">Bài 2.</span> Tìm hạng của ma trận
+              theo tham số \( \lambda \):
+            </p>
+
+            <div class="math-scroll">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(3, 1fr);
+                  gap: 20px;
+                  text-align: left;
+                  margin-top: 15px;
+                "
+              >
+                <div>
+                  a) \( A = \begin{pmatrix} 3 & \lambda & 1 & 2 \\ 1 & 4 & 7 & 2
+                  \\ 1 & 10 & 17 & 4 \\ 4 & 1 & 3 & 3 \end{pmatrix} \)
+                </div>
+                <div>
+                  b) \( B = \begin{pmatrix} -1 & 2 & 1 & -1 & 1 \\ \lambda & -1
+                  & 1 & -1 & -1 \\ 1 & \lambda & 0 & 1 & 1 \\ 1 & 2 & 2 & -1 & 1
+                  \end{pmatrix} \)
+                </div>
+                <div>
+                  c) \( C = \begin{pmatrix} 1 & -\lambda & 0 & 0 \\ 0 & 1 &
+                  -\lambda & 0 \\ 0 & 0 & 1 & -\lambda \\ 0 & 0 & 0 & 1
+                  \end{pmatrix} \)
+                </div>
+              </div>
+            </div>
+
+            <p id="bai-3" style="margin-top: 25px">
+              <span class="text-red-bold">Bài 3.</span> Biện luận hạng của ma
+              trận:
+            </p>
+
+            <div class="math-scroll">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(2, 1fr);
+                  gap: 20px;
+                  text-align: left;
+                  margin-top: 15px;
+                "
+              >
+                <div>
+                  a) \( A = \begin{pmatrix} 1 & -1 & 2 & b \\ 2 & a & 4 & -1+b
+                  \\ 3 & a-1 & 6 & b \end{pmatrix} \)
+                </div>
+                <div>
+                  b) \( A = \begin{pmatrix} 1 & m & -1 & 2 \\ 2 & -1 & m & 5 \\
+                  1 & 10 & -6 & 1 \end{pmatrix} \)
+                </div>
+              </div>
+            </div>
+
+            <p id="bai-4" style="margin-top: 25px">
+              <span class="text-red-bold">Bài 4.</span> Cho ma trận: \( A =
+              \begin{pmatrix} 1 & m-1 & 1 \\ 1 & 1 & 3-m \\ m & -3 & -3
+              \end{pmatrix} \) Tìm \( m \) để hạng của ma trận \( A \) là lớn
+              nhất.
+            </p>
+
+            <p id="bai-5" style="margin-top: 25px">
+              <span class="text-red-bold">Bài 5.</span> Tìm \( m \) để các ma
+              trận sau có hạng nhỏ nhất: \( A = \begin{pmatrix} 1 & 2 & -1 & -1
+              \\ 2 & m+4 & -2 & -1 \\ 3 & m+6 & -3 & m-3 \end{pmatrix} \)
+            </p>
+
+            <p id="bai-6" style="margin-top: 25px">
+              <span class="text-red-bold">Bài 6.</span> Tìm hạng của ma trận:
+            </p>
+
+            <div class="math-scroll" style="margin-top: 15px">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(3, 1fr);
+                  gap: 20px;
+                  text-align: left;
+                  align-items: center;
+                "
+              >
+                <div>
+                  a) \( T = \begin{pmatrix} 1 & 7 & 1 & 3 & 0 \\ 1 & 7 & -1 & -2
+                  & -2 \\ 2 & 14 & 2 & 7 & 0 \\ 6 & 42 & 3 & 13 & -3
+                  \end{pmatrix} \)
+                </div>
+                <div>
+                  e) \( H = \begin{pmatrix} 4 & 3 & 2 & 2 \\ 0 & 2 & 1 & 1 \\ 0
+                  & 0 & 3 & 3 \end{pmatrix} \)
+                </div>
+                <div>
+                  i) \( H = \begin{pmatrix} 1 & 1 & -3 \\ 2 & 1 & m \\ 1 & m & 3
+                  \end{pmatrix} \)
+                </div>
+
+                <div>
+                  b) \( R = \begin{pmatrix} 1 & 2 & -3 & 5 \\ 1 & 3 & -13 & 22
+                  \\ 3 & 5 & 1 & -2 \\ 2 & 3 & 4 & -7 \end{pmatrix} \)
+                </div>
+                <div>
+                  f) \( M = \begin{pmatrix} 1 & 2 & 3 & 6 \\ 2 & 3 & 1 & 6 \\ 3
+                  & 1 & 2 & 6 \end{pmatrix} \)
+                </div>
+                <div>
+                  j) \( H = \begin{pmatrix} m & 5m & -m \\ 2m & m & 10m \\ -m &
+                  -2m & -3m \end{pmatrix} \)
+                </div>
+
+                <div>
+                  c) \( I = \begin{pmatrix} 1 & -2 & 3 & -4 \\ 3 & 3 & -5 & 1 \\
+                  -2 & 1 & 2 & -3 \\ 3 & 0 & 3 & -10 \end{pmatrix} \)
+                </div>
+                <div>
+                  g) \( I = \begin{pmatrix} 1 & -1 & 5 & -1 \\ 1 & 1 & -2 & 3 \\
+                  3 & -1 & 8 & 1 \\ 1 & 3 & -9 & 7 \end{pmatrix} \)
+                </div>
+                <div>
+                  k) \( U = \begin{pmatrix} 3 & 1 & 1 & 4 \\ m & 4 & 10 & 1 \\ 1
+                  & 7 & 17 & 3 \\ 2 & 2 & 4 & 1 \end{pmatrix} \)
+                </div>
+
+                <div>
+                  d) \( N = \begin{pmatrix} 1 & 2 & 3 & 4 \\ 2 & 4 & 6 & 8 \\ 3
+                  & 6 & 9 & 12 \end{pmatrix} \)
+                </div>
+                <div>
+                  h) \( N = \begin{pmatrix} 1 & 3 & -2 & -1 \\ 2 & 5 & -2 & 1 \\
+                  1 & 1 & 6 & 13 \\ -2 & -6 & 8 & 10 \end{pmatrix} \)
+                </div>
+                <div>
+                  l) \( Y = \begin{pmatrix} m & 0 & 0 & n \\ n & m & 0 & 0 \\ 0
+                  & n & m & 0 \\ 0 & 0 & n & m \end{pmatrix} \)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="download-container">
+            <p
+              style="
+                margin-bottom: 15px;
+                color: var(--text-sub);
+                font-size: 0.95rem;
+              "
+            >
+              <i class="fa-solid fa-circle-info"></i> Bạn đã hoàn thành các bài
+              tập? Tải lời giải về để đối chiếu nhé!
+            </p>
+
+            <a
+              href="https://drive.google.com/uc?export=download&id=1aMVQ4Nim5ePDRZfM0sjN__uqqywgeLDT"
+              target="_blank"
+              class="btn-download"
+            >
+              <i class="fa-solid fa-file-arrow-down"></i> Lời giải tham khảo
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="vectoria-footer distraction-element">
+      <div class="footer-container">
+        <div class="brand-col">
+          <div
+            class="partner-logo"
+            style="display: flex; align-items: center; gap: 10px"
+          >
+            <img src="../../assets/images/logoMoi.png" alt="Logo Nhóm/Trường" />
+            <img
+              src="../../assets/images/logoChu.png"
+              id="textLogo"
+              alt="Logo Chữ Vectoria"
+              style="height: 35px; width: auto"
+            />
+          </div>
+          <p>
+            Vectoria — Vương quốc của những Vector — được kiến tạo để thay đổi
+            hoàn toàn cách chúng ta nhìn nhận về vector. Không còn là những khái
+            niệm khô khan, tại nơi đây, mỗi vector đều mang một hình hài, một
+            hướng đi và sinh khí riêng. Chúng tôi khao khát trao cho bạn một góc
+            nhìn thấu thị để toàn bộ vẻ đẹp trừu tượng của không gian vector
+            được thu trọn vào tầm mắt.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              <a href="mailto:support@vectoria.io.vn">support@vectoria.io.vn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="margin: 0">
+          © 2026 Vectoria. Học và trực quan hóa Không gian vector.
+        </p>
+      </div>
+    </footer>
+    <script>
+      // 1. THEME HANDLING & ANIMATION
+      // Theme is auto-initialized by theme-manager.js script
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const settingsBtn = document.getElementById("btnSettings");
+        const settingsDropdown = document.getElementById("settingsDropdown");
+        const themeToggle = document.getElementById("themeToggle");
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+        const transitionIcons = document.querySelector(
+          ".theme-transition-icons",
+        );
+
+        // Set initial checkbox state from ThemeManager
+        themeToggle.checked = ThemeManager.isDarkMode();
+
+        settingsBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          settingsDropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (
+            !settingsDropdown.contains(e.target) &&
+            !settingsBtn.contains(e.target)
+          ) {
+            settingsDropdown.classList.remove("show");
+          }
+        });
+
+        themeToggle.addEventListener("change", () => {
+          const isDark = ThemeManager.toggle();
+          themeToggle.checked = isDark;
+          ThemeManager.applyTheme(isDark);
+
+          // Animation Logic
+          if (transitionIcons) {
+            transitionIcons.classList.remove("animate-rise-fade");
+            void transitionIcons.offsetWidth; // Trigger reflow
+
+            if (isDark) {
+              sunIcon.style.display = "none";
+              moonIcon.style.display = "block";
+            } else {
+              sunIcon.style.display = "block";
+              moonIcon.style.display = "none";
+            }
+            transitionIcons.classList.add("animate-rise-fade");
+          }
+        });
+
+        // Listen for theme changes from other tabs
+        window.addEventListener("storage", (e) => {
+          if (e.key === ThemeManager.STORAGE_KEY) {
+            const isDark = ThemeManager.isDarkMode();
+            themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+          }
+        });
+      });
+
+      // 2. YOUTUBE API
+      var player;
+      function onYouTubeIframeAPIReady() {
+        var originUrl = window.location.origin;
+        player = new YT.Player("youtube-player", {
+          height: "100%",
+          width: "100%",
+          videoId: "woM6wsymvsc",
+          playerVars: { playsinline: 1, rel: 0, origin: originUrl },
+          events: { onReady: onPlayerReady, onError: onPlayerError },
+        });
+      }
+      function onPlayerReady(event) {
+        console.log("Video ready");
+      }
+      function onPlayerError(event) {
+        console.error("Lỗi video: " + event.data);
+        document.querySelector(".video-box").innerHTML =
+          '<div style="color:white;text-align:center;padding-top:20%;">Lỗi tải video (Mã: ' +
+          event.data +
+          ")</div>";
+      }
+
+      var tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      function seekTo(seconds) {
+        if (player && player.seekTo) {
+          player.seekTo(seconds, true);
+          player.playVideo();
+        }
+      }
+      function setActive(el) {
+        document
+          .querySelectorAll(".chapter-item")
+          .forEach((i) => i.classList.remove("playing"));
+        el.classList.add("playing");
+      }
+    </script>
+
+    <script src="../../js/utils/auto-update_timeline.js"></script>
+    <script>
+      function bootVectoriaMenu() {
+        console.log("Enterprise Menu System: Booting...");
+        const sidebar = document.querySelector(".sidebar");
+        if (!sidebar) return;
+
+        // 1. DỌN RÁC AJAX CŨ: Tắt Camera cũ trước khi bật Camera mới
+        if (window.vectoriaObserver) {
+          window.vectoriaObserver.disconnect();
+        }
+
+        const topbarHeight =
+          document.getElementById("topbar")?.offsetHeight || 60;
+        let isClicking = false;
+        let clickTimeout;
+
+        // 2. AUTO-FIX MŨI TÊN
+        document.querySelectorAll(".custom-nav .arrow-icon").forEach((icon) => {
+          icon.classList.remove("fa-chevron-down");
+          icon.classList.add("fa-chevron-right");
+          const parentLi = icon.closest(".has-dropdown");
+          if (parentLi && parentLi.classList.contains("open")) {
+            icon.style.transform = "rotate(90deg)";
+          } else {
+            icon.style.transform = "rotate(0deg)";
+          }
+        });
+
+        // 3. NÚT "MỤC LỤC" MOBILE
+        const navTitle = document.querySelector(".sidebar h3.nav-title");
+        if (navTitle) {
+          const newNavTitle = navTitle.cloneNode(true);
+          navTitle.replaceWith(newNavTitle);
+          newNavTitle.addEventListener("click", () => {
+            sidebar.classList.toggle("mobile-open");
+          });
+        }
+
+        // 4. CLICK MENU ĐÓNG/MỞ & SCROLL
+        document.querySelectorAll(".custom-nav a").forEach((link) => {
+          link.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("href");
+            const isToggle = this.closest(".toggle-btn");
+            const isGroup =
+              this.classList.contains("sub-heading") ||
+              this.classList.contains("group-label") ||
+              (this.hasAttribute("style") &&
+                this.getAttribute("style").includes("uppercase"));
+
+            // Mũi tên chỉ làm nhiệm vụ đóng/mở menu
+            if (isToggle) {
+              e.preventDefault();
+              e.stopPropagation();
+              const parentLi = this.closest(".has-dropdown");
+              if (parentLi) {
+                parentLi.classList.toggle("open");
+                const icon = parentLi.querySelector(".toggle-btn .arrow-icon");
+                if (icon)
+                  icon.style.transform = parentLi.classList.contains("open")
+                    ? "rotate(90deg)"
+                    : "rotate(0deg)";
+              }
+              return;
+            }
+
+            // Nếu là link chuyển mục, tính toán Scroll thời gian thực
+            if (targetId && targetId !== "#" && !isGroup) {
+              e.preventDefault();
+              isClicking = true; // Bịt mắt Camera an ninh tạm thời
+              clearTimeout(clickTimeout);
+
+              // Tô xanh menu ngay lập tức
+              document
+                .querySelectorAll(".custom-nav .active")
+                .forEach((el) => el.classList.remove("active"));
+              this.classList.add("active");
+              const parentDiv =
+                this.closest(".nav-link") ||
+                this.closest(".sub-link") ||
+                this.closest(".sub-sub-link");
+              if (parentDiv) parentDiv.classList.add("active");
+
+              if (window.innerWidth <= 960 && sidebar) {
+                sidebar.classList.remove("mobile-open");
+              }
+
+              // Tính tọa độ ngay TẠI THỜI ĐIỂM CLICK (Bất chấp MathJax phình to)
+              const targetElement = document.querySelector(targetId);
+              if (targetElement) {
+                const offset =
+                  window.innerWidth <= 960 ? 140 : topbarHeight + 20;
+                const y =
+                  targetElement.getBoundingClientRect().top +
+                  window.pageYOffset -
+                  offset;
+                window.scrollTo({ top: y, behavior: "smooth" });
+              }
+
+              // Mở mắt Camera lại sau khi trượt xong (800ms)
+              clickTimeout = setTimeout(() => {
+                isClicking = false;
+              }, 800);
+            }
+          });
+        });
+
+        // 5. THUẬT TOÁN CAMERA (INTERSECTION OBSERVER)
+        const sections = document.querySelectorAll(
+          ".chapter-card, .pdf-h1[id], .pdf-h2[id], .pdf-h3[id], #bai-tap, .video-box[id]",
+        );
+        const menuLinks = document.querySelectorAll('.custom-nav a[href^="#"]');
+
+        // Định hình ống kính: cách topbar 80px (để không bị đè), cắt bớt nửa dưới màn hình
+        const observerOptions = {
+          root: null,
+          rootMargin: `-${topbarHeight + 20}px 0px -50% 0px`,
+          threshold: 0,
+        };
+
+        window.vectoriaObserver = new IntersectionObserver((entries) => {
+          if (isClicking) return; // Đang bấm menu trượt thì không dò tìm
+
+          let activeId = null;
+          // Tìm đối tượng đang lọt vào ống kính
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              activeId = entry.target.getAttribute("id");
+            }
+          });
+
+          if (activeId) {
+            menuLinks.forEach((link) => {
+              if (link.getAttribute("href") === `#${activeId}`) {
+                const isGroup =
+                  link.classList.contains("sub-heading") ||
+                  link.classList.contains("group-label");
+
+                // Tô xanh mục lục (bao gồm cả dòng mũi tên)
+                if (!isGroup) {
+                  document
+                    .querySelectorAll(".custom-nav .active")
+                    .forEach((el) => el.classList.remove("active"));
+                  link.classList.add("active");
+
+                  const parentDiv =
+                    link.closest(".nav-link") ||
+                    link.closest(".sub-link") ||
+                    link.closest(".sub-sub-link");
+                  if (parentDiv) parentDiv.classList.add("active");
+
+                  // Tự động mở menu cha nếu đang đóng (chỉ PC)
+                  if (window.innerWidth > 960) {
+                    let parentDropdown = link.closest(".has-dropdown");
+                    while (parentDropdown) {
+                      parentDropdown.classList.add("open");
+                      const icon = parentDropdown.querySelector(
+                        ".toggle-btn .arrow-icon",
+                      );
+                      if (icon) icon.style.transform = "rotate(90deg)";
+                      parentDropdown =
+                        parentDropdown.parentElement?.closest(".has-dropdown");
+                    }
+                  }
+                }
+              }
+            });
+          }
+        }, observerOptions);
+
+        // Bật camera giám sát tất cả các đề mục
+        sections.forEach((sec) => window.vectoriaObserver.observe(sec));
+      }
+
+      // KÍCH HOẠT TRỰC TIẾP (KHÔNG CẦN CHỜ DOMContentLoaded)
+      // Khi lật trang AJAX xong, script này đọc tới đâu chạy thẳng tới đó, bỏ qua rào cản!
+      bootVectoriaMenu();
+
+      // Phòng hờ MathJax khởi động xong mà làm xô lệch layout nặng thì Reset lại Camera
+      if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+        MathJax.startup.promise
+          .then(() => {
+            bootVectoriaMenu();
+          })
+          .catch(() => {});
+      }
+    </script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="../../js/utils/live-collab.js"></script> 
+</body>
+</html>

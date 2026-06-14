@@ -1,0 +1,2381 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Hạng của hệ vector và hệ sinh - Vectoria Knowledge</title>
+
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="../js/utils/theme-manager.js"></script>
+
+    <style>
+      /* =================== 1. CẤU HÌNH CƠ BẢN =================== */
+      :root {
+        --primary: #3a78ff;
+        --accent: #3a78ff;
+        --bg-body: #f1f5f9;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-sub: #64748b;
+        --border: #e2e8f0;
+        --sidebar-width: 250px;
+        --topbar-h: 60px;
+        --fg: #0f1117;
+        --bg: #ffffff;
+        --card: #ffffff;
+        --muted: #6b6f76;
+        --shadow-lg: 0 10px 30px rgba(16, 24, 40, 0.1);
+        --hover-bg: rgba(0, 0, 0, 0.05);
+      }
+
+      body.dark {
+        --bg-body: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --border: #334155;
+        --fg: #e9e9ef;
+        --bg: #0f1116;
+        --card: #1e293b;
+        --muted: #a8acb4;
+        --shadow-lg: 0 16px 44px rgba(0, 0, 0, 0.45);
+        --hover-bg: rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        height: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        padding-top: var(--topbar-h);
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      /* =================== 2. FIX CÔNG THỨC TOÁN (QUAN TRỌNG) =================== */
+
+      /* Cấu hình chung để văn bản và công thức tự xuống dòng */
+      .chapter-card,
+      .pdf-box,
+      p,
+      li,
+      td,
+      .math-center {
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
+        white-space: normal !important;
+        /* Cho phép xuống dòng */
+        max-width: 100%;
+      }
+
+      /* Can thiệp trực tiếp vào MathJax */
+      mjx-container {
+        white-space: normal !important;
+        /* Bắt buộc xuống dòng */
+        display: inline-block !important;
+        /* Để ứng xử như văn bản */
+        overflow-wrap: break-word !important;
+        max-width: 100% !important;
+        font-size: 100% !important;
+      }
+
+      /* Với công thức dài (Display Math), nếu không xuống dòng được thì hiện thanh cuộn */
+      /* Thay vì bị cắt mất (hidden), nó sẽ cho phép lướt ngang */
+      mjx-container[display="true"],
+      .math-center {
+        display: block !important;
+        overflow-x: auto !important;
+        /* Hiện thanh cuộn nếu quá dài */
+        overflow-y: hidden;
+        text-align: center;
+      }
+
+      /* Làm đẹp thanh cuộn công thức */
+      mjx-container::-webkit-scrollbar,
+      .math-center::-webkit-scrollbar {
+        height: 5px;
+      }
+
+      mjx-container::-webkit-scrollbar-thumb,
+      .math-center::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+      }
+
+      /* =================== 3. GIAO DIỆN CHUNG =================== */
+      #topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topbar-h);
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 1000;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .topbar-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+      }
+
+      #topbar .brand {
+        text-align: center;
+        font-weight: 800;
+        font-size: 18px;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      .topbar-icon,
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-sub);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        text-decoration: none;
+        margin-right: 0px;
+      }
+
+      .topbar-icon:hover,
+      .icon-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .settings-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .settings-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 260px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      .settings-dropdown.show {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .setting-item:hover {
+        background: var(--hover-bg);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        opacity: 0.5;
+        transition: 0.3s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--accent);
+        opacity: 1;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      .theme-transition-icons {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(100px) scale(0.5);
+      }
+
+      #sunIcon,
+      #moonIcon {
+        font-size: 8rem;
+        position: absolute;
+      }
+
+      #sunIcon {
+        color: #f59e0b;
+      }
+
+      #moonIcon {
+        color: #f8fafc;
+      }
+
+      .animate-rise-fade {
+        animation: riseAndFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes riseAndFade {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(150px) scale(0.5);
+        }
+
+        40% {
+          opacity: 1;
+          transform: translate(-50%, -50%) translateY(0px) scale(1.2);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(-100px) scale(0.8);
+        }
+      }
+
+      .container {
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        gap: 30px;
+        position: relative;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      .sidebar h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.1rem;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 10px;
+        color: var(--text-main);
+      }
+
+      .menu-link {
+        display: block;
+        padding: 10px 12px;
+        color: var(--text-sub);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: 0.2s;
+        border-left: 3px solid transparent;
+      }
+
+      .menu-link:hover,
+      .menu-link.active {
+        background: #eff6ff;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      body.dark .menu-link:hover,
+      body.dark .menu-link.active {
+        background: #2d3748;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      /* [ĐÃ SỬA] Bỏ overflow: hidden để không bị cắt nội dung */
+      .chapter-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 40px;
+        margin-bottom: 30px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      h1.lesson-title {
+        font-size: 2rem;
+        margin: 0 0 10px;
+        color: var(--primary);
+      }
+
+      h2.section-title {
+        font-size: 1.4rem;
+        margin: 0 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+      }
+
+      .cinema-container {
+        display: flex;
+        flex-direction: row;
+        background: #0f172a;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        min-height: 400px;
+      }
+
+      .video-box {
+        flex: 2.2;
+        position: relative;
+        background: #000;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      #youtube-player {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .playlist-box {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #1e293b;
+        border-left: 1px solid #334155;
+        height: auto;
+        max-height: 100%;
+      }
+
+      .playlist-header {
+        padding: 15px 20px;
+        background: #0f172a;
+        border-bottom: 1px solid #334155;
+        color: #fff;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .chapter-list {
+        overflow-y: auto;
+        flex-grow: 1;
+        scrollbar-width: thin;
+        scrollbar-color: #475569 #1e293b;
+      }
+
+      .chapter-item {
+        display: flex;
+        gap: 12px;
+        padding: 15px 20px;
+        border-bottom: 1px solid #334155;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #fff;
+      }
+
+      .chapter-item:hover {
+        background: #334155;
+      }
+
+      .chapter-item.playing {
+        background: #253346;
+        border-left: 4px solid var(--primary);
+      }
+
+      .time-badge {
+        background: rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        font-family: monospace;
+        font-size: 0.8rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .chapter-info {
+        flex-grow: 1;
+      }
+
+      .chapter-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .chapter-desc {
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+
+      .chapter-icon {
+        color: var(--primary);
+        opacity: 0;
+        transition: 0.3s;
+      }
+
+      .chapter-item.playing .chapter-icon {
+        opacity: 1;
+      }
+
+      .pdf-h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 30px 0 15px 0;
+        color: #000;
+      }
+
+      .pdf-h3 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin: 25px 0 10px 0;
+        color: #000;
+      }
+
+      .pdf-note {
+        color: #3a78ff;
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      .pdf-box {
+        border: 2px solid #3a78ff;
+        background-color: #eff6ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        color: #000;
+      }
+
+      .pdf-box-title {
+        color: #3a78ff;
+        font-weight: bold;
+      }
+
+      .pdf-sol-title {
+        color: #3a78ff;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 15px 0;
+        font-size: 1.1rem;
+        text-decoration: underline;
+      }
+
+      .pdf-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 1rem;
+        table-layout: fixed;
+      }
+
+      .pdf-table th,
+      .pdf-table td {
+        border: 1px solid #666;
+        padding: 8px 10px;
+        vertical-align: top;
+        word-wrap: break-word;
+      }
+
+      .pdf-table th {
+        background-color: #f8fafc;
+        text-align: center;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .pdf-list li {
+        margin-bottom: 6px;
+      }
+
+      body.dark .pdf-h2,
+      body.dark .pdf-h3 {
+        color: #fff;
+      }
+
+      body.dark #ly-thuyet {
+        color: #e2e8f0;
+      }
+
+      body.dark .pdf-box {
+        background-color: rgba(58, 120, 255, 0.1);
+        border-color: #60a5fa;
+        color: #e2e8f0;
+      }
+
+      body.dark .pdf-box-title {
+        color: #60a5fa;
+      }
+
+      body.dark .pdf-note {
+        color: #60a5fa;
+      }
+
+      body.dark .pdf-sol-title {
+        color: #93c5fd;
+      }
+
+      body.dark .pdf-table th {
+        background-color: #1e293b;
+        color: #fff;
+        border-color: #475569;
+      }
+
+      body.dark .pdf-table td {
+        border-color: #475569;
+      }
+
+      body.dark mjx-container path {
+        fill: #e2e8f0 !important;
+        stroke: #e2e8f0 !important;
+      }
+
+      /* =================== 5. MOBILE RESPONSIVE (DƯỚI 960PX) =================== */
+      @media (max-width: 960px) {
+        .container {
+          flex-direction: column;
+          padding: 0;
+          gap: 0;
+        }
+
+        .main-content {
+          padding: 15px;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          z-index: 990;
+          position: sticky;
+          top: 60px;
+          /* Dính ngay dưới header */
+          border-radius: 0;
+          border: none;
+          border-bottom: 1px solid var(--border);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+          background-color: var(--bg-body);
+          padding: 10px 0;
+          margin: 0;
+        }
+
+        .sidebar h3 {
+          display: none;
+        }
+
+        .menu-list {
+          display: flex;
+          gap: 10px;
+          overflow-x: auto;
+          padding: 0 15px;
+          white-space: nowrap;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .menu-list::-webkit-scrollbar {
+          display: none;
+        }
+
+        .menu-link {
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          padding: 8px 16px;
+          font-size: 0.9rem;
+          border-radius: 20px;
+        }
+
+        .menu-link.active {
+          background: var(--primary);
+          color: #fff;
+          border-color: #fff;
+        }
+
+        .chapter-card {
+          scroll-margin-top: 130px;
+          padding: 20px;
+        }
+
+        .cinema-container {
+          flex-direction: column;
+        }
+
+        .video-box {
+          aspect-ratio: 16/9;
+          width: 100%;
+        }
+
+        .playlist-box {
+          height: 300px;
+          border-left: none;
+          border-top: 1px solid #334155;
+        }
+
+        /* ===== SCROLL NGANG RIÊNG CHO MỤC LÝ THUYẾT (#ly-thuyet) ===== */
+        #ly-thuyet {
+          overflow-x: auto;
+          overflow-y: visible;
+
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
+
+          max-width: 100%;
+        }
+
+        #ly-thuyet > * {
+          min-width: max-content;
+        }
+      }
+
+      /* =================== 6. STYLE CHO PHẦN BÀI TẬP (MỚI) =================== */
+
+      /* Cấu trúc Hộp dùng chung: Phải có border-box để mép hộp cân bằng */
+      .box-black,
+      .box-blue {
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        color: var(--text-main);
+        box-sizing: border-box; /* Cân bằng chiều rộng */
+        overflow-x: auto; /* Bật thanh cuộn NGAY TẠI HỘP nếu công thức quá dài */
+      }
+
+      .box-black {
+        border: 2px solid #000;
+        background-color: #f9fafb;
+      }
+      .box-blue {
+        border: 2px solid var(--primary);
+        background-color: #eff6ff;
+      }
+
+      /* Chữ nhấn mạnh */
+      .text-red-bold {
+        color: #dc2626;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .text-example-blue {
+        color: var(--primary);
+        font-weight: bold;
+        font-style: italic;
+        margin-right: 5px;
+      }
+      .pdf-sol-title {
+        color: var(--primary);
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 15px 0;
+        font-size: 1.1rem;
+      }
+
+      /* Cấu hình Danh sách bài tập */
+      .exercise-list {
+        list-style: none;
+        padding-left: 5px;
+        margin-top: 10px;
+      }
+      .exercise-list li {
+        margin-bottom: 12px;
+        line-height: 1.6;
+      }
+
+      /* CẤU TRÚC CUỘN NGANG CHO MATHJAX BỊ TRÀN */
+      .math-scroll {
+        overflow-x: auto;
+        white-space: normal; /* Cho chữ tự xuống dòng */
+        padding-bottom: 5px;
+        margin-top: 5px;
+        margin-left: 0;
+        width: 100%;
+        box-sizing: border-box; /* Ép không tràn lề cha */
+      }
+
+      /* 1. Tiêu đề mục lớn */
+      .pdf-h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        color: var(--text-main);
+        display: inline-block;
+      }
+      .pdf-remark {
+        color: #9f1239;
+        font-weight: bold;
+        font-style: italic;
+        margin-bottom: 15px;
+      }
+
+      /* =================== 7. NÚT TẢI ĐÁP ÁN =================== */
+      .download-container {
+        margin-top: 40px;
+        text-align: center;
+        padding-bottom: 20px;
+        border-top: 1px dashed var(--border);
+        padding-top: 30px;
+      }
+      .btn-download {
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(58, 120, 255, 0.3);
+        text-decoration: none;
+      }
+      .btn-download:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(58, 120, 255, 0.5);
+      }
+      .btn-download:active {
+        transform: translateY(-1px);
+      }
+
+      /* --- DARK MODE TỔNG HỢP CHO BOX VÀ BTN --- */
+      body.dark .box-black {
+        background-color: var(--bg-card);
+        border-color: var(--border);
+      }
+      body.dark .box-blue {
+        background-color: rgba(58, 120, 255, 0.05);
+        border-color: #60a5fa;
+      }
+      body.dark .text-red-bold {
+        color: #fb7185;
+      }
+      body.dark .pdf-remark {
+        color: #fb7185;
+      }
+      body.dark .text-example-blue,
+      body.dark .pdf-sol-title,
+      body.dark .pdf-h1 {
+        color: #60a5fa;
+      }
+      body.dark .download-container {
+        border-top-color: #334155;
+      }
+      body.dark .btn-download {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        color: #fff;
+      }
+      body.dark .btn-download:hover {
+        background: linear-gradient(135deg, #60a5fa, #2563eb);
+        box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+      }
+
+      /* =================== STYLE MENU MỤC LỤC ĐA CẤP =================== */
+      .custom-nav {
+        padding: 15px 0 !important;
+      }
+      .custom-nav .nav-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        padding: 0 20px 15px 20px;
+        margin: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .custom-nav .nav-list {
+        list-style: none;
+        padding: 10px 0 0 0;
+        margin: 0;
+      }
+      .custom-nav .nav-item {
+        margin-bottom: 2px;
+      }
+
+      /* ĐỊNH DẠNG CHUNG CHO MỌI LINK (Chừa lề trái để hiện vạch xanh) */
+      .custom-nav .nav-link,
+      .custom-nav .sub-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #475569;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border-left: 3px solid transparent !important;
+      }
+      .custom-nav .nav-link {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+      }
+      .custom-nav .sub-link {
+        padding: 10px 20px 10px 40px;
+        font-size: 0.9rem;
+      } /* Thụt lề cấp 2 */
+
+      /* MỤC LỤC MẸ CÓ MŨI TÊN (KHÔNG HIỆN VẠCH XANH) */
+      .custom-nav .nav-link.toggle-btn {
+        border-left: none !important;
+      }
+      .custom-nav .nav-link.toggle-btn:hover {
+        background: #f8fafc;
+        color: var(--primary);
+      }
+
+      /* HOVER & ACTIVE (CÓ THANH XANH) */
+      .custom-nav .nav-link:not(.toggle-btn):hover,
+      .custom-nav .sub-link:hover {
+        color: var(--primary);
+        background: #eff6ff;
+      }
+      .custom-nav .nav-link:not(.toggle-btn).active,
+      .custom-nav .sub-link.active {
+        color: var(--primary) !important;
+        background: #eff6ff !important;
+        border-left-color: var(--primary) !important;
+        font-weight: 600;
+      }
+
+      /* MŨI TÊN XOAY (Mặc định chĩa phải, mở ra chĩa xuống) */
+      .custom-nav .arrow-icon {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        transition: transform 0.3s ease !important;
+        transform: rotate(0deg) !important;
+      }
+      .custom-nav .has-dropdown.open > .toggle-btn .arrow-icon {
+        transform: rotate(90deg) !important;
+      }
+
+      .custom-nav .sub-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+      }
+      .custom-nav .nav-item.open > .sub-menu {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      /* TIÊU ĐỀ IN HOA (KHÔNG BẤM ĐƯỢC) */
+      .custom-nav .sub-heading {
+        padding: 15px 20px 5px 20px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--primary);
+        letter-spacing: 0.5px;
+        border-left: none !important;
+        pointer-events: none;
+      }
+
+      /* DARK MODE */
+      body.dark .custom-nav .nav-link {
+        color: #cbd5e1;
+      }
+      body.dark .custom-nav .nav-link.toggle-btn:hover {
+        background: transparent;
+        color: #60a5fa;
+      }
+      body.dark .custom-nav .nav-link:not(.toggle-btn):hover,
+      body.dark .custom-nav .sub-link:hover {
+        color: #60a5fa;
+        background: #1e293b;
+      }
+      body.dark .custom-nav .nav-link:not(.toggle-btn).active,
+      body.dark .custom-nav .sub-link.active {
+        background-color: #1e293b !important;
+        color: #60a5fa !important;
+        border-left-color: #60a5fa !important;
+      }
+      body.dark .custom-nav .sub-heading {
+        color: #60a5fa;
+      }
+      body.dark .custom-nav .sub-link {
+        color: #94a3b8;
+      }
+
+      /* =================== 5. BỘ ĐIỀU KHIỂN GIAO DIỆN MOBILE =================== */
+      @media (max-width: 960px) {
+        .container {
+          flex-direction: column;
+          padding: 0;
+          gap: 0;
+        }
+        .main-content {
+          padding: 15px;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          max-height: none;
+          z-index: 990;
+          position: sticky;
+          top: 60px;
+          border-radius: 0;
+          border: none;
+          background-color: var(--bg-body);
+          padding: 10px;
+          margin: 0;
+          overflow-y: visible;
+        }
+
+        /* Nút "Mục lục" có mũi tên (Mặc định chĩa phải) */
+        .sidebar h3.nav-title {
+          display: flex !important;
+          justify-content: space-between;
+          align-items: center;
+          background: var(--bg-card);
+          padding: 15px 20px;
+          margin: 0;
+          border-radius: 12px;
+          border: 1px solid var(--border);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+          cursor: pointer;
+          color: var(--primary);
+        }
+        .sidebar h3.nav-title::after {
+          content: "\f054"; /* Icon fa-chevron-right */
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          transition: transform 0.3s ease;
+        }
+
+        /* Mở ra thì xoay mũi tên 90 độ (chĩa xuống) */
+        .sidebar.mobile-open h3.nav-title::after {
+          transform: rotate(90deg);
+        }
+
+        /* Khung danh sách mục lục xổ dọc */
+        .custom-nav .nav-list {
+          display: none !important;
+          flex-direction: column !important;
+          background: var(--bg-card);
+          padding: 10px;
+          margin: -5px 0 0 0;
+          border-radius: 0 0 12px 12px;
+          border: 1px solid var(--border);
+          border-top: none;
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.mobile-open .nav-list {
+          display: flex !important;
+        }
+        .sidebar.mobile-open h3.nav-title {
+          border-radius: 12px 12px 0 0;
+        }
+
+        /* Đảm bảo sub-menu xếp dọc */
+        .custom-nav .sub-menu {
+          display: none !important;
+          flex-direction: column;
+        }
+        .custom-nav .has-dropdown.open > .sub-menu {
+          display: flex !important;
+        }
+
+        /* Hiện các tiêu đề và icon */
+        .custom-nav .sub-heading,
+        .custom-nav div.toggle-btn,
+        .custom-nav .arrow-icon {
+          display: flex !important;
+        }
+
+        /* KHÔI PHỤC ĐỊNH DẠNG TRÊN MOBILE: Giữ thụt lề, xóa viền thừa */
+        .custom-nav a.nav-link,
+        .custom-nav a.sub-link {
+          background: transparent !important;
+          border: none !important;
+          border-left: 3px solid transparent !important; /* Dành chỗ cho vạch xanh xuất hiện */
+          border-radius: 0 !important;
+          margin-bottom: 0 !important;
+          padding-top: 12px !important;
+          padding-bottom: 12px !important;
+          padding-right: 15px !important;
+        }
+
+        /* Chỉnh độ thụt lề chuẩn Mobile */
+        .custom-nav a.nav-link {
+          padding-left: 20px !important;
+        }
+        .custom-nav a.sub-link {
+          padding-left: 45px !important;
+        } /* Thụt lề cấp 2 rõ ràng */
+
+        /* Hiển thị THANH DỌC XANH + NỀN XANH NHẠT khi Active trên Mobile */
+        .custom-nav a.nav-link.active,
+        .custom-nav a.sub-link.active {
+          background: #eff6ff !important;
+          color: var(--primary) !important;
+          border-left-color: var(--primary) !important;
+        }
+
+        /* Tiêu đề in hoa chữ xanh */
+        .custom-nav li.sub-heading {
+          padding-top: 15px !important;
+          padding-bottom: 5px !important;
+          padding-right: 15px !important;
+          pointer-events: none;
+          border: none !important;
+          background: transparent !important;
+        }
+
+        /* Dark Mode cho Menu Mobile */
+        body.dark .sidebar {
+          background-color: var(--bg-body);
+        }
+        body.dark .sidebar h3.nav-title {
+          background: #1e293b;
+          border-color: #334155;
+        }
+        body.dark .custom-nav .nav-list {
+          background: #1e293b;
+          border-color: #334155;
+        }
+        body.dark .custom-nav a.nav-link.active,
+        body.dark .custom-nav a.sub-link.active {
+          background: #1e293b !important;
+          color: #60a5fa !important;
+          border-left-color: #60a5fa !important;
+        }
+
+        /* SCROLL NGANG CHO VÙNG CÔNG THỨC TRÀN LỀ */
+        .chapter-card {
+          scroll-margin-top: 130px;
+          padding: 20px;
+        }
+        .cinema-container {
+          flex-direction: column;
+        }
+        .video-box {
+          aspect-ratio: 16/9;
+          width: 100%;
+        }
+        .playlist-box {
+          height: 300px;
+          border-left: none;
+          border-top: 1px solid #334155;
+        }
+        #ly-thuyet {
+          overflow-x: auto;
+          overflow-y: visible;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
+          max-width: 100%;
+        }
+        #ly-thuyet > * {
+          min-width: max-content;
+        }
+      }
+
+      /* =================== MÀN CHE VIDEO SCI-FI =================== */
+      .temp-video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #050b14;
+        /* Nền xanh đen sâu thẳm */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        overflow: hidden;
+        border-right: 1px solid #334155;
+      }
+
+      /* Vẽ lưới Grid Toán học nền sau */
+      .temp-video-overlay::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background-image:
+          linear-gradient(rgba(58, 120, 255, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(58, 120, 255, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 0;
+        animation: panGrid 20s linear infinite;
+      }
+
+      /* Quả cầu phát sáng lơ lửng */
+      .temp-video-overlay::after {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: var(--primary);
+        filter: blur(90px);
+        opacity: 0.4;
+        z-index: 0;
+        animation: floatOrb 6s infinite alternate ease-in-out;
+      }
+
+      /* Khung kính mờ Glassmorphism */
+      .tv-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        padding: 35px 50px;
+        border-radius: 20px;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(58, 120, 255, 0.05);
+      }
+
+      /* Vòng xoay quanh Icon */
+      .tv-icon-wrapper {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+      }
+
+      .tv-icon-wrapper i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        text-shadow: 0 0 15px var(--primary);
+      }
+
+      .tv-spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px dashed rgba(96, 165, 250, 0.6);
+        border-radius: 50%;
+        animation: spinDash 12s linear infinite;
+      }
+
+      /* Định dạng chữ */
+      .tv-content h4 {
+        margin: 0 0 12px;
+        color: #f8fafc;
+        font-size: 1.3rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 800;
+      }
+
+      .tv-content p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 1rem;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      /* Animations */
+      @keyframes panGrid {
+        0% {
+          transform: translate(0, 0);
+        }
+
+        100% {
+          transform: translate(-40px, -40px);
+        }
+      }
+
+      @keyframes floatOrb {
+        0% {
+          transform: translate(-50px, -30px) scale(0.8);
+        }
+
+        100% {
+          transform: translate(50px, 30px) scale(1.2);
+        }
+      }
+
+      @keyframes spinDash {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <div id="topbar">
+      <div class="topbar-left">
+        <a
+          href="../knowledge_info.html"
+          class="topbar-icon"
+          title="Quay lại thư viện"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <a href="../index.html" class="topbar-icon" title="Về trang chủ">
+          <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="../tltk.html" class="topbar-icon" title="Tài liệu tham khảo">
+          <i class="fa-solid fa-file-lines"></i>
+        </a>
+      </div>
+
+      <div class="brand">Vectoria Knowledge</div>
+
+      <div class="topbar-right" style="margin-right: 25px">
+        <div class="settings-container">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <hr
+              style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0;
+                opacity: 0.5;
+              "
+            />
+
+            <a
+              href="../hdsd.html"
+              class="setting-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span
+                ><i class="fa-solid fa-book-open-reader"></i> Hướng dẫn sử
+                dụng</span
+              >
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+            <a
+              href="../contact.html"
+              class="setting-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <aside class="sidebar custom-nav">
+        <h3 class="nav-title"><i class="fa-solid fa-list-ul"></i> Mục lục</h3>
+        <ul class="nav-list">
+          <li class="nav-item has-dropdown open">
+            <div class="nav-link toggle-btn">
+              <a
+                href="#ly-thuyet"
+                style="text-decoration: none; color: inherit; font-weight: 700"
+                >Lý thuyết</a
+              >
+              <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </div>
+            <ul class="sub-menu">
+              <li class="nav-item has-dropdown open">
+                <ul class="sub-menu">
+                  <li
+                    style="
+                      padding: 15px 20px 5px 20px;
+                      font-size: 0.8rem;
+                      font-weight: 800;
+                      text-transform: uppercase;
+                      color: var(--primary);
+                      letter-spacing: 0.5px;
+                    "
+                  >
+                    Hạng của hệ vector
+                  </li>
+                  <li>
+                    <a
+                      href="#hang-1"
+                      class="sub-link active"
+                      style="padding-left: 55px; font-size: 0.85rem"
+                      >1. Hệ con độc lập tuyến tính tối đại</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#hang-2"
+                      class="sub-link"
+                      style="padding-left: 55px; font-size: 0.85rem"
+                      >2. Hạng của hệ vector</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li
+                style="
+                  padding: 15px 20px 5px 20px;
+                  font-size: 0.8rem;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  color: var(--primary);
+                  letter-spacing: 0.5px;
+                "
+              >
+                Hệ sinh
+              </li>
+              <li>
+                <a
+                  href="#sinh-1"
+                  class="sub-link"
+                  style="padding-left: 55px; font-size: 0.85rem"
+                  >1. Không gian con sinh bởi một tập hợp</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#sinh-2"
+                  class="sub-link"
+                  style="padding-left: 55px; font-size: 0.85rem"
+                  >2. Hệ sinh của không gian vector</a
+                >
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a
+              href="#coming-soon"
+              class="nav-link section-link"
+              style="font-weight: 700"
+              >Video trực quan</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              href="#bai-tap"
+              class="nav-link section-link"
+              style="font-weight: 700"
+              >Bài tập</a
+            >
+          </li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <div class="chapter-card" id="ly-thuyet">
+          <script>
+            window.MathJax = {
+              tex: {
+                inlineMath: [
+                  ["\\(", "\\)"],
+                  ["$", "$"],
+                ],
+                displayMath: [["\\[", "\\]"]],
+                processEscapes: true,
+              },
+              // Thêm cấu hình output để xử lý xuống dòng tốt hơn
+              chtml: {
+                scale: 0.95, // Thu nhỏ xíu để đỡ tràn
+                displayAlign: "center",
+              },
+              svg: {
+                fontCache: "global",
+                scale: 0.95,
+              },
+            };
+          </script>
+          <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+          ></script>
+
+          <style>
+            /* === LIGHT MODE (Mặc định) === */
+            #ly-thuyet {
+              font-family: "Inter", sans-serif;
+              color: #000;
+              font-size: 1.15rem;
+              line-height: 1.6;
+            }
+
+            /* Tiêu đề mục */
+            .pdf-h2 {
+              font-size: 1.5rem;
+              font-weight: bold;
+              margin: 30px 0 15px 0;
+              color: #000;
+            }
+
+            .pdf-h3 {
+              font-size: 1.25rem;
+              font-weight: bold;
+              margin: 25px 0 10px 0;
+              color: #000;
+            }
+
+            /* Chữ Nhận xét (Chuyển sang Xanh chủ đạo) */
+            .pdf-note {
+              color: #3a78ff;
+              font-weight: bold;
+              font-style: italic;
+            }
+
+            /* Khung Bài Toán (ĐÃ SỬA: Viền Xanh - Nền Xanh Nhạt) */
+            .pdf-box {
+              border: 2px solid #3a78ff;
+              /* Viền xanh */
+              background-color: #eff6ff;
+              /* Nền xanh rất nhạt */
+              padding: 15px;
+              border-radius: 8px;
+              margin: 20px 0;
+              color: #000;
+            }
+
+            .pdf-box-title {
+              color: #3a78ff;
+              font-weight: bold;
+            }
+
+            /* Chữ Lời giải */
+            .pdf-sol-title {
+              color: #3a78ff;
+              font-weight: bold;
+              text-align: center;
+              display: block;
+              margin: 15px 0;
+              font-size: 1.1rem;
+              text-decoration: underline;
+            }
+
+            /* Bảng Tiên đề */
+            .pdf-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 15px 0;
+              font-size: 1rem;
+            }
+
+            .pdf-table th,
+            .pdf-table td {
+              border: 1px solid #666;
+              padding: 8px 10px;
+              vertical-align: top;
+            }
+
+            .pdf-table th {
+              background-color: #f8fafc;
+              text-align: center;
+              font-weight: bold;
+              color: #000;
+            }
+
+            /* Danh sách */
+            .pdf-list li {
+              margin-bottom: 6px;
+            }
+
+            .math-center {
+              text-align: center;
+              margin: 8px 0;
+            }
+
+            /* === DARK MODE (Tương phản cao) === */
+            body.dark #ly-thuyet {
+              color: #e2e8f0;
+            }
+
+            /* Chữ chính màu trắng xám */
+            body.dark .pdf-h2,
+            body.dark .pdf-h3 {
+              color: #fff;
+            }
+
+            /* Tiêu đề trắng tinh */
+
+            /* Dark mode: Khung bài toán */
+            body.dark .pdf-box {
+              background-color: rgba(58, 120, 255, 0.1);
+              /* Nền xanh trong suốt */
+              border-color: #60a5fa;
+              /* Viền xanh sáng */
+              color: #e2e8f0;
+            }
+
+            body.dark .pdf-box-title {
+              color: #60a5fa;
+            }
+
+            body.dark .pdf-note {
+              color: #60a5fa;
+            }
+
+            body.dark .pdf-sol-title {
+              color: #93c5fd;
+            }
+
+            /* Dark mode: Bảng */
+            body.dark .pdf-table th {
+              background-color: #1e293b;
+              color: #fff;
+              border-color: #475569;
+            }
+
+            body.dark .pdf-table td {
+              border-color: #475569;
+            }
+
+            /* [QUAN TRỌNG] Ép màu MathJax sang trắng trong Dark Mode */
+            body.dark mjx-container path {
+              fill: #e2e8f0 !important;
+              stroke: #e2e8f0 !important;
+            }
+
+            .pdf-main-title {
+              color: var(--primary);
+              font-size: 1.5rem;
+              font-weight: bold;
+              margin-top: 40px;
+              margin-bottom: 30px;
+              padding-bottom: 8px;
+              /* Khoảng cách từ chữ xuống đường gạch */
+              border-bottom: 3px solid var(--primary);
+              /* Đường kẻ xanh */
+              width: fit-content;
+              /* Tuyệt chiêu ôm khít chữ giống vector_pho_thong */
+            }
+
+            /* Đổi màu sáng hơn khi ở Dark Mode */
+            body.dark .pdf-main-title {
+              color: #60a5fa;
+              border-bottom-color: #60a5fa;
+            }
+          </style>
+          <h2 class="section-title" style="margin-bottom: 20px">
+            <i class="fa-solid fa-book-open"></i> Lý thuyết
+          </h2>
+
+          <h1 class="pdf-main-title" id="hang-he-vector">Hạng của hệ vector</h1>
+
+          <div class="pdf-h2" id="hang-1">
+            1 &nbsp; Hệ con độc lập tuyến tính tối đại
+          </div>
+          <p>
+            Cho \( S \) là một tập hợp các vector thuộc không gian vector \( V
+            \). Một hệ con \( W = \{v_1, v_2, \dots, v_k\} \subseteq S \) được
+            xác định là <strong>hệ con độc lập tuyến tính tối đại</strong> của
+            \( S \) nếu thỏa mãn đồng thời hai điều kiện:
+          </p>
+          <ul
+            class="pdf-list"
+            style="list-style-type: none; padding-left: 20px"
+          >
+            <li>i) \( W \) độc lập tuyến tính</li>
+            <li style="margin-top: 10px">
+              ii) Khi bổ sung bất kỳ vector \( u \) nào thuộc \( S \) vào \( W
+              \), hệ mới \( W \cup \{u\} \) trở thành hệ PTTT.
+            </li>
+          </ul>
+
+          <div class="pdf-h2" id="hang-2">2 &nbsp; Hạng của hệ vector</div>
+          <p>
+            Số lượng các vector thuộc một hệ con độc lập tuyến tính tối đại của
+            hệ \( S \) được gọi là <strong>hạng</strong> của \( S \), ký hiệu là
+            \( r(S) \) hoặc \( \text{rank}(S) \).
+          </p>
+
+          <div class="box-black">
+            <p>
+              <span class="text-red-bold" style="font-style: italic"
+                >Ví dụ:</span
+              >
+              Hạng của họ vector \( M \) bằng 5 hay \( r(M) = 5 \), có nghĩa là
+              tồn tại 5 vector của \( M \) tạo thành tập hợp ĐLTT và mọi tập con
+              của \( M \) chứa nhiều hơn 5 vector đều là tập PTTT. Từ đó, ta có
+              các nhận xét sau:
+            </p>
+            <ul
+              class="pdf-list"
+              style="
+                list-style-type: none;
+                padding-left: 20px;
+                margin-top: 15px;
+              "
+            >
+              <li>
+                i) Nếu ta chọn nhiều hơn 5 vector của \( M \), thì ta thu được
+                một họ PTTT
+              </li>
+              <li style="margin-top: 10px">
+                ii) Nếu ta chọn đúng 5 vector của \( M \), thì tập hợp thu được
+                có thể ĐLTT hoặc có thể PTTT.
+              </li>
+              <li style="margin-top: 10px">
+                iii) Trong \( M \) chắc chắn phải tồn tại một tập hợp con chứa 5
+                vector ĐLTT.
+              </li>
+            </ul>
+          </div>
+
+          <h1 class="pdf-main-title" id="he-sinh">Hệ sinh</h1>
+
+          <div class="pdf-h2" id="sinh-1">
+            1 &nbsp; Không gian con sinh bởi một tập hợp
+          </div>
+          <p>
+            Cho \( S = \{v_1, v_2, \dots, v_k\} \) là một tập hợp các vector
+            trong không gian vector \( V \). Không gian con sinh bởi \( S \) hay
+            bao tuyến tính của \( S \), ký hiệu là \( \text{span}(S) \) hoặc \(
+            \text{span}\{v_1, \dots, v_k\} \), là tập hợp tất cả các tổ hợp
+            tuyến tính của các vector trong \( S \).
+          </p>
+          <div class="math-center math-scroll" style="margin: 20px 0">
+            \( \text{span}(S) = \{c_1v_1 + c_2v_2 + \dots + c_kv_k \mid c_1,
+            c_2, \dots, c_k \in \mathbb{R}\} \)
+          </div>
+          <p>
+            <span class="text-red-bold" style="font-style: italic"
+              >Quy ước:</span
+            >
+            Nếu \( S = \varnothing \) thì \( \text{span}(S) = \{\mathbf{0}\} \)
+            và \( \text{span}(S) \) là không gian con nhỏ nhất của \( V \) chứa
+            \( S \).
+          </p>
+
+          <div class="pdf-h2" id="sinh-2">
+            2 &nbsp; Hệ sinh của không gian vector
+          </div>
+          <p>
+            Cho \( V \) là một không gian vector và \( S = \{u_1, u_2, \dots,
+            u_n\} \) là một họ vector thuộc \( V \). Nếu mọi \( u \in V \) đều
+            có biểu diễn dưới dạng tổ hợp tuyến tính:
+          </p>
+          <div class="math-center math-scroll" style="margin: 15px 0">
+            \( u = c_1u_1 + c_2u_2 + \dots + c_nu_n \)
+          </div>
+          <p>
+            thì ta nói họ \( S \) sinh ra \( V \) hay \( S \) là một
+            <strong>hệ sinh</strong> của \( V \). Ký hiệu: \( V = \text{span}(S)
+            \).
+          </p>
+          <p style="margin-top: 15px">
+            Nếu không gian vector \( V \) sở hữu ít nhất một hệ sinh hữu hạn thì
+            \( V \) được gọi là <strong>không gian hữu hạn sinh</strong>.
+          </p>
+
+          <p>
+            <span class="pdf-note">Nhận xét:</span> Việc xác định một không gian
+            là hữu hạn sinh rất quan trọng, vì nó cho phép chúng ta nghiên cứu
+            toàn bộ cấu trúc không gian vô hạn chỉ thông qua một tập hợp hữu hạn
+            các vector đại diện.
+          </p>
+
+          <div class="box-black" style="margin-top: 25px">
+            <p>
+              <span class="text-red-bold" style="font-style: italic"
+                >Ví dụ 1:</span
+              >
+              Trong không gian vector \( \mathbb{R}^2 \), xét hệ vector \( E =
+              \{e_1 = (1, 0); e_2 = (0, 1)\} \). Chứng minh rằng \( E \) là một
+              hệ sinh của \( \mathbb{R}^2 \).
+            </p>
+            <p style="margin-top: 15px">
+              <strong><em>Lời giải:</em></strong> Thật vậy, với mọi vector \( x
+              = (a, b) \in \mathbb{R}^2 \), ta luôn có:
+            </p>
+            <div class="math-center math-scroll" style="margin: 15px 0">
+              \( x = (a, b) = a(1, 0) + b(0, 1) = ae_1 + be_2 \)
+            </div>
+            <p>
+              Vì \( x \) luôn biểu diễn được dưới dạng tổ hợp tuyến tính của \(
+              e_1, e_2 \) nên \( E \) là hệ sinh của \( \mathbb{R}^2 \).
+            </p>
+          </div>
+
+          <div class="box-black">
+            <p>
+              <span class="text-red-bold" style="font-style: italic"
+                >Ví dụ 2:</span
+              >
+              Trong không gian vector \( \mathbb{R}^2 \), xét hệ vector \( E' =
+              \{e_1 = (1, 0); e_2 = (0, 1); e_3 = (2, 5)\} \). Chứng minh rằng
+              \( E' \) là một hệ sinh của \( \mathbb{R}^2 \).
+            </p>
+            <p style="margin-top: 15px">
+              <strong><em>Lời giải:</em></strong> Thật vậy, với mọi \( x = (a,
+              b) \in \mathbb{R}^2 \), ta có thể biểu diễn:
+            </p>
+            <div class="math-center math-scroll" style="margin: 15px 0">
+              \( x = (a, b) = a(1, 0) + b(0, 1) + 0(2, 5) = ae_1 + be_2 + 0e_3
+              \)
+            </div>
+            <p>Do đó, \( E' \) là một hệ sinh của \( \mathbb{R}^2 \).</p>
+          </div>
+
+          <p>
+            <span class="pdf-note">Nhận xét:</span> Ở ví dụ 2, một hệ sinh có
+            thể chứa các vector "dư thừa" (như \( e_3 \)) mà việc loại bỏ chúng
+            vẫn không làm thay đổi không gian được sinh ra. Điều này đặt ra một
+            câu hỏi quan trọng:
+          </p>
+
+          <p
+            style="
+              font-style: italic;
+              text-align: center;
+              margin: 25px 40px;
+              color: var(--text-sub);
+            "
+          >
+            "Làm thế nào để tìm được một hệ sinh <strong>tiết kiệm</strong> nhất
+            (chứa ít vector nhất) mà vẫn bao phủ được toàn bộ không gian?"
+          </p>
+
+          <p>
+            Hệ sinh "vừa đủ" đó chính là một hệ sinh đồng thời thỏa mãn sự
+            <strong>độc lập tuyến tính</strong>. Đây là cầu nối dẫn dắt chúng ta
+            đến với khái niệm quan trọng nhất của chương này là
+            <strong>cơ sở của không gian vector</strong>.
+          </p>
+
+          <script>
+            if (window.MathJax && window.MathJax.typesetPromise) {
+              window.MathJax.typesetPromise([
+                document.getElementById("ly-thuyet"),
+              ])
+                .then(() => {
+                  console.log("MathJax rendered successfully!");
+                })
+                .catch((err) => {
+                  console.error("MathJax error:", err);
+                });
+            }
+          </script>
+        </div>
+
+        <div class="video-box" id="coming-soon">
+          <div class="temp-video-overlay">
+            <div class="tv-content">
+              <div class="tv-icon-wrapper">
+                <div class="tv-spinner"></div>
+                <i class="fa-solid fa-hourglass-half"></i>
+              </div>
+              <h4>Sắp ra mắt</h4>
+              <p>
+                Video trực quan đang trong quá trình biên tập.<br />Hệ thống sẽ
+                cập nhật trong thời gian tới.
+              </p>
+            </div>
+          </div>
+
+          <div id="youtube-player"></div>
+        </div>
+
+        <div class="chapter-card" id="bai-tap">
+          <h2 class="section-title">
+            <i class="fa-solid fa-pen-to-square"></i> Bài tập
+          </h2>
+
+          <div class="box-blue">
+            <span class="text-red-bold">Bài 1.</span> Tìm hạng của các hệ véc tơ
+            sau:
+
+            <div class="math-scroll" style="margin-top: 10px">
+              <ul class="exercise-list">
+                <li>
+                  a) \( u_1 = (2, 3, 5, 7), u_2 = (4, 1, 3, 2), u_3 = (8, 7, 13,
+                  16), u_4 = (6, 4, 8, 9) \).
+                </li>
+                <li>
+                  b) \( u_1 = (1, 1, 5, 7), u_2 = (6, 2, 2, 2), u_3 = (13, 1, 8,
+                  17), u_4 = (0, 1, 1, 2) \).
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <span class="text-red-bold">Bài 2.</span> Tìm \( m \) để hệ sau có
+            hạng bằng 2:
+
+            <div class="math-scroll" style="margin-top: 10px">
+              <ul class="exercise-list">
+                <li>
+                  a) \( u = (1, 3, 1), v = (1, m + 3, 3), w = (1, m + 6, m + 3)
+                  \).
+                </li>
+                <li>
+                  b) \( u = (m, 1, 0, 2), v = (m, m + 1, -1, 2), w = (2m, m + 2,
+                  -1, 5) \).
+                </li>
+                <li>c) \( u = (m, 1, 1), v = (1, m, 1), w = (1, 1, m) \).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <span class="text-red-bold">Bài 3.</span> Tìm hạng và hệ con độc lập
+            tuyến tính tối đại của các hệ sau:
+
+            <div class="math-scroll" style="margin-top: 10px">
+              <ul class="exercise-list">
+                <li>
+                  a) \( \alpha_1 = (1, 0, -1, 0), \alpha_2 = (1, 2, 1, 1),
+                  \alpha_3 = (3, 2, 3, 2), \alpha_4 = (1, 1, 2, 1) \).
+                </li>
+                <li>
+                  b) \( \alpha_1 = (1, 0, 0, -1), \alpha_2 = (2, 1, 1, 0),
+                  \alpha_3 = (1, 1, 1, 1), \alpha_4 = (1, 2, 3, 4), \alpha_5 =
+                  (0, 1, 2, 3) \).
+                </li>
+                <li>
+                  c) \( \alpha_1 = (1, 2, 0, 1), \alpha_2 = (1, 1, 1, 0),
+                  \alpha_3 = (1, 0, 1, 0), \alpha_4 = (1, 3, 0, 1) \).
+                </li>
+                <li>
+                  d) \( \alpha_1 = (1, 1, 1, 1), \alpha_2 = (1, 3, 1, 3),
+                  \alpha_3 = (1, 2, 0, 2), \alpha_4 = (1, 2, 1, 2), \alpha_5 =
+                  (3, 1, 3, 1) \).
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <p style="margin: 0; line-height: 1.6">
+              <span class="text-red-bold">Bài 4.</span> Trong không gian \(
+              \mathcal{P}_2[x] \), cho tập hợp con \( S = \{x^2 + 2x - 1; 2x^2 +
+              x - 3; 5x^2 + x - 8; 4x^2 + mx + 1\} \). Tìm tất cả các giá trị
+              thực của \( m \) để \( S \) là một hệ sinh của \( \mathcal{P}_2[x]
+              \).
+            </p>
+          </div>
+
+          <div class="box-blue">
+            <p style="margin: 0; line-height: 1.6">
+              <span class="text-red-bold">Bài 5.</span> Trong \( \mathbb{R}^3
+              \), cho hai tập hợp con \( S_1 = \{(1; 2; -1), (2; 5; 1), (3; 7;
+              m)\} \) và \( S_2 = \{(1; 3; 2), (5; 12; 1), (4; 7; m)\} \). Tìm
+              \( m \) để \( S_1 \) và \( S_2 \) sinh ra cùng một không gian
+              vector.
+            </p>
+          </div>
+
+          <div class="box-blue">
+            <span class="text-red-bold">Bài 6.</span> Trong không gian vector \(
+            \mathcal{M}_2[\mathbb{R}] \), cho hệ vector sau:
+
+            <div class="math-center math-scroll" style="margin: 15px 0">
+              \( S = \left\{ \begin{pmatrix} 1 & 2 \\ -1 & 1 \end{pmatrix} ;
+              \begin{pmatrix} 2 & 4 \\ -4 & 5 \end{pmatrix} ; \begin{pmatrix} 3
+              & 2 \\ -5 & 2 \end{pmatrix} ; \begin{pmatrix} 5 & 3 \\ 1 & m
+              \end{pmatrix} \right\} \)
+            </div>
+
+            <p style="margin: 0; line-height: 1.6">
+              Tìm tất cả các số thực \( m \) để \( S \) không là hệ sinh của \(
+              \mathcal{M}_2[\mathbb{R}] \).
+            </p>
+          </div>
+
+          <div class="download-container">
+            <p
+              style="
+                margin-bottom: 15px;
+                color: var(--text-sub);
+                font-size: 0.95rem;
+              "
+            >
+              <i class="fa-solid fa-circle-info"></i> Bạn đã hoàn thành các bài
+              tập? Tải lời giải về để đối chiếu nhé!
+            </p>
+
+            <a
+              href="https://drive.google.com/uc?export=download&id=1jLKpLAmjPvmusQzUuR2-HCYPKuhBSM41"
+              target="_blank"
+              class="btn-download"
+            >
+              <i class="fa-solid fa-file-arrow-down"></i> Lời giải tham khảo
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+    <footer class="vectoria-footer distraction-element">
+      <div class="footer-container">
+        <div class="brand-col">
+          <div
+            class="partner-logo"
+            style="display: flex; align-items: center; gap: 10px"
+          >
+            <img src="../assets/images/logoMoi.png" alt="Logo Nhóm/Trường" />
+            <img
+              src="../assets/images/logoChu.png"
+              id="textLogo"
+              alt="Logo Chữ Vectoria"
+              style="height: 35px; width: auto"
+            />
+          </div>
+          <p>
+            Vectoria — Vương quốc của những Vector — được kiến tạo để thay đổi
+            hoàn toàn cách chúng ta nhìn nhận về vector. Không còn là những khái
+            niệm khô khan, tại nơi đây, mỗi vector đều mang một hình hài, một
+            hướng đi và sinh khí riêng. Chúng tôi khao khát trao cho bạn một góc
+            nhìn thấu thị để toàn bộ vẻ đẹp trừu tượng của không gian vector
+            được thu trọn vào tầm mắt.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              <a href="mailto:support@vectoria.io.vn">support@vectoria.io.vn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="margin: 0">
+          © 2026 Vectoria. Học và trực quan hóa Không gian vector.
+        </p>
+      </div>
+    </footer>
+    <script>
+      // 1. THEME HANDLING & ANIMATION
+      // Theme is auto-initialized by theme-manager.js script
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const settingsBtn = document.getElementById("btnSettings");
+        const settingsDropdown = document.getElementById("settingsDropdown");
+        const themeToggle = document.getElementById("themeToggle");
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+        const transitionIcons = document.querySelector(
+          ".theme-transition-icons",
+        );
+
+        // Set initial checkbox state from ThemeManager
+        themeToggle.checked = ThemeManager.isDarkMode();
+
+        settingsBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          settingsDropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (
+            !settingsDropdown.contains(e.target) &&
+            !settingsBtn.contains(e.target)
+          ) {
+            settingsDropdown.classList.remove("show");
+          }
+        });
+
+        themeToggle.addEventListener("change", () => {
+          const isDark = ThemeManager.toggle();
+          themeToggle.checked = isDark;
+          ThemeManager.applyTheme(isDark);
+
+          // Animation Logic
+          if (transitionIcons) {
+            transitionIcons.classList.remove("animate-rise-fade");
+            void transitionIcons.offsetWidth; // Trigger reflow
+
+            if (isDark) {
+              sunIcon.style.display = "none";
+              moonIcon.style.display = "block";
+            } else {
+              sunIcon.style.display = "block";
+              moonIcon.style.display = "none";
+            }
+            transitionIcons.classList.add("animate-rise-fade");
+          }
+        });
+
+        // Listen for theme changes from other tabs
+        window.addEventListener("storage", (e) => {
+          if (e.key === ThemeManager.STORAGE_KEY) {
+            const isDark = ThemeManager.isDarkMode();
+            themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+          }
+        });
+      });
+
+      // 2. YOUTUBE API
+      var player;
+      function onYouTubeIframeAPIReady() {
+        var originUrl = window.location.origin;
+        player = new YT.Player("youtube-player", {
+          height: "100%",
+          width: "100%",
+          videoId: "woM6wsymvsc",
+          playerVars: { playsinline: 1, rel: 0, origin: originUrl },
+          events: { onReady: onPlayerReady, onError: onPlayerError },
+        });
+      }
+      function onPlayerReady(event) {
+        console.log("Video ready");
+      }
+      function onPlayerError(event) {
+        console.error("Lỗi video: " + event.data);
+        document.querySelector(".video-box").innerHTML =
+          '<div style="color:white;text-align:center;padding-top:20%;">Lỗi tải video (Mã: ' +
+          event.data +
+          ")</div>";
+      }
+
+      var tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      function seekTo(seconds) {
+        if (player && player.seekTo) {
+          player.seekTo(seconds, true);
+          player.playVideo();
+        }
+      }
+      function setActive(el) {
+        document
+          .querySelectorAll(".chapter-item")
+          .forEach((i) => i.classList.remove("playing"));
+        el.classList.add("playing");
+      }
+    </script>
+    <script>
+      function bootVectoriaMenu() {
+        if (window.menuInitialized) return;
+        window.menuInitialized = true;
+
+        console.log("Menu System: Booting Vector Space...");
+        const topbarHeight =
+          document.getElementById("topbar")?.offsetHeight || 60;
+        let isClicking = false;
+
+        // AUTO-FIX: Tìm các icon fa-chevron-down sửa thành fa-chevron-right để CSS xoay chuẩn
+        document.querySelectorAll(".custom-nav .arrow-icon").forEach((icon) => {
+          if (icon.classList.contains("fa-chevron-down")) {
+            icon.classList.remove("fa-chevron-down");
+            icon.classList.add("fa-chevron-right");
+          }
+        });
+
+        // 1. NÚT "MỤC LỤC" THU GỌN TRÊN MOBILE
+        const sidebar = document.querySelector(".sidebar");
+        const navTitle = document.querySelector(".sidebar h3.nav-title");
+        if (navTitle) {
+          navTitle.addEventListener("click", () => {
+            sidebar.classList.toggle("mobile-open");
+          });
+        }
+
+        // 2. ĐÓNG MỞ CÁC DÒNG CÓ MŨI TÊN
+        document.querySelectorAll(".custom-nav .toggle-btn").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const parentLi = this.closest(".has-dropdown");
+            if (parentLi) {
+              isClicking = true;
+              parentLi.classList.toggle("open");
+              setTimeout(() => {
+                isClicking = false;
+              }, 800);
+            }
+          });
+        });
+
+        // 3. CUỘN TRANG CÁC MỤC CON
+        const menuLinks = document.querySelectorAll('.custom-nav a[href^="#"]');
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("href");
+            if (!targetId || targetId === "#") return;
+
+            // Cấm cuộn nếu lỡ bấm dính mũi tên hoặc chữ in hoa
+            if (
+              this.closest(".toggle-btn") ||
+              this.classList.contains("sub-heading") ||
+              (this.hasAttribute("style") &&
+                this.getAttribute("style").includes("uppercase"))
+            ) {
+              e.preventDefault();
+              return;
+            }
+
+            e.preventDefault();
+            isClicking = true;
+
+            menuLinks.forEach((el) => el.classList.remove("active"));
+            this.classList.add("active");
+
+            // CƠ CHẾ MOBILE: Tự động khép Mục Lục lại khi đã chọn xong bài
+            if (window.innerWidth <= 960 && sidebar) {
+              sidebar.classList.remove("mobile-open");
+            }
+
+            // ĐỢI 150MS CHO MENU KHÉP LẠI XONG RỒI MỚI ĐO KHOẢNG CÁCH CUỘN
+            setTimeout(
+              () => {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                  // Trừ hao khoảng cách an toàn
+                  const offset =
+                    window.innerWidth <= 960 ? 140 : topbarHeight + 20;
+                  const executeScroll = () => {
+                    const y =
+                      targetElement.getBoundingClientRect().top +
+                      window.pageYOffset -
+                      offset;
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                    setTimeout(() => {
+                      isClicking = false;
+                    }, 800);
+                  };
+
+                  if (
+                    window.MathJax &&
+                    MathJax.startup &&
+                    MathJax.startup.promise
+                  ) {
+                    MathJax.startup.promise.then(() =>
+                      requestAnimationFrame(executeScroll),
+                    );
+                  } else {
+                    executeScroll();
+                  }
+                }
+              },
+              window.innerWidth <= 960 ? 150 : 0,
+            ); // Mấu chốt giải quyết lỗi cuộn bị che là đây!
+          });
+        });
+
+        // 4. AUTO SÁNG MỤC KHI LĂN CHUỘT DỌC BÀI
+        let isScrolling;
+        window.onscroll = () => {
+          window.clearTimeout(isScrolling);
+          isScrolling = setTimeout(() => {
+            if (isClicking) return;
+
+            const sections = document.querySelectorAll(
+              ".chapter-card, .pdf-h1[id], .pdf-h2[id], .pdf-h3[id], #bai-tap, .video-box[id]",
+            );
+            let currentId = "";
+            const offsetSpy =
+              window.innerWidth <= 960 ? 150 : topbarHeight + 50;
+
+            sections.forEach((section) => {
+              if (
+                window.pageYOffset >=
+                section.getBoundingClientRect().top +
+                  window.pageYOffset -
+                  offsetSpy -
+                  50
+              ) {
+                currentId = section.getAttribute("id");
+              }
+            });
+
+            if (currentId) {
+              menuLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === `#${currentId}`) {
+                  const inToggleBtn = link.closest(".toggle-btn");
+                  const inGroupLabel =
+                    link.closest("li.sub-heading") ||
+                    (link.hasAttribute("style") &&
+                      link.getAttribute("style").includes("uppercase"));
+
+                  if (!inToggleBtn && !inGroupLabel) {
+                    link.classList.add("active");
+
+                    // PC tự động mở mục cha nếu đang khép
+                    if (window.innerWidth > 960) {
+                      let parentDropdown = link.closest(".has-dropdown");
+                      while (parentDropdown) {
+                        parentDropdown.classList.add("open");
+                        parentDropdown =
+                          parentDropdown.parentElement.closest(".has-dropdown");
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          }, 50);
+        };
+      }
+
+      bootVectoriaMenu();
+      setTimeout(bootVectoriaMenu, 100);
+      setTimeout(bootVectoriaMenu, 500);
+    </script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="../js/utils/live-collab.js"></script>
+  </body>
+</html>

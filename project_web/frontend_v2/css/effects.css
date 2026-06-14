@@ -1,0 +1,109 @@
+/* =================== VIỀN ĐẶC BIỆT =================== */
+
+/* Gradient viền cố định nhiều màu */
+.card.gradient,
+.vec-item.gradient {
+  border: 2px solid transparent !important;
+  border-radius: var(--r-lg);
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(135deg, var(--accent), #8b5cf6, #10b981, #f59e0b) border-box;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Neon Glow (phát sáng) */
+.card.glow,
+.vec-item.glow {
+  border: 2px solid var(--accent) !important;
+  border-radius: var(--r-lg);
+  background: var(--card);
+  box-shadow:
+    0 0 6px var(--accent),
+    0 0 14px var(--accent),
+    0 0 24px color-mix(in oklab, var(--accent) 70%, transparent);
+}
+
+/* Depth (viền nổi khối 3D) */
+.card.depth,
+.vec-item.depth {
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-lg);
+  background: var(--card);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover Gradient (bình thường viền đơn giản, hover mới có gradient) */
+.card.hover-gradient,
+.vec-item.hover-gradient {
+  position: relative;
+  border: 2px solid var(--border) !important;
+  border-radius: var(--r-lg);
+  background: var(--card);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.card.hover-gradient::before,
+.vec-item.hover-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), #8b5cf6, #10b981, #f59e0b);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.card.hover-gradient:hover::before,
+.vec-item.hover-gradient:hover::before {
+  opacity: 1;
+}
+
+/* =================== APP NUDGE (guidance) =================== */
+@keyframes appNudgeGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    transform: translateY(0);
+  }
+  25% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+  55% {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--accent) 14%, transparent);
+    transform: translateY(-1px);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes appNudgeInput {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  30% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 18%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.app-nudge-card {
+  outline: 2px solid color-mix(in oklab, var(--accent) 70%, transparent);
+  box-shadow:
+    0 0 0 6px color-mix(in oklab, var(--accent) 18%, transparent),
+    var(--shadow-md);
+  transition:
+    box-shadow 220ms ease,
+    outline-color 220ms ease;
+}
+
+.app-nudge-input {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 18%, transparent) !important;
+}

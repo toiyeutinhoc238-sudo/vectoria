@@ -1,0 +1,2491 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Không gian vector - Vectoria Knowledge</title>
+
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="../js/utils/theme-manager.js"></script>
+
+    <style>
+      /* =================== 1. CẤU HÌNH CƠ BẢN =================== */
+      :root {
+        --primary: #3a78ff;
+        --accent: #3a78ff;
+        --bg-body: #f1f5f9;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-sub: #64748b;
+        --border: #e2e8f0;
+        --sidebar-width: 250px;
+        --topbar-h: 60px;
+        --fg: #0f1117;
+        --bg: #ffffff;
+        --card: #ffffff;
+        --muted: #6b6f76;
+        --shadow-lg: 0 10px 30px rgba(16, 24, 40, 0.1);
+        --hover-bg: rgba(0, 0, 0, 0.05);
+      }
+
+      body.dark {
+        --bg-body: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --border: #334155;
+        --fg: #e9e9ef;
+        --bg: #0f1116;
+        --card: #1e293b;
+        --muted: #a8acb4;
+        --shadow-lg: 0 16px 44px rgba(0, 0, 0, 0.45);
+        --hover-bg: rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        height: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        padding-top: var(--topbar-h);
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      /* =================== 2. FIX CÔNG THỨC TOÁN (QUAN TRỌNG) =================== */
+
+      /* Cấu hình chung để văn bản và công thức tự xuống dòng */
+      .chapter-card,
+      .pdf-box,
+      p,
+      li,
+      td,
+      .math-center {
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
+        white-space: normal !important;
+        /* Cho phép xuống dòng */
+        max-width: 100%;
+      }
+
+      /* Can thiệp trực tiếp vào MathJax */
+      mjx-container {
+        white-space: normal !important;
+        /* Bắt buộc xuống dòng */
+        display: inline-block !important;
+        /* Để ứng xử như văn bản */
+        overflow-wrap: break-word !important;
+        max-width: 100% !important;
+        font-size: 100% !important;
+      }
+
+      /* Với công thức dài (Display Math), nếu không xuống dòng được thì hiện thanh cuộn */
+      /* Thay vì bị cắt mất (hidden), nó sẽ cho phép lướt ngang */
+      mjx-container[display="true"],
+      .math-center {
+        display: block !important;
+        overflow-x: auto !important;
+        /* Hiện thanh cuộn nếu quá dài */
+        overflow-y: hidden;
+        text-align: center;
+      }
+
+      /* Làm đẹp thanh cuộn công thức */
+      mjx-container::-webkit-scrollbar,
+      .math-center::-webkit-scrollbar {
+        height: 5px;
+      }
+
+      mjx-container::-webkit-scrollbar-thumb,
+      .math-center::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+      }
+
+      /* =================== 3. GIAO DIỆN CHUNG =================== */
+      #topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topbar-h);
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 1000;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .topbar-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+      }
+
+      #topbar .brand {
+        text-align: center;
+        font-weight: 800;
+        font-size: 18px;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      .topbar-icon,
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-sub);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        text-decoration: none;
+        margin-right: 0px;
+      }
+
+      .topbar-icon:hover,
+      .icon-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .settings-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .settings-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 260px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      .settings-dropdown.show {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .setting-item:hover {
+        background: var(--hover-bg);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        opacity: 0.5;
+        transition: 0.3s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--accent);
+        opacity: 1;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      .theme-transition-icons {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(100px) scale(0.5);
+      }
+
+      #sunIcon,
+      #moonIcon {
+        font-size: 8rem;
+        position: absolute;
+      }
+
+      #sunIcon {
+        color: #f59e0b;
+      }
+
+      #moonIcon {
+        color: #f8fafc;
+      }
+
+      .animate-rise-fade {
+        animation: riseAndFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes riseAndFade {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(150px) scale(0.5);
+        }
+
+        40% {
+          opacity: 1;
+          transform: translate(-50%, -50%) translateY(0px) scale(1.2);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(-100px) scale(0.8);
+        }
+      }
+
+      .container {
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        gap: 30px;
+        position: relative;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      .sidebar h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.1rem;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 10px;
+        color: var(--text-main);
+      }
+
+      .menu-link {
+        display: block;
+        padding: 10px 12px;
+        color: var(--text-sub);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: 0.2s;
+        border-left: 3px solid transparent;
+      }
+
+      .menu-link:hover,
+      .menu-link.active {
+        background: #eff6ff;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      body.dark .menu-link:hover,
+      body.dark .menu-link.active {
+        background: #2d3748;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      /* [ĐÃ SỬA] Bỏ overflow: hidden để không bị cắt nội dung */
+      .chapter-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 40px;
+        margin-bottom: 30px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      h1.lesson-title {
+        font-size: 2rem;
+        margin: 0 0 10px;
+        color: var(--primary);
+      }
+
+      h2.section-title {
+        font-size: 1.4rem;
+        margin: 0 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+      }
+
+      .cinema-container {
+        display: flex;
+        flex-direction: row;
+        background: #0f172a;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        min-height: 400px;
+      }
+
+      .video-box {
+        flex: 2.2;
+        position: relative;
+        background: #000;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      #youtube-player {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .playlist-box {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #1e293b;
+        border-left: 1px solid #334155;
+        height: auto;
+        max-height: 100%;
+      }
+
+      .playlist-header {
+        padding: 15px 20px;
+        background: #0f172a;
+        border-bottom: 1px solid #334155;
+        color: #fff;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .chapter-list {
+        overflow-y: auto;
+        flex-grow: 1;
+        scrollbar-width: thin;
+        scrollbar-color: #475569 #1e293b;
+      }
+
+      .chapter-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        border-bottom: 1px solid #334155;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #fff;
+      }
+
+      .chapter-item:hover {
+        background: #334155;
+      }
+
+      .chapter-item.playing {
+        background: #253346;
+        border-left: 4px solid var(--primary);
+      }
+
+      .time-badge {
+        background: rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        font-family: monospace;
+        font-size: 0.8rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .chapter-info {
+        flex-grow: 1;
+      }
+
+      .chapter-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .chapter-desc {
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+
+      .chapter-icon {
+        color: var(--primary);
+        opacity: 0;
+        transition: 0.3s;
+      }
+
+      .chapter-item.playing .chapter-icon {
+        opacity: 1;
+      }
+
+      .pdf-h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 30px 0 15px 0;
+        color: #000;
+      }
+
+      .pdf-h3 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin: 25px 0 10px 0;
+        color: #000;
+      }
+
+      .pdf-note {
+        color: #3a78ff;
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      .pdf-box {
+        border: 2px solid #3a78ff;
+        background-color: #eff6ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        color: #000;
+      }
+
+      .pdf-box-title {
+        color: #3a78ff;
+        font-weight: bold;
+      }
+
+      .pdf-sol-title {
+        color: #3a78ff;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 15px 0;
+        font-size: 1.1rem;
+      }
+
+      .pdf-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 1rem;
+        table-layout: fixed;
+      }
+
+      .pdf-table th,
+      .pdf-table td {
+        border: 1px solid #666;
+        padding: 8px 10px;
+        vertical-align: top;
+        word-wrap: break-word;
+      }
+
+      .pdf-table th {
+        background-color: #f8fafc;
+        text-align: center;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .pdf-list li {
+        margin-bottom: 6px;
+      }
+
+      body.dark .pdf-h2,
+      body.dark .pdf-h3 {
+        color: #fff;
+      }
+
+      body.dark #ly-thuyet {
+        color: #e2e8f0;
+      }
+
+      body.dark .pdf-box {
+        background-color: rgba(58, 120, 255, 0.1);
+        border-color: #60a5fa;
+        color: #e2e8f0;
+      }
+
+      body.dark .pdf-box-title {
+        color: #60a5fa;
+      }
+
+      body.dark .pdf-note {
+        color: #60a5fa;
+      }
+
+      body.dark .pdf-sol-title {
+        color: #93c5fd;
+      }
+
+      body.dark .pdf-table th {
+        background-color: #1e293b;
+        color: #fff;
+        border-color: #475569;
+      }
+
+      body.dark .pdf-table td {
+        border-color: #475569;
+      }
+
+      body.dark mjx-container path {
+        fill: #e2e8f0 !important;
+        stroke: #e2e8f0 !important;
+      }
+
+      /* =================== STYLE MENU MỤC LỤC ĐA CẤP =================== */
+      .custom-nav {
+        padding: 15px 0 !important;
+      }
+      .custom-nav .nav-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        padding: 0 20px 15px 20px;
+        margin: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .custom-nav .nav-list {
+        list-style: none;
+        padding: 10px 0 0 0;
+        margin: 0;
+      }
+      .custom-nav .nav-item {
+        margin-bottom: 2px;
+      }
+
+      /* ĐỊNH DẠNG CHUNG CHO LINK CẤP 1 */
+      .custom-nav .nav-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 3px solid transparent; /* Chừa chỗ vạch xanh */
+      }
+      /* 1. DÒNG CÓ MŨI TÊN (KHÔNG CÓ THANH DỌC XANH) */
+      .custom-nav .nav-link.toggle-btn {
+        border-left: none !important;
+      }
+
+      /* 4. CÁC LINK MỤC CON */
+      .custom-nav .sub-link {
+        display: block;
+        padding: 10px 20px 10px 40px;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        border-left: 3px solid transparent; /* Chừa chỗ vạch xanh */
+      }
+
+      /* HOVER */
+      .custom-nav .nav-link.toggle-btn:hover {
+        background: #f8fafc;
+        color: var(--primary);
+      }
+      .custom-nav .nav-link:not(.toggle-btn):hover,
+      .custom-nav .sub-link:hover {
+        color: var(--primary);
+        background: #eff6ff;
+      }
+
+      .custom-nav .sub-sub-link {
+        display: block !important;
+        padding: 10px 20px 10px 60px !important;
+        font-size: 0.85rem;
+        color: #64748b;
+        text-decoration: none;
+        transition: all 0.2s;
+        border-left: 3px solid transparent !important;
+      }
+      /* ACTIVE RIÊNG CHO MỤC LỚN (HIỆN THANH DỌC XANH + NỀN XANH NHẠT) */
+      .custom-nav .nav-link:not(.toggle-btn).active,
+      .custom-nav .sub-link.active {
+        color: var(--primary) !important;
+        background: #eff6ff !important;
+        border-left: 3px solid var(--primary) !important;
+        font-weight: 600;
+      }
+
+      /* ACTIVE RIÊNG CHO MỤC 2.1, 2.2 (CHỈ THANH DỌC, XÓA NỀN TRẮNG/XANH) */
+      .custom-nav .sub-sub-link.active {
+        color: var(--primary) !important;
+        background: transparent !important; /* Tuyệt chiêu xóa nền */
+        border-left: 3px solid var(--primary) !important;
+        font-weight: 600;
+      }
+
+      /* MŨI TÊN (Sẽ do JavaScript xoay) */
+      .custom-nav .arrow-icon {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        transition: transform 0.3s ease;
+      }
+
+      .custom-nav .sub-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+      }
+      .custom-nav .nav-item.open > .sub-menu {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      /* TIÊU ĐỀ IN HOA (KHÔNG BẤM ĐƯỢC) */
+      .custom-nav .sub-heading {
+        padding: 15px 20px 5px 20px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--primary);
+        letter-spacing: 0.5px;
+        border-left: none !important;
+        pointer-events: none;
+      }
+
+      /* --- DARK MODE CHO MENU --- */
+      body.dark .custom-nav .nav-link {
+        color: #cbd5e1;
+      }
+      body.dark .custom-nav .nav-link.toggle-btn:hover {
+        background: transparent;
+        color: #60a5fa;
+      }
+      body.dark .custom-nav .nav-link:not(.toggle-btn):hover,
+      body.dark .custom-nav .sub-link:hover {
+        color: #60a5fa;
+        background: #1e293b;
+      }
+      body.dark .custom-nav .nav-link:not(.toggle-btn).active,
+      body.dark .custom-nav .sub-link.active {
+        background-color: #1e293b !important;
+        color: #60a5fa !important;
+        border-left: 3px solid #60a5fa !important;
+      }
+      body.dark .custom-nav .sub-heading {
+        color: #60a5fa;
+      }
+      body.dark .custom-nav .sub-link {
+        color: #94a3b8;
+      }
+
+      /* =================== 5. BỘ ĐIỀU KHIỂN GIAO DIỆN MOBILE =================== */
+      @media (max-width: 960px) {
+        .container {
+          flex-direction: column;
+          padding: 0;
+          gap: 0;
+        }
+        .main-content {
+          padding: 15px;
+        }
+
+        /* Sidebar bám dính trên đỉnh màn hình (ngay dưới Header) */
+        .sidebar {
+          width: 100%;
+          height: auto;
+          max-height: none;
+          z-index: 990;
+          position: sticky;
+          top: 60px;
+          border-radius: 0;
+          border: none;
+          background-color: var(--bg-body);
+          padding: 10px;
+          margin: 0;
+          overflow-y: visible;
+        }
+
+        /* Nút "Mục lục" có mũi tên */
+        .sidebar h3.nav-title {
+          display: flex !important;
+          justify-content: space-between;
+          align-items: center;
+          background: var(--bg-card);
+          padding: 15px 20px;
+          margin: 0;
+          border-radius: 12px;
+          border: 1px solid var(--border);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+          cursor: pointer;
+          color: var(--primary);
+        }
+        .sidebar h3.nav-title::after {
+          content: "\f054"; /* fa-chevron-right */
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          transition: transform 0.3s ease;
+        }
+        .sidebar.mobile-open h3.nav-title::after {
+          transform: rotate(90deg);
+        } /* Mở thì xoay xuống */
+
+        /* Giấu danh sách mặc định đi, biến nó thành 1 cục xổ xuống */
+        .custom-nav .nav-list {
+          display: none !important;
+          flex-direction: column !important;
+          background: var(--bg-card);
+          padding: 0 0 15px 0;
+          margin: -5px 0 0 0;
+          border-radius: 0 0 12px 12px;
+          border: 1px solid var(--border);
+          border-top: none;
+        }
+
+        /* Hiển thị danh sách khi được cấp quyền (có class mobile-open) */
+        .sidebar.mobile-open .nav-list {
+          display: flex !important;
+        }
+        .sidebar.mobile-open h3.nav-title {
+          border-radius: 12px 12px 0 0;
+        }
+
+        /* Đảm bảo các mục con bên trong cũng xếp dọc */
+        .custom-nav .sub-menu {
+          display: none !important;
+          flex-direction: column;
+        }
+        .custom-nav .has-dropdown.open > .sub-menu {
+          display: flex !important;
+        }
+
+        /* Trên Mobile, HIỂN THỊ lại tiêu đề con và mũi tên để dễ thao tác */
+        .custom-nav .sub-heading,
+        .custom-nav div.toggle-btn,
+        .custom-nav .arrow-icon {
+          display: flex !important;
+        }
+
+        /* KHÔI PHỤC THANH DỌC XANH: Xóa viền viên thuốc, trả lại border-left trong suốt */
+        .custom-nav a.nav-link,
+        .custom-nav a.sub-link {
+          background: transparent !important;
+          border: none !important; /* Xóa viền 4 cạnh bị thừa */
+          border-left: 3px solid transparent !important; /* Dành chỗ cho vạch xanh xuất hiện */
+          border-radius: 0 !important;
+          margin-bottom: 0 !important;
+          padding-top: 12px !important;
+          padding-bottom: 12px !important;
+          padding-right: 15px !important;
+        }
+
+        /* Chỉnh độ thụt lề chuẩn */
+        .custom-nav a.nav-link {
+          padding-left: 20px !important;
+        }
+        .custom-nav a.sub-link {
+          padding-left: 45px !important;
+        } /* Thụt lề cấp 2 rõ ràng */
+
+        /* Mobile: Mục lớn có nền */
+        .custom-nav a.nav-link.active,
+        .custom-nav a.sub-link.active {
+          background: #eff6ff !important;
+          color: var(--primary) !important;
+          border-left-color: var(--primary) !important;
+        }
+        /* Mobile: Mục con 2.1, 2.2 không có nền */
+        .custom-nav a.sub-sub-link.active {
+          background: transparent !important;
+          color: var(--primary) !important;
+          border-left-color: var(--primary) !important;
+        }
+
+        /* Tiêu đề in hoa chữ xanh */
+        .custom-nav li.sub-heading,
+        .custom-nav li[style*="uppercase"] {
+          padding-top: 15px !important;
+          padding-bottom: 5px !important;
+          padding-right: 15px !important;
+          pointer-events: none;
+          border: none !important;
+          background: transparent !important;
+        }
+
+        /* Dark Mode cho Menu Mobile */
+        body.dark .sidebar {
+          background-color: var(--bg-body);
+        }
+        body.dark .sidebar h3.nav-title {
+          background: #1e293b;
+          border-color: #334155;
+        }
+        body.dark .custom-nav .nav-list {
+          background: #1e293b;
+          border-color: #334155;
+        }
+        body.dark .custom-nav a.nav-link.active,
+        body.dark .custom-nav a.sub-link.active {
+          background: #1e293b !important;
+          color: #60a5fa !important;
+          border-left-color: #60a5fa !important;
+        }
+
+        /* SCROLL NGANG CHO VÙNG CÔNG THỨC TRÀN LỀ */
+        .chapter-card {
+          scroll-margin-top: 130px;
+          padding: 20px;
+        }
+        .cinema-container {
+          flex-direction: column;
+        }
+        .video-box {
+          aspect-ratio: 16/9;
+          width: 100%;
+        }
+        .playlist-box {
+          height: 300px;
+          border-left: none;
+          border-top: 1px solid #334155;
+        }
+        #ly-thuyet {
+          overflow-x: auto;
+          overflow-y: visible;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
+          max-width: 100%;
+        }
+        #ly-thuyet > * {
+          min-width: max-content;
+        }
+      }
+
+      /* =================== 6. STYLE CHO PHẦN BÀI TẬP (MỚI) =================== */
+
+      /* Cấu trúc Hộp dùng chung: Phải có border-box để mép hộp cân bằng */
+      .box-black,
+      .box-blue {
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        color: var(--text-main);
+        box-sizing: border-box; /* Cân bằng chiều rộng */
+        overflow-x: auto; /* Bật thanh cuộn NGAY TẠI HỘP nếu công thức quá dài */
+      }
+
+      .box-black {
+        border: 2px solid #000;
+        background-color: #f9fafb;
+      }
+      .box-blue {
+        border: 2px solid var(--primary);
+        background-color: #eff6ff;
+      }
+
+      /* Chữ nhấn mạnh */
+      .text-red-bold {
+        color: #dc2626;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .text-example-blue {
+        color: var(--primary);
+        font-weight: bold;
+        font-style: italic;
+        margin-right: 5px;
+      }
+      .pdf-sol-title {
+        color: var(--primary);
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 15px 0;
+        font-size: 1.1rem;
+      }
+
+      /* Cấu hình Danh sách bài tập */
+      .exercise-list {
+        list-style: none;
+        padding-left: 5px;
+        margin-top: 10px;
+      }
+      .exercise-list li {
+        margin-bottom: 12px;
+        line-height: 1.6;
+      }
+
+      /* CẤU TRÚC CUỘN NGANG CHO MATHJAX BỊ TRÀN */
+      .math-scroll {
+        overflow-x: auto;
+        white-space: normal; /* Cho chữ tự xuống dòng */
+        padding-bottom: 5px;
+        margin-top: 5px;
+        margin-left: 0;
+        width: 100%;
+        box-sizing: border-box; /* Ép không tràn lề cha */
+      }
+
+      /* 1. Tiêu đề mục lớn */
+      .pdf-h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        color: var(--text-main);
+        display: inline-block;
+      }
+      .pdf-remark {
+        color: #9f1239;
+        font-weight: bold;
+        font-style: italic;
+        margin-bottom: 15px;
+      }
+
+      /* =================== 7. NÚT TẢI ĐÁP ÁN =================== */
+      .download-container {
+        margin-top: 40px;
+        text-align: center;
+        padding-bottom: 20px;
+        border-top: 1px dashed var(--border);
+        padding-top: 30px;
+      }
+      .btn-download {
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(58, 120, 255, 0.3);
+        text-decoration: none;
+      }
+      .btn-download:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(58, 120, 255, 0.5);
+      }
+      .btn-download:active {
+        transform: translateY(-1px);
+      }
+
+      /* --- DARK MODE TỔNG HỢP CHO BOX VÀ BTN --- */
+      body.dark .box-black {
+        background-color: var(--bg-card);
+        border-color: var(--border);
+      }
+      body.dark .box-blue {
+        background-color: rgba(58, 120, 255, 0.05);
+        border-color: #60a5fa;
+      }
+      body.dark .text-red-bold {
+        color: #fb7185;
+      }
+      body.dark .pdf-remark {
+        color: #fb7185;
+      }
+      body.dark .text-example-blue,
+      body.dark .pdf-sol-title,
+      body.dark .pdf-h1 {
+        color: #60a5fa;
+      }
+      body.dark .download-container {
+        border-top-color: #334155;
+      }
+      body.dark .btn-download {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        color: #fff;
+      }
+      body.dark .btn-download:hover {
+        background: linear-gradient(135deg, #60a5fa, #2563eb);
+        box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <div id="topbar">
+      <div class="topbar-left">
+        <a
+          href="../knowledge_info.html"
+          class="topbar-icon"
+          title="Quay lại thư viện"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <a href="../index.html" class="topbar-icon" title="Về trang chủ">
+          <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="../tltk.html" class="topbar-icon" title="Tài liệu tham khảo">
+          <i class="fa-solid fa-file-lines"></i>
+        </a>
+      </div>
+
+      <div class="brand">Vectoria Knowledge</div>
+
+      <div class="topbar-right" style="margin-right: 25px">
+        <div class="settings-container">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <hr
+              style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0;
+                opacity: 0.5;
+              "
+            />
+
+            <a
+              href="../hdsd.html"
+              class="setting-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span
+                ><i class="fa-solid fa-book-open-reader"></i> Hướng dẫn sử
+                dụng</span
+              >
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+            <a
+              href="../contact.html"
+              class="setting-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <aside class="sidebar custom-nav">
+        <h3 class="nav-title"><i class="fa-solid fa-list-ul"></i> Mục lục</h3>
+        <ul class="nav-list">
+          <li class="nav-item has-dropdown open">
+            <div class="nav-link toggle-btn">
+              <a
+                href="#ly-thuyet"
+                style="
+                  text-decoration: none;
+                  color: inherit;
+                  font-weight: 700;
+                  flex-grow: 1;
+                "
+                >Lý thuyết</a
+              >
+              <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </div>
+
+            <ul class="sub-menu">
+              <li class="sub-heading">
+                Tổ hợp - Độc lập - Phụ thuộc tuyến tính
+              </li>
+              <li>
+                <a href="#to-hop" class="sub-link active"
+                  >1. Tổ hợp tuyến tính</a
+                >
+              </li>
+
+              <li class="nav-item has-dropdown open">
+                <div
+                  class="sub-link toggle-btn"
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding-left: 40px !important;
+                    cursor: pointer;
+                  "
+                >
+                  <a
+                    href="#doc-lap"
+                    style="
+                      font-weight: normal;
+                      flex-grow: 1;
+                      text-decoration: none;
+                      color: inherit;
+                    "
+                    >2. Độc lập tuyến tính và Phụ thuộc tuyến tính</a
+                  >
+                  <i
+                    class="fa-solid fa-chevron-right arrow-icon"
+                    style="padding: 5px; margin-right: -5px"
+                  ></i>
+                </div>
+                <ul class="sub-menu">
+                  <li>
+                    <a href="#dinh-nghia" class="sub-sub-link"
+                      >2.1 Định nghĩa</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#tinh-chat-co-ban" class="sub-sub-link"
+                      >2.2 Các tính chất cơ bản</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a
+              href="#video-truc-quan"
+              class="nav-link section-link"
+              style="font-weight: 700"
+              >Video trực quan</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              href="#bai-tap"
+              class="nav-link section-link"
+              style="font-weight: 700"
+              >Bài tập</a
+            >
+          </li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <div class="chapter-card" id="ly-thuyet">
+          <script>
+            window.MathJax = {
+              tex: {
+                inlineMath: [
+                  ["\\(", "\\)"],
+                  ["$", "$"],
+                ],
+                displayMath: [["\\[", "\\]"]],
+                processEscapes: true,
+              },
+              // Thêm cấu hình output để xử lý xuống dòng tốt hơn
+              chtml: {
+                scale: 0.95, // Thu nhỏ xíu để đỡ tràn
+                displayAlign: "center",
+              },
+              svg: {
+                fontCache: "global",
+                scale: 0.95,
+              },
+            };
+          </script>
+          <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+          ></script>
+
+          <style>
+            /* === LIGHT MODE (Mặc định) === */
+            #ly-thuyet {
+              font-family: "Inter", sans-serif;
+              color: #000;
+              font-size: 1.15rem;
+              line-height: 1.6;
+            }
+            .dark .img-light {
+              filter: invert(1) hue-rotate(180deg);
+            }
+          </style>
+
+          <h2 class="section-title" style="margin-bottom: 20px">
+            <i class="fa-solid fa-book-open"></i> Lý thuyết
+          </h2>
+
+          <div
+            class="pdf-h1"
+            style="
+              font-size: 1.5rem;
+              color: var(--primary);
+              border-bottom: 2px solid var(--primary);
+              padding-bottom: 5px;
+              margin-bottom: 20px;
+            "
+          >
+            Tổ hợp - Độc lập - Phụ thuộc tuyến tính
+          </div>
+          <div class="pdf-h3" id="to-hop">1 &nbsp; Tổ hợp tuyến tính</div>
+          <p>
+            Cho \( v_1, v_2, \dots, v_n \) là \( n \) vector (\( n \ge 1 \)) của
+            \( \mathbb{K}- \) không gian vector \( V \) và \( c_1, c_2, \dots,
+            c_n \) là \( n \) vô hướng trong trường \( \mathbb{K} \). Lúc này,
+            vector:
+          </p>
+
+          <div class="math-center">
+            \( v = c_1v_1 + c_2v_2 + \dots + c_nv_n = \sum_{i=1}^n c_iv_i \)
+          </div>
+
+          <p>
+            được gọi là <strong>tổ hợp tuyến tính</strong> (THTT) của hệ vector
+            \( \{v_1, v_2, \dots, v_n\} \).
+          </p>
+
+          <p>
+            Khi vector \( v \) là một tổ hợp tuyến tính của hệ \( \{v_1, v_2,
+            \dots, v_n\} \) thì ta bảo \( v \)
+            <strong>biểu diễn tuyến tính</strong> được qua hệ \( \{v_1, v_2,
+            \dots, v_n\} \).
+          </p>
+
+          <div style="text-align: center; margin: 25px 0; width: 100%">
+            <img
+              src="../assets/images/dltt-minhhoa.png"
+              alt="Hình 1: Ví dụ về tổ hợp tuyến tính"
+              class="img-light"
+              style="
+                max-width: 100%;
+                height: auto;
+                object-fit: contain;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+              "
+            />
+
+            <p
+              style="
+                text-align: center;
+                font-style: italic;
+                margin-top: 10px;
+                color: var(--text-sub);
+                font-family: &quot;Inter&quot;, sans-serif;
+                font-size: 0.95rem;
+              "
+            >
+              Hình 1: Ví dụ về tổ hợp tuyến tính
+            </p>
+          </div>
+
+          <p>
+            Trong hình 1, vector màu tím \( v = (3, 1) \) là một THTT hay biểu
+            diễn tuyến tính được qua hệ 2 vector màu đỏ \( v_1 = (1, 2) \) và
+            màu xanh lá \( v_2 = (2, -1) \).
+          </p>
+
+          <p>Về mặt đại số, \( v \) là THTT của \( \{v_1, v_2\} \) vì:</p>
+          <div class="math-center">
+            \( v = v_1 + v_2 = (1, 2) + (2, -1) = (3, 1) \quad \text{với các hệ
+            số} \quad c_1 = c_2 = 1 \)
+          </div>
+
+          <p>
+            <span class="text-red-bold" style="font-style: italic">Ví dụ:</span>
+            Cho tập hợp các vector trong \( \mathcal{M}_2 \):
+          </p>
+          <div class="math-center" style="overflow-x: auto">
+            \( S = \{v, v_1, v_2, v_3\} = \left\{ \begin{pmatrix} 0 & 8 \\ 2 & 1
+            \end{pmatrix}, \begin{pmatrix} 0 & 2 \\ 1 & 0 \end{pmatrix},
+            \begin{pmatrix} -1 & 3 \\ 1 & 2 \end{pmatrix}, \begin{pmatrix} -2 &
+            0 \\ 1 & 3 \end{pmatrix} \right\} \)
+          </div>
+          <p>Khi đó, \( v \) là THTT của \( \{v_1, v_2, v_3\} \) bởi vì:</p>
+          <div class="math-center" style="overflow-x: auto">
+            \( v = v_1 + 2v_2 - v_3 = \begin{pmatrix} 0 & 2 \\ 1 & 0
+            \end{pmatrix} + 2\begin{pmatrix} -1 & 3 \\ 1 & 2 \end{pmatrix} -
+            \begin{pmatrix} -2 & 0 \\ 1 & 3 \end{pmatrix} = \begin{pmatrix} 0 &
+            8 \\ 2 & 1 \end{pmatrix} \quad \text{với } c_1 = 1, c_2 = 2, c_3 =
+            -1 \)
+          </div>
+
+          <div class="box-black">
+            <span class="text-red-bold" style="font-style: italic">Ví dụ:</span>
+            Trong \( \mathbb{R}^3 \), cho \( u_1 = (1, 1, 1), u_2 = (1, 2, 3),
+            u_3 = (2, -1, 1) \) và \( v = (1, -2, 5) \). Kiểm tra xem vector \(
+            v \) có là tổ hợp tuyến tính của hệ \( S = \{u_1, u_2, u_3\} \)
+            không?
+          </div>
+
+          <span class="pdf-sol-title">Lời giải</span>
+
+          <p><strong>Cách 1: Biện luận hạng của ma trận</strong></p>
+          <p>
+            Lập ma trận \( A \) có các cột là các vector \( u_i \) và ma trận mở
+            rộng \( \bar{A} = [A|v] \):
+          </p>
+          <div class="math-center" style="overflow-x: auto">
+            \( A = \begin{pmatrix} 1 & 1 & 2 \\ 1 & 2 & -1 \\ 1 & 3 & 1
+            \end{pmatrix} \Rightarrow \bar{A} = \left( \begin{array}{ccc|c} 1 &
+            1 & 2 & 1 \\ 1 & 2 & -1 & -2 \\ 1 & 3 & 1 & 5 \end{array} \right) \)
+          </div>
+          <p>Biến đổi \( \bar{A} \) về dạng bậc thang:</p>
+          <div class="math-center" style="overflow-x: auto">
+            \( \bar{A} \xrightarrow[d_3 - d_1]{d_2 - d_1} \left(
+            \begin{array}{ccc|c} 1 & 1 & 2 & 1 \\ 0 & 1 & -3 & -3 \\ 0 & 2 & -1
+            & 4 \end{array} \right) \xrightarrow{d_3 - 2d_2} \left(
+            \begin{array}{ccc|c} 1 & 1 & 2 & 1 \\ 0 & 1 & -3 & -3 \\ 0 & 0 & 5 &
+            10 \end{array} \right) \)
+          </div>
+          <p>
+            <strong>Kết luận:</strong> Ta thấy \( \rho(A) = 3 \) và \(
+            \rho(\bar{A}) = 3 \). Vì \( \rho(A) = \rho(\bar{A}) \) nên \( v \)
+            là tổ hợp tuyến tính của hệ \( S \).
+          </p>
+
+          <p>
+            <strong
+              >Cách 2: Giải hệ phương trình tuyến tính (phương pháp
+              Gauss)</strong
+            >
+          </p>
+          <p>Từ ma trận bậc thang ở cách 1, ta suy ra hệ phương trình:</p>
+          <div class="math-center" style="overflow-x: auto">
+            \( \bar{A} = \dots \Rightarrow \begin{cases} c_1 + c_2 + 2c_3 = 1 \\
+            \quad \;\; c_2 - 3c_3 = -3 \\ \quad \quad \quad \; 5c_3 = 10
+            \end{cases} \Leftrightarrow \begin{cases} c_1 = -6 \\ c_2 = 3 \\ c_3
+            = 2 \end{cases} \)
+          </div>
+          <p>
+            Vậy \( v \) là một tổ hợp tuyến tính có dạng \( v = -6u_1 + 3u_2 +
+            2u_3 \).
+          </p>
+
+          <div class="pdf-h3" id="doc-lap">
+            2 &nbsp; Độc lập tuyến tính và Phụ thuộc tuyến tính
+          </div>
+          <div class="pdf-h3" id="dinh-nghia" style="font-size: 1.15rem">
+            2.1 &nbsp; Định nghĩa
+          </div>
+          <p>
+            Cho \( V \) là không gian vector và \( S = \{v_1, v_2 \dots, v_n\}
+            \) là một hệ vector của \( V \), ta nói:
+          </p>
+          <p>
+            Hệ \( S \) <strong>phụ thuộc tuyến tính</strong> (PTTT) nếu tồn tại
+            các số thực hay các vô hướng \( c_1, c_2 \dots, c_n \) không đồng
+            thời bằng 0 (tức là có ít nhất một số khác 0) thỏa mãn:
+          </p>
+          <div class="math-center">
+            \( c_1v_1 + c_2v_2 + \dots + c_nv_n = 0_V \)
+          </div>
+          <p>
+            Điều này đồng nghĩa với việc phương trình trên sở hữu ít nhất một
+            <strong>nghiệm không tầm thường</strong>.
+          </p>
+
+          <p>
+            Ngược lại, hệ \( S \) được gọi là hệ vector
+            <strong>độc lập tuyến tính</strong> (ĐLTT) nếu nó không phụ thuộc
+            tuyến tính. Nói cách khác, hệ \( S \) ĐLTT khi và chỉ khi:
+          </p>
+          <div class="math-center">
+            \( c_1v_1 + c_2v_2 + \dots + c_nv_n = 0_V \)
+          </div>
+          <p>
+            chỉ có <strong>nghiệm tầm thường</strong> là \( c_1 = c_2 = \dots =
+            c_n = 0 \)
+          </p>
+
+          <div class="pdf-h3" id="tinh-chat-co-ban" style="font-size: 1.15rem">
+            2.2 &nbsp; Các tính chất cơ bản
+          </div>
+          <ul
+            class="pdf-list"
+            style="list-style-type: disc; padding-left: 20px"
+          >
+            <li>Hệ chứa vector không luôn PTTT.</li>
+            <li>
+              Hệ gồm 1 vector PTTT khi và chỉ khi vector đó bằng 0, hệ gồm 2
+              vector PTTT khi và chỉ khi 2 vector đó tỷ lệ với nhau.
+            </li>
+            <li>
+              Nếu một hệ vector ĐLTT thì mọi hệ con tùy ý của nó cũng ĐLTT.
+            </li>
+            <li>
+              Hệ vector \( \{v_1, v_2, \dots, v_n\} \) PTTT khi và chỉ khi tồn
+              tại ít nhất một vector trong hệ có thể
+              <strong>biểu diễn tuyến tính</strong> qua các vector còn lại của
+              hệ đó.
+            </li>
+            <li>
+              Cho hệ vector \( \{v_1, v_2, \dots, v_n\} \) ĐLTT. Khi đó, hệ
+              vector mở rộng \( \{v_1, v_2, \dots, v_n, \mathbf{u}\} \) ĐLTT khi
+              và chỉ khi vector \( \mathbf{u} \) không thể biểu diễn tuyến tính
+              qua hệ \( \{v_1, v_2, \dots, v_n\} \).
+            </li>
+          </ul>
+
+          <div class="box-black">
+            <span class="text-red-bold" style="font-style: italic">Ví dụ:</span>
+            Xét sự ĐLTT/PTTT của hệ \( S = \{u_1=(1,2,3), u_2=(2,5,7),
+            u_3=(1,3,5)\} \) trong \( \mathbb{R}^3 \)
+          </div>
+
+          <span class="pdf-sol-title">Lời giải</span>
+
+          <p>
+            <strong
+              >Cách 1: Sử dụng định nghĩa (Giải hệ phương trình tuyến tính thuần
+              nhất)</strong
+            >
+          </p>
+          <p>Xét phương trình vector:</p>
+          <div class="math-center" style="overflow-x: auto">
+            \( c_1u_1 + c_2u_2 + c_3u_3 = 0 \) <br />
+            \( \Leftrightarrow c_1 \cdot (1, 2, 3) + c_2 \cdot (2, 5, 7) + c_3
+            \cdot (1, 3, 5) = (0, 0, 0) \)
+          </div>
+          <p>Hệ phương trình tương ứng:</p>
+          <div class="math-center">
+            \( \begin{cases} c_1 + 2c_2 + c_3 = 0 \\ 2c_1 + 5c_2 + 3c_3 = 0 \\
+            3c_1 + 7c_2 + 5c_3 = 0 \end{cases} \)
+          </div>
+          <p>
+            Giải hệ, ta tìm được nghiệm duy nhất là \( c_1 = c_2 = c_3 = 0 \)
+            (nghiệm tầm thường). Vậy hệ \( S \) ĐLTT.
+          </p>
+
+          <p><strong>Cách 2: Biện luận hạng của ma trận</strong></p>
+          <p>
+            Lập ma trận \( A \) có các cột (hoặc dòng) là các vector của hệ \( S
+            \):
+          </p>
+          <div class="math-center" style="overflow-x: auto">
+            \( A = \begin{pmatrix} 1 & 2 & 1 \\ 2 & 5 & 3 \\ 3 & 7 & 5
+            \end{pmatrix} \xrightarrow[d_3 - 3d_1]{d_2 - 2d_1} \begin{pmatrix} 1
+            & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 1 & 2 \end{pmatrix} \xrightarrow{d_3 -
+            d_2} \begin{pmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1
+            \end{pmatrix} \)
+          </div>
+          <p>
+            Nhận thấy, ma trận thu được có 3 dòng khác không, vậy \( \rho(A) = 3
+            = n \) (số vector). Vậy hệ \( S \) ĐLTT.
+          </p>
+
+          <p>
+            <strong
+              >Cách 3: Sử dụng định thức (Trường hợp số vector bằng số chiều
+              không gian)</strong
+            >
+          </p>
+          <div class="math-center">
+            \( \det(A) = \begin{vmatrix} 1 & 2 & 1 \\ 2 & 5 & 3 \\ 3 & 7 & 5
+            \end{vmatrix} = 1 \)
+          </div>
+          <p>Vì \( \det(A) = 1 \neq 0 \), suy ra hệ \( S \) ĐLTT.</p>
+
+          <p style="margin-top: 20px">
+            <span class="text-red-bold" style="font-style: italic"
+              >Nhận xét:</span
+            >
+            Ma trận \( A \) được sử dụng trong cách 2 và cách 3 chính là
+            <strong>ma trận hệ số</strong> của hệ phương trình tuyến tính thuần
+            nhất được thiết lập ở cách 1. Tính ĐLTT của hệ \( S \) đồng nghĩa
+            với việc hệ phương trình này chỉ có
+            <strong>nghiệm tầm thường</strong>, điều này tương đương với việc \(
+            \det(A) \neq 0 \) hoặc có hạng đầy đủ (\( \rho(A) = n \)).
+          </p>
+
+          <script>
+            if (window.MathJax && window.MathJax.typesetPromise) {
+              window.MathJax.typesetPromise([
+                document.getElementById("ly-thuyet"),
+              ])
+                .then(() => {
+                  console.log("MathJax rendered successfully!");
+                })
+                .catch((err) => {
+                  console.error("MathJax error:", err);
+                });
+            }
+          </script>
+        </div>
+
+        <div
+          class="chapter-card"
+          id="video-truc-quan"
+          style="
+            padding: 0;
+            overflow: hidden;
+            border: none;
+            background: transparent;
+          "
+        >
+          <h2 class="section-title" style="margin-bottom: 20px">
+            <i class="fa-brands fa-youtube"></i> Video trực quan
+          </h2>
+
+          <div class="cinema-container">
+            <div class="video-box">
+              <div id="youtube-player"></div>
+            </div>
+
+            <div class="playlist-box">
+              <div class="playlist-header">
+                <span>Nội dung</span>
+                <span style="font-size: 0.8rem; color: #94a3b8">4 phần</span>
+              </div>
+              <div class="chapter-list">
+                <div
+                  class="chapter-item playing"
+                  onclick="
+                    seekTo(0);
+                    setActive(this);
+                  "
+                >
+                  <i class="fa-solid fa-circle-play chapter-icon"></i>
+                  <div class="chapter-info">
+                    <span class="chapter-title">Đặt vấn đề</span>
+                  </div>
+                  <div class="time-badge">00:00</div>
+                </div>
+                <div
+                  class="chapter-item"
+                  onclick="
+                    seekTo(45);
+                    setActive(this);
+                  "
+                >
+                  <i class="fa-solid fa-circle-play chapter-icon"></i>
+                  <div class="chapter-info">
+                    <span class="chapter-title">Kiến thức chuẩn bị</span>
+                  </div>
+                  <div class="time-badge">00:45</div>
+                </div>
+                <div
+                  class="chapter-item"
+                  onclick="
+                    seekTo(130);
+                    setActive(this);
+                  "
+                >
+                  <i class="fa-solid fa-circle-play chapter-icon"></i>
+                  <div class="chapter-info">
+                    <span class="chapter-title"
+                      >Tổ hợp - Độc lập - <br />Phụ thuộc tuyến tính</span
+                    >
+                  </div>
+                  <div class="time-badge">02:10</div>
+                </div>
+
+                <div
+                  class="chapter-item"
+                  onclick="
+                    seekTo(470);
+                    setActive(this);
+                  "
+                >
+                  <i class="fa-solid fa-circle-play chapter-icon"></i>
+                  <div class="chapter-info">
+                    <span class="chapter-title">Giải quyết vấn đề</span>
+                  </div>
+                  <div class="time-badge">07:50</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chapter-card" id="bai-tap">
+          <h2 class="section-title">
+            <i class="fa-solid fa-pen-to-square"></i> Bài tập
+          </h2>
+
+          <div
+            class="pdf-h1"
+            id="bai-tap-1"
+            style="
+              font-size: 1.3rem;
+              color: var(--primary);
+              border-bottom: 2px solid var(--primary);
+              padding-bottom: 5px;
+              margin-bottom: 20px;
+            "
+          >
+            Tổ hợp tuyến tính
+          </div>
+
+          <div class="box-black">
+            <span class="text-red-bold" style="font-style: italic"
+              >Ví dụ 1:</span
+            >
+            Trong \( \mathbb{R}^3 \), cho hệ vector \( S = \{v_1 = (1, 1, 0),
+            v_2 = (0, 2, 1)\} \) và vector \( v = (2, 6, 2) \). Hỏi \( v \) có
+            phải là THTT của \( S \) không?
+
+            <span class="text-blue-sol">Lời giải</span>
+
+            <p>Xét ma trận mở rộng:</p>
+            <div
+              class="math-center"
+              style="overflow-x: auto; margin-bottom: 15px; margin-top: 10px"
+            >
+              \( \bar{A} = \left( \begin{array}{cc|c} 1 & 0 & 2 \\ 1 & 2 & 6 \\
+              0 & 1 & 2 \end{array} \right) \xrightarrow{d_2 \rightarrow d_2 -
+              d_1} \left( \begin{array}{cc|c} 1 & 0 & 2 \\ 0 & 2 & 4 \\ 0 & 1 &
+              2 \end{array} \right) \xrightarrow{d_3 \rightarrow d_3 -
+              \frac{1}{2}d_2} \left( \begin{array}{cc|c} 1 & 0 & 2 \\ 0 & 2 & 4
+              \\ 0 & 0 & 0 \end{array} \right) \)
+            </div>
+            <p>
+              Ta có \( rank(A) = rank(\bar{A}) = 2 \). Suy ra, hệ có nghiệm duy
+              nhất \( (c_1, c_2) = (2, 2) \).
+            </p>
+            <p style="margin-top: 15px">
+              Vậy \( v \) là THTT của \( S \) và \( v = 2v_1 + 2v_2 \).
+            </p>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 1.</span> Xét xem vector \( v \)
+              có phải là một THTT của hệ \( S \) không? Nếu có, hãy tìm một bộ
+              hệ số \( c_i \) thỏa mãn:
+            </p>
+            <div class="math-scroll">
+              <ul class="exercise-list">
+                <li>a) \( S = \{(1, 2), (-1, 3)\}, \quad v = (0, 5) \).</li>
+                <li>b) \( S = \{(1, 0), (0, 1)\}, \quad v = (3, -4) \).</li>
+                <li>
+                  c) \( S = \{(1, 1, 1), (1, 0, 1)\}, \quad v = (2, 1, 2) \).
+                </li>
+                <li>
+                  d) \( S = \{(1, -1, 0), (0, 1, -1)\}, \quad v = (1, 0, -1) \).
+                </li>
+                <li>
+                  e) \( S = \{(1, 2, 3), (0, 1, 2), (0, 0, 1)\}, \quad v = (1,
+                  4, 9) \).
+                </li>
+                <li>
+                  f) \( S = \{e_1, e_2, e_3\} \) (với \( e_i \) là cơ sở chính
+                  tắc của \( \mathbb{R}^3 \)), \( \quad v = (x, y, z) \).
+                </li>
+                <li>
+                  g) \( S = \{(1, 2, 1), (2, 1, 3), (1, 1, 1)\}, \quad v = (1,
+                  1, 0) \).
+                </li>
+                <li>
+                  h) \( S = \{(1, 0, 0), (1, 1, 0), (1, 1, 1)\}, \quad v = (2,
+                  3, 4) \).
+                </li>
+                <li>
+                  i) \( S = \{(1, 2, 1), (2, 5, 2), (1, 3, 2)\}, \quad v = (1,
+                  1, 1) \).
+                </li>
+                <li>
+                  j) \( S = \{(1, 1, 0), (1, 0, 1), (0, 1, 1)\}, \quad v = (2,
+                  2, 2) \).
+                </li>
+                <li>
+                  k) \( S = \{(1, 2, 3), (4, 5, 6)\}, \quad v = (7, 8, 9) \).
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 2.</span> Giải thích tại sao các
+              vector \( v \) sau đây <strong>không</strong> phải (hoặc có tính
+              chất đặc biệt) là THTT của hệ \( S \):
+            </p>
+            <div class="math-scroll" style="margin-top: 10px">
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px"
+              >
+                <div>
+                  <div style="margin-bottom: 20px">
+                    a) \( S = \{(2, 1), (6, 3)\}, \quad v = (1, 0) \)
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    b) \( S = \{(1, 1), (2, 2)\}, \quad v = (1, 2) \)
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    c) \( S = \{(1, 0), (2, 0)\}, \quad v = (0, 1) \)
+                  </div>
+                  <div>
+                    d) \( S = \{(1, 2, 3), (2, 4, 6)\}, \quad v = (3, 6, 9) \)
+                  </div>
+                </div>
+                <div>
+                  <div style="margin-bottom: 20px">
+                    e) \( S = \{(2, 0, 0), (0, 3, 0)\}, \quad v = (4, 6, 1) \)
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    f) \( S = \{(1, 2, -1), (3, 1, 0)\}, \quad v = (0, 0, 0) \)
+                  </div>
+                  <div>
+                    g) \( S = \{(1, -2), (2, -4)\}, \quad v = (3, -6) \)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box-black">
+            <span class="text-red-bold" style="font-style: italic"
+              >Ví dụ 2:</span
+            >
+            Tìm các giá trị của \( m \) để vector \( u \) là tổ hợp tuyến tính
+            của hệ \( \{u_1, u_2\} \) với \( u_1 = (1, 1, 1); \quad u_2 = (1, 2,
+            3); \quad u = (1, 4, m) \)
+
+            <span class="text-blue-sol">Lời giải</span>
+
+            <p>
+              Lập ma trận \( A \) từ các vector theo cột và tính định thức: \(
+              \det(A) = \begin{vmatrix} 1 & 1 & 1 \\ 1 & 2 & 3 \\ 1 & 4 & m
+              \end{vmatrix} \)
+            </p>
+
+            <p style="margin-top: 15px">Khai triển theo dòng 1:</p>
+            <div class="math-center" style="overflow-x: auto; margin: 15px 0">
+              \( \det(A) = 1(2m - 12) - 1(m - 3) + 1(4 - 2) = 2m - 12 - m + 3 +
+              2 = m - 7 \)
+            </div>
+
+            <p>
+              Để hệ vector phụ thuộc tuyến tính \( \Leftrightarrow \det(A) = 0
+              \Leftrightarrow m - 7 = 0 \Leftrightarrow m = 7 \)
+            </p>
+            <p style="margin-top: 15px">
+              Vậy \( m = 7 \) thì vector \( u \) là một tổ hợp tuyến tính của \(
+              \{u_1, u_2\} \)
+            </p>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 3.</span> Tìm các giá trị của \( m
+              \) để vector \( u \) là tổ hợp tuyến tính của hệ vector tương ứng:
+            </p>
+            <div class="math-scroll">
+              <ul class="exercise-list">
+                <li>
+                  a) \( u_1 = (1, 2); \quad u_2 = (2, 4); \quad u = (1, m) \)
+                </li>
+                <li>
+                  b) \( u_1 = (1, 2, -1); \quad u_2 = (2, 3, 1); \quad u_3 = (3,
+                  5, 0); \quad u = (8, m, 1) \)
+                </li>
+                <li>
+                  c) \( u_1 = (2, 3, 1); \quad u_2 = (-4, -6, 2); \quad u_3 =
+                  (6, 9, 1); \quad u = (1, 2, m) \)
+                </li>
+                <li>
+                  d) \( u_1 = (1, 2, 4); \quad u_2 = (2, 1, 5); \quad u_3 = (3,
+                  -1, 0); \quad u = (m, 3, 1) \)
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 4.</span> Trong không gian véctơ
+              ma trận vuông cấp 2, hãy biểu diễn véctơ \( \begin{pmatrix} 11 &
+              13 \\ 6 & 5 \end{pmatrix} \) theo 4 véctơ \( \begin{pmatrix} 1 & 1
+              \\ -1 & 2 \end{pmatrix}, \begin{pmatrix} 0 & 1 \\ 2 & 1
+              \end{pmatrix}, \begin{pmatrix} 2 & 2 \\ 1 & -1 \end{pmatrix},
+              \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} \)
+            </p>
+          </div>
+
+          <div
+            class="pdf-h1"
+            id="bai-tap-2"
+            style="
+              font-size: 1.3rem;
+              color: var(--primary);
+              border-bottom: 2px solid var(--primary);
+              padding-bottom: 5px;
+              margin-top: 40px;
+              margin-bottom: 20px;
+            "
+          >
+            Độc lập tuyến tính - Phụ thuộc tuyến tính
+          </div>
+
+          <div class="box-black">
+            <span class="text-red-bold" style="font-style: italic">Ví dụ:</span>
+            Xét sự ĐLTT hoặc PTTT của hệ \( S = \{u_1 = (1, 2, 1), u_2 = (2, 5,
+            3), u_3 = (1, 3, 3)\} \) trong không gian \( \mathbb{R}^3 \).
+
+            <span class="text-blue-sol">Lời giải</span>
+
+            <p>
+              <strong
+                >Cách 1: Sử dụng định nghĩa (Xét hệ phương trình thuần
+                nhất)</strong
+              >
+            </p>
+            <p>Xét phương trình vector:</p>
+            <div
+              class="math-center"
+              style="margin-bottom: 10px; overflow-x: auto"
+            >
+              \( c_1u_1 + c_2u_2 + c_3u_3 = \mathbf{0} \)<br />
+              \( \Leftrightarrow c_1 \cdot (1, 2, 1) + c_2 \cdot (2, 5, 3) + c_3
+              \cdot (1, 3, 3) = (0, 0, 0) \)
+            </div>
+            <p>Hệ phương trình tương ứng:</p>
+            <div class="math-center" style="margin-bottom: 15px">
+              \( \begin{cases} c_1 + 2c_2 + c_3 = 0 \\ 2c_1 + 5c_2 + 3c_3 = 0 \\
+              c_1 + 3c_2 + 3c_3 = 0 \end{cases} \)
+            </div>
+            <p>
+              Giải hệ trên, thu được nghiệm duy nhất \( c_1 = c_2 = c_3 = 0 \)
+              (<strong>nghiệm tầm thường</strong>).
+            </p>
+            <p style="margin-top: 10px">Vậy hệ \( S \) ĐLTT.</p>
+
+            <p style="margin-top: 25px">
+              <strong>Cách 2: Biện luận hạng của ma trận</strong>
+            </p>
+            <p>
+              Lập ma trận \( A \) có các cột là các vector thuộc hệ \( S \) và
+              thực hiện các phép biến đổi sơ cấp:
+            </p>
+            <div class="math-center" style="margin: 15px 0; overflow-x: auto">
+              \( A = \begin{pmatrix} 1 & 2 & 1 \\ 2 & 5 & 3 \\ 1 & 3 & 3
+              \end{pmatrix} \xrightarrow[d_3 - d_1]{d_2 - 2d_1} \begin{pmatrix}
+              1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 1 & 2 \end{pmatrix} \xrightarrow{d_3
+              - d_2} \begin{pmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1
+              \end{pmatrix} \)
+            </div>
+            <p>
+              Nhận thấy \( \rho(A) = 3 = n \) (số vector của hệ). Vậy hệ \( S \)
+              ĐLTT.
+            </p>
+
+            <p style="margin-top: 25px">
+              <strong
+                >Cách 3: Sử dụng định thức (Trường hợp số vector bằng số chiều
+                không gian)</strong
+              >
+            </p>
+            <p>
+              Do hệ \( S \) gồm 3 vector trong không gian \( \mathbb{R}^3 \), ta
+              lập ma trận vuông \( A \) và tính định thức:
+            </p>
+            <div class="math-center" style="margin: 15px 0; overflow-x: auto">
+              \( \det(A) = \begin{vmatrix} 1 & 2 & 1 \\ 2 & 5 & 3 \\ 1 & 3 & 3
+              \end{vmatrix} = 1(15 - 9) - 2(6 - 3) + 1(6 - 5) = 6 - 6 + 1 = 1 \)
+            </div>
+            <p>
+              Vì \( \det(A) = 1 \neq 0 \), suy ra \( \rho(A) = 3 = \) số vector,
+              do đó hệ vector \( S \) <strong>ĐLTT</strong>.
+            </p>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 1.</span> Xét tính ĐLTT hoặc PTTT
+              của các hệ vector sau trong không gian tương ứng:
+            </p>
+            <div class="math-scroll" style="margin-top: 15px">
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px"
+              >
+                <div>
+                  <div style="margin-bottom: 20px">
+                    a) \( S = \{(1, 2), (3, 4)\} \) trong \( \mathbb{R}^2 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    b) \( S = \{(1, 1), (2, 2)\} \) trong \( \mathbb{R}^2 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    c) \( S = \{(1, 0, 0), (0, 1, 0), (0, 0, 1)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    d) \( S = \{(1, 2, 3), (4, 5, 6), (7, 8, 9)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    e) \( S = \{(1, 0, 1), (1, 1, 0), (0, 1, 1)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    f) \( S = \{(2, -1, 3), (4, -2, 6)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div>
+                    g) \( S = \{(1, 1, 1), (1, 2, 3), (0, 1, 2)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                </div>
+                <div>
+                  <div style="margin-bottom: 20px">
+                    h) \( S = \{(1, 2, 1), (0, 1, 2), (0, 0, 3)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    i) \( S = \{(1, -1, 0), (0, 1, -1), (-1, 0, 1)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    j) \( S = \{(1, 1, 2), (2, 2, 4), (3, 3, 5)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    k) \( S = \{(1, 2, 3), (2, 5, 8), (1, 4, 7)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div style="margin-bottom: 20px">
+                    l) \( S = \{(1, 0, 1), (0, 1, 0), (2, 1, 3)\} \) trong \(
+                    \mathbb{R}^3 \).
+                  </div>
+                  <div>
+                    m) \( S = \{(1, 1, 0, 1), (1, 0, 0, 1), (1, -1, 0, 1)\} \)
+                    trong \( \mathbb{R}^4 \).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 2.</span> Cho biết các hệ vector
+              sau ĐLTT hay PTTT. Giải thích tại sao?
+            </p>
+            <div class="math-scroll" style="margin-top: 15px">
+              <ul class="exercise-list">
+                <li style="margin-bottom: 20px">
+                  a) \( S = \{e_1, e_2, e_3, e_4\} \) trong \( \mathbb{R}^4 \)
+                  (\( e_i \) là các vector thuộc cơ sở chính tắc của \(
+                  \mathbb{R}^4 \)).
+                </li>
+                <li style="margin-bottom: 20px">
+                  b) \( S = \{(1, 2), (2, 3), (3, 4)\} \) trong \( \mathbb{R}^2
+                  \).
+                </li>
+                <li style="margin-bottom: 20px">
+                  c) \( S = \{(1, 0), (0, 1), (1, 1)\} \) trong \( \mathbb{R}^2
+                  \).
+                </li>
+                <li style="margin-bottom: 20px">
+                  d) \( S = \{(1, 2, 3), \mathbf{0}, (4, 5, 6)\} \) trong \(
+                  \mathbb{R}^3 \) (với \( \mathbf{0} \) là vector không).
+                </li>
+                <li>
+                  e) Cho hai vector \( u, v \) bất kỳ. Xét hệ vector \( S = \{u,
+                  v, u + v\} \).
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box-blue">
+            <p>
+              <span class="text-red-bold">Bài 3.</span> Trong không gian \(
+              \mathcal{P}_2[x] \), xét xem hệ vector \( B = \{u_1 = 1 + 2x, u_2
+              = 3x - x^2, u_3 = 2 - x + x^2\} \) ĐLTT hay PTTT.
+            </p>
+          </div>
+
+          <div class="box-blue">
+            <p><span class="text-red-bold">Bài 4.</span></p>
+            <div class="math-scroll" style="margin-top: 15px">
+              <ul class="exercise-list">
+                <li style="margin-bottom: 25px">
+                  a) Trong không gian véctơ \( \mathbb{R}^4 \), các vector sau
+                  là ĐLTT hay PTTT:
+                  <div class="math-center" style="margin-top: 15px">
+                    \( u_1 = (1, 1, 1, 1), \quad u_2 = (1, 1, -1, -1), \quad u_3
+                    = (1, -1, 1, -1), \quad u_4 = (1, -1, -1, 1) \)
+                  </div>
+                </li>
+                <li>
+                  b) Tìm tất cả các giá trị của \( m \) sao cho véctơ \( u = (m,
+                  1, 2, 3) \) là THTT của bốn vector \( u_1, u_2, u_3, u_4 \)
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="download-container">
+            <p
+              style="
+                margin-bottom: 15px;
+                color: var(--text-sub);
+                font-size: 0.95rem;
+              "
+            >
+              <i class="fa-solid fa-circle-info"></i> Bạn đã hoàn thành các bài
+              tập? Tải lời giải về để đối chiếu nhé!
+            </p>
+            <a
+              href="https://drive.google.com/uc?export=download&id=1mmAe1p4wHEXY2MmcpCNwo7hiHjj_FQUi"
+              target="_blank"
+              class="btn-download"
+            >
+              <i class="fa-solid fa-file-arrow-down"></i> Lời giải tham khảo
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+    <footer class="vectoria-footer distraction-element">
+      <div class="footer-container">
+        <div class="brand-col">
+          <div
+            class="partner-logo"
+            style="display: flex; align-items: center; gap: 10px"
+          >
+            <img src="../assets/images/logoMoi.png" alt="Logo Nhóm/Trường" />
+            <img
+              src="../assets/images/logoChu.png"
+              id="textLogo"
+              alt="Logo Chữ Vectoria"
+              style="height: 35px; width: auto"
+            />
+          </div>
+          <p>
+            Vectoria — Vương quốc của những Vector — được kiến tạo để thay đổi
+            hoàn toàn cách chúng ta nhìn nhận về vector. Không còn là những khái
+            niệm khô khan, tại nơi đây, mỗi vector đều mang một hình hài, một
+            hướng đi và sinh khí riêng. Chúng tôi khao khát trao cho bạn một góc
+            nhìn thấu thị để toàn bộ vẻ đẹp trừu tượng của không gian vector
+            được thu trọn vào tầm mắt.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              <a href="mailto:support@vectoria.io.vn">support@vectoria.io.vn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="margin: 0">
+          © 2026 Vectoria. Học và trực quan hóa Không gian vector.
+        </p>
+      </div>
+    </footer>
+    <script>
+      // 1. THEME HANDLING & ANIMATION
+      (function () {
+        const savedTheme = localStorage.getItem("vec_theme");
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark");
+        }
+      })();
+      document.addEventListener("DOMContentLoaded", () => {
+        const settingsBtn = document.getElementById("btnSettings");
+        const settingsDropdown = document.getElementById("settingsDropdown");
+        const themeToggle = document.getElementById("themeToggle");
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+        const transitionIcons = document.querySelector(
+          ".theme-transition-icons",
+        );
+
+        // Set initial checkbox state from ThemeManager
+        themeToggle.checked = ThemeManager.isDarkMode();
+
+        settingsBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          settingsDropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (
+            !settingsDropdown.contains(e.target) &&
+            !settingsBtn.contains(e.target)
+          ) {
+            settingsDropdown.classList.remove("show");
+          }
+        });
+
+        themeToggle.addEventListener("change", () => {
+          const isDark = ThemeManager.toggle();
+          themeToggle.checked = isDark;
+          ThemeManager.applyTheme(isDark);
+
+          // Animation Logic
+          if (transitionIcons) {
+            transitionIcons.classList.remove("animate-rise-fade");
+            void transitionIcons.offsetWidth; // Trigger reflow
+
+            if (isDark) {
+              sunIcon.style.display = "none";
+              moonIcon.style.display = "block";
+            } else {
+              sunIcon.style.display = "block";
+              moonIcon.style.display = "none";
+            }
+            transitionIcons.classList.add("animate-rise-fade");
+          }
+        });
+
+        // Listen for theme changes from other tabs
+        window.addEventListener("storage", (e) => {
+          if (e.key === ThemeManager.STORAGE_KEY) {
+            const isDark = ThemeManager.isDarkMode();
+            themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+          }
+        });
+      });
+    </script>
+    <script>
+      const VIDEO_ID = "3ioHzSV6PJs";
+      const CHAPTER_TIMES = [0, 45, 130, 470];
+    </script>
+
+    <script src="../js/utils/auto-update_timeline.js"></script>
+    <script>
+      function bootVectoriaMenu() {
+        if (window.menuInitialized) return;
+        window.menuInitialized = true;
+
+        console.log("Menu System: Booting...");
+        const topbarHeight =
+          document.getElementById("topbar")?.offsetHeight || 60;
+        let isClicking = false;
+
+        // AUTO-FIX TẬN GỐC: ÉP CHỈA PHẢI, SAU ĐÓ TỰ XOAY XUỐNG NẾU ĐANG OPEN
+        document.querySelectorAll(".custom-nav .arrow-icon").forEach((icon) => {
+          icon.classList.remove("fa-chevron-down");
+          icon.classList.add("fa-chevron-right");
+
+          const parentLi = icon.closest(".has-dropdown");
+          if (parentLi && parentLi.classList.contains("open")) {
+            setTimeout(() => {
+              icon.style.transform = "rotate(90deg)";
+            }, 0);
+          } else {
+            icon.style.transform = "rotate(0deg)";
+          }
+        });
+
+        // 1. NÚT "MỤC LỤC" THU GỌN TRÊN MOBILE
+        const sidebar = document.querySelector(".sidebar");
+        const navTitle = document.querySelector(".sidebar h3.nav-title");
+        if (navTitle) {
+          const newNavTitle = navTitle.cloneNode(true);
+          navTitle.replaceWith(newNavTitle);
+          newNavTitle.addEventListener("click", () => {
+            sidebar.classList.toggle("mobile-open");
+            // Tui đã xóa sạch đoạn code đẻ thêm mũi tên ở đây! CSS sẽ tự lo việc xoay.
+          });
+        }
+
+        // 2. MŨI TÊN ĐÓNG/MỞ CÁC MỤC BÊN TRONG
+        document.querySelectorAll(".custom-nav .toggle-btn").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const parentLi = this.closest(".has-dropdown");
+            if (parentLi) {
+              isClicking = true;
+              parentLi.classList.toggle("open");
+
+              const icon = this.querySelector(".arrow-icon");
+              if (icon) {
+                icon.style.transform = parentLi.classList.contains("open")
+                  ? "rotate(90deg)"
+                  : "rotate(0deg)";
+              }
+
+              setTimeout(() => {
+                isClicking = false;
+              }, 800);
+            }
+          });
+        });
+
+        // 3. CUỘN TRANG THÔNG MINH
+        const menuLinks = document.querySelectorAll('.custom-nav a[href^="#"]');
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("href");
+            if (!targetId || targetId === "#") return;
+
+            // Cấm cuộn nếu bấm vào chữ tĩnh
+            if (
+              this.classList.contains("sub-heading") ||
+              this.closest(".toggle-btn") ||
+              (this.hasAttribute("style") &&
+                this.getAttribute("style").includes("uppercase"))
+            ) {
+              e.preventDefault();
+              return;
+            }
+
+            e.preventDefault();
+            isClicking = true;
+
+            // Xóa sạch Active cũ
+            document
+              .querySelectorAll(".custom-nav .active")
+              .forEach((el) => el.classList.remove("active"));
+
+            // Bôi xanh thẻ a và cả cái Div chứa thẻ a
+            this.classList.add("active");
+            const parentDiv =
+              this.closest(".nav-link") ||
+              this.closest(".sub-link") ||
+              this.closest(".sub-sub-link");
+            if (parentDiv) parentDiv.classList.add("active");
+
+            // Tự động mở menu nếu nó đang bị đóng
+            const parentDropdown = this.closest(".has-dropdown");
+            if (parentDropdown) {
+              parentDropdown.classList.add("open");
+              const icon = parentDropdown.querySelector(".arrow-icon");
+              if (icon) icon.style.transform = "rotate(90deg)";
+            }
+
+            // Tự động đóng Menu Mục lục trên Mobile khi bấm bài
+            if (window.innerWidth <= 960 && sidebar) {
+              sidebar.classList.remove("mobile-open");
+              // Đoạn này cũng đã xóa việc reset mũi tên rác!
+            }
+
+            // Đợi 150ms cho Mobile menu rút lên xong rồi mới cuộn trang
+            setTimeout(
+              () => {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                  const offset =
+                    window.innerWidth <= 960 ? 140 : topbarHeight + 20;
+                  const executeScroll = () => {
+                    const y =
+                      targetElement.getBoundingClientRect().top +
+                      window.pageYOffset -
+                      offset;
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                    setTimeout(() => {
+                      isClicking = false;
+                    }, 800);
+                  };
+
+                  if (
+                    window.MathJax &&
+                    MathJax.startup &&
+                    MathJax.startup.promise
+                  ) {
+                    MathJax.startup.promise.then(() =>
+                      requestAnimationFrame(executeScroll),
+                    );
+                  } else {
+                    executeScroll();
+                  }
+                }
+              },
+              window.innerWidth <= 960 ? 150 : 0,
+            );
+          });
+        });
+
+        // 4. AUTO SÁNG MỤC KHI LĂN CHUỘT (SCROLL SPY)
+        let isScrolling;
+        window.onscroll = () => {
+          window.clearTimeout(isScrolling);
+          isScrolling = setTimeout(() => {
+            if (isClicking) return;
+
+            const sections = document.querySelectorAll(
+              ".chapter-card, .pdf-h1[id], .pdf-h2[id], .pdf-h3[id], #bai-tap, .video-box[id]",
+            );
+            let currentId = "";
+            const offsetSpy =
+              window.innerWidth <= 960 ? topbarHeight + 80 : topbarHeight + 50;
+
+            sections.forEach((section) => {
+              if (
+                window.pageYOffset >=
+                section.getBoundingClientRect().top +
+                  window.pageYOffset -
+                  offsetSpy -
+                  50
+              ) {
+                currentId = section.getAttribute("id");
+              }
+            });
+
+            if (currentId) {
+              menuLinks.forEach((link) => {
+                if (link.getAttribute("href") === `#${currentId}`) {
+                  const inGroupLabel =
+                    link.classList.contains("sub-heading") ||
+                    link.closest(".toggle-btn") ||
+                    (link.hasAttribute("style") &&
+                      link.getAttribute("style").includes("uppercase"));
+
+                  if (!inGroupLabel) {
+                    // Đánh dấu Active
+                    document
+                      .querySelectorAll(".custom-nav .active")
+                      .forEach((el) => el.classList.remove("active"));
+                    link.classList.add("active");
+                    const parentDiv =
+                      link.closest(".nav-link") ||
+                      link.closest(".sub-link") ||
+                      link.closest(".sub-sub-link");
+                    if (parentDiv) parentDiv.classList.add("active");
+                  }
+                }
+              });
+            }
+          }, 50);
+        };
+      }
+
+      document.addEventListener("DOMContentLoaded", bootVectoriaMenu);
+      setTimeout(bootVectoriaMenu, 500);
+    </script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="../js/utils/live-collab.js"></script>
+  </body>
+</html>

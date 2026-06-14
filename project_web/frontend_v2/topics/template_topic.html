@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cơ sở và Số chiều - Vectoria Knowledge</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="../js/utils/theme-manager.js"></script>
+
+    <style>
+        /* =================== 1. CÁC BIẾN MÀU & THEME =================== */
+        :root {
+            /* Theme Variables */
+            --primary: #3a78ff; 
+            --accent: #3a78ff; 
+            
+            /* Light Mode */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 280px;
+            --topbar-h: 60px;
+            
+            /* Settings Variables */
+            --fg: #0f1117;
+            --bg: #ffffff;
+            --card: #ffffff;
+            --muted: #6b6f76;
+            --shadow-lg: 0 10px 30px rgba(16, 24, 40, .10);
+            --hover-bg: rgba(0,0,0,0.05);
+        }
+
+        /* Dark Mode Override */
+        body.dark {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --border: #334155;
+            
+            /* Override Settings */
+            --fg: #e9e9ef;
+            --bg: #0f1116;
+            --card: #1e293b;
+            --muted: #a8acb4;
+            --shadow-lg: 0 16px 44px rgba(0, 0, 0, .45);
+            --hover-bg: rgba(255,255,255,0.1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding-top: var(--topbar-h);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* =================== 2. HEADER & SETTINGS =================== */
+        #topbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--topbar-h);
+            background: var(--bg-card); border-bottom: 1px solid var(--border);
+            display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+            padding: 0 20px; z-index: 1000;
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .topbar-right { display: flex; justify-content: flex-end; align-items: center; gap: 15px; }
+
+        #topbar .brand {
+            text-align: center; font-weight: 800; font-size: 18px;
+            color: var(--accent); white-space: nowrap;
+        }
+
+        /* Icon Buttons */
+        .topbar-icon, .icon-btn {
+            width: 40px; height: 40px; border-radius: 10px;
+            border: 1px solid var(--border); background: var(--bg-card); color: var(--text-sub);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; font-size: 1.1rem;
+            text-decoration: none;
+        }
+        .topbar-icon:hover, .icon-btn:hover {
+            background: var(--accent); color: #fff; border-color: var(--accent);
+        }
+        .icon-btn:hover i { transform: rotate(45deg); transition: 0.3s; }
+
+        /* Settings Dropdown */
+        .settings-container { position: relative; display: flex; align-items: center; }
+
+        .settings-dropdown {
+            position: absolute; top: 50px; right: 0; width: 260px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; box-shadow: var(--shadow-lg);
+            padding: 12px; display: none; flex-direction: column; gap: 8px; z-index: 1000;
+        }
+        .settings-dropdown.show { display: flex; animation: slideDown 0.2s ease-out; }
+
+        @keyframes slideDown { 
+            from { opacity: 0; transform: translateY(-10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .setting-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 10px; border-radius: 6px;
+            color: var(--text-main); text-decoration: none; font-weight: 500; cursor: pointer;
+        }
+        .setting-item:hover { background: var(--hover-bg); }
+        .setting-item span { display: flex; align-items: center; gap: 10px; }
+
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--text-sub); opacity: 0.5; transition: .3s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px;
+            left: 3px; bottom: 3px; background-color: white;
+            transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); opacity: 1; }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        /* =================== 3. ANIMATION MẶT TRĂNG/MẶT TRỜI (ĐÃ FIX LỖI) =================== */
+        .theme-transition-icons {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 9999; pointer-events: none;
+            display: flex; justify-content: center; align-items: center;
+            
+            /* [FIX QUAN TRỌNG] Mặc định ẩn ở container cha */
+            opacity: 0; 
+            transform: translate(-50%, -50%) translateY(100px) scale(0.5); 
+        }
+
+        #sunIcon, #moonIcon { 
+            font-size: 8rem; 
+            position: absolute; 
+            /* [FIX QUAN TRỌNG] Không set opacity ở đây nữa */
+        }
+        
+        #sunIcon { color: #f59e0b; filter: drop-shadow(0 0 40px rgba(245, 158, 11, 0.8)); }
+        #moonIcon { color: #f8fafc; filter: drop-shadow(0 0 40px rgba(248, 250, 252, 0.8)); }
+
+        /* Class kích hoạt animation */
+        .animate-rise-fade { animation: riseAndFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        
+        @keyframes riseAndFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) translateY(150px) scale(0.5); }
+            40% { opacity: 1; transform: translate(-50%, -50%) translateY(0px) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) translateY(-100px) scale(0.8); }
+        }
+
+        /* =================== 4. STYLE RIÊNG CỦA TRANG NÀY =================== */
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 40px 20px;
+            display: flex; gap: 40px; position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width); flex-shrink: 0; height: fit-content;
+            position: sticky; top: 100px;
+            background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); padding: 20px;
+            transition: background 0.3s, border 0.3s;
+        }
+        .sidebar h3 { margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 2px solid var(--primary); padding-bottom: 10px; color: var(--text-main); }
+        .menu-link { display: block; padding: 10px 12px; color: var(--text-sub); text-decoration: none; border-radius: 6px; transition: 0.2s; border-left: 3px solid transparent; }
+        .menu-link:hover, .menu-link.active { background: #eff6ff; color: var(--primary); font-weight: 600; }
+        body.dark .menu-link:hover, body.dark .menu-link.active { background: #2d3748; }
+
+        /* Content */
+        .main-content { flex-grow: 1; min-width: 0; }
+        .chapter-card { 
+            background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border); 
+            padding: 40px; margin-bottom: 30px; transition: background 0.3s, border 0.3s;
+        }
+        h1.lesson-title { font-size: 2rem; margin: 0 0 10px; color: var(--primary); }
+        h2.section-title { font-size: 1.4rem; margin: 0 0 20px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
+        h2.section-title i { color: var(--primary); }
+        p, li { line-height: 1.7; color: var(--text-main); margin-bottom: 20px; }
+
+        /* Cinema Layout */
+        .cinema-container {
+            display: flex; flex-direction: row;
+            background: #0f172a; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-height: 400px; 
+        }
+        .video-box { flex: 2.2; position: relative; background: #000; width: 100%; aspect-ratio: 16 / 9; }
+        #youtube-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
+
+        .playlist-box {
+            flex: 1; display: flex; flex-direction: column;
+            background: #1e293b; border-left: 1px solid #334155; height: auto; max-height: 100%;
+        }
+
+        @media (max-width: 960px) {
+            .cinema-container { flex-direction: column; }
+            .video-box { flex: none; width: 100%; aspect-ratio: 16 / 9; }
+            .playlist-box { flex: none; width: 100%; height: 400px; border-left: none; border-top: 1px solid #334155; }
+        }
+
+        /* Playlist Item */
+        .playlist-header { padding: 15px 20px; background: #0f172a; border-bottom: 1px solid #334155; color: #fff; font-weight: 600; display: flex; justify-content: space-between; }
+        .chapter-list { overflow-y: auto; flex-grow: 1; scrollbar-width: thin; scrollbar-color: #475569 #1e293b; }
+        .chapter-item { display: flex; gap: 12px; padding: 15px 20px; border-bottom: 1px solid #334155; cursor: pointer; transition: 0.2s; color: #fff; }
+        .chapter-item:hover { background: #334155; }
+        .chapter-item.playing { background: #253346; border-left: 4px solid var(--primary); }
+        .time-badge { background: rgba(255,255,255,0.1); color: #94a3b8; font-family: monospace; font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; height: fit-content;}
+        .chapter-info { flex-grow: 1; }
+        .chapter-title { font-size: 0.9rem; font-weight: 500; color: #e2e8f0; display: block; margin-bottom: 4px; }
+        .chapter-desc { font-size: 0.8rem; color: #94a3b8; }
+        .chapter-icon { color: var(--primary); opacity: 0; transition: 0.3s; transform: translateX(-10px); }
+        .chapter-item.playing .chapter-icon, .chapter-item:hover .chapter-icon { opacity: 1; transform: translateX(0); }
+        
+        /* PDF & Code */
+        .pdf-wrapper { width: 100%; height: 700px; border: 1px solid var(--border); border-radius: 8px; }
+        .code-block { background: #1e293b; color: #e2e8f0; padding: 20px; border-radius: 8px; font-family: monospace; overflow-x: auto; }
+    </style>
+</head>
+
+<body>
+
+    <div class="theme-transition-icons">
+        <i class="fa-solid fa-sun" id="sunIcon"></i>
+        <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <div id="topbar">
+        <div class="topbar-left">
+            <a href="knowledge_info.html" class="topbar-icon" title="Quay lại thư viện">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+
+        <div class="brand">Vectoria Knowledge</div>
+
+        <div class="topbar-right">
+            <div class="settings-container">
+                <button id="btnSettings" class="icon-btn" title="Cài đặt">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+
+                <div class="settings-dropdown" id="settingsDropdown">
+                    <div class="setting-item">
+                        <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0; opacity: 0.5;">
+
+                    <div class="setting-item">
+                        <span><i class="fa-solid fa-film"></i> Hiệu ứng (phép tính)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="animToggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid var(--border); margin: 0; opacity: 0.5;">
+
+                    <a href="contact.html" class="setting-item" style="text-decoration: none; color: inherit;">
+                        <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; color: var(--muted);"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3><i class="fa-solid fa-list-ul"></i> Mục lục bài học</h3>
+            <div class="menu-list">
+                <a href="#tong-quan" class="menu-link active">1. Tổng quan</a>
+                <a href="#video-bai-giang" class="menu-link">2. Video bài giảng</a>
+                <a href="#ly-thuyet" class="menu-link">3. Lý thuyết</a>
+                <a href="#tai-lieu-pdf" class="menu-link">4. Tài liệu PDF</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="chapter-card" id="tong-quan">
+                <h1 class="lesson-title">Cơ sở và Số chiều</h1>
+                <p>Khái niệm cơ bản về không gian vector.</p>
+                <div class="code-block">Dim(V) = n</div>
+            </div>
+
+            <div class="chapter-card" id="video-bai-giang" style="padding: 0; overflow: hidden; border: none; background: transparent;">
+                <h2 class="section-title" style="margin-bottom: 20px;"><i class="fa-brands fa-youtube"></i> Video bài giảng</h2>
+
+                <div class="cinema-container">
+                    <div class="video-box">
+                        <div id="youtube-player"></div>
+                    </div>
+
+                    <div class="playlist-box">
+                        <div class="playlist-header">
+                            <span>Nội dung</span>
+                            <span style="font-size: 0.8rem; color: #94a3b8;">4 phần</span>
+                        </div>
+                        <div class="chapter-list">
+                            <div class="chapter-item playing" onclick="seekTo(0); setActive(this)">
+                                <i class="fa-solid fa-circle-play chapter-icon"></i>
+                                <div class="chapter-info"><span class="chapter-title">Vector ở phổ thông</span></div>
+                                <div class="time-badge">00:00</div>
+                            </div>
+                            <div class="chapter-item" onclick="seekTo(60); setActive(this)">
+                                <i class="fa-solid fa-circle-play chapter-icon"></i>
+                                <div class="chapter-info"><span class="chapter-title">Quy tắc nối đuôi</span></div>
+                                <div class="time-badge">01:00</div>
+                            </div>
+                            <div class="chapter-item" onclick="seekTo(230); setActive(this)">
+                                <i class="fa-solid fa-circle-play chapter-icon"></i>
+                                <div class="chapter-info"><span class="chapter-title">Quy tắc hình bình hành</span></div>
+                                <div class="time-badge">03:50</div>
+                            </div>
+                            <div class="chapter-item" onclick="seekTo(307); setActive(this)">
+                                <i class="fa-solid fa-circle-play chapter-icon"></i>
+                                <div class="chapter-info"><span class="chapter-title">Phép nhân vector với số thực</span></div>
+                                <div class="time-badge">05:07</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter-card" id="ly-thuyet">
+                <h2 class="section-title">Lý thuyết trọng tâm</h2>
+                <p>Nội dung lý thuyết...</p>
+            </div>
+             <div class="chapter-card" id="tai-lieu-pdf">
+                <h2 class="section-title">Tài liệu tham khảo</h2>
+                <p>File PDF sẽ hiển thị ở đây.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 1. THEME HANDLING & ANIMATION
+        (function() {
+            const savedTheme = localStorage.getItem('vec_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+            }
+        })();
+        document.addEventListener('DOMContentLoaded', () => {
+            const settingsBtn = document.getElementById('btnSettings');
+            const settingsDropdown = document.getElementById('settingsDropdown');
+            const themeToggle = document.getElementById('themeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const transitionIcons = document.querySelector('.theme-transition-icons');
+
+            // Set initial checkbox state from ThemeManager
+            themeToggle.checked = ThemeManager.isDarkMode();
+
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!settingsDropdown.contains(e.target) && !settingsBtn.contains(e.target)) {
+                    settingsDropdown.classList.remove('show');
+                }
+            });
+
+            themeToggle.addEventListener('change', () => {
+                const isDark = ThemeManager.toggle();
+                themeToggle.checked = isDark;
+                ThemeManager.applyTheme(isDark);
+                
+                // Animation Logic
+                if (transitionIcons) {
+                    transitionIcons.classList.remove('animate-rise-fade');
+                    void transitionIcons.offsetWidth; // Trigger reflow
+                    
+                    if (isDark) {
+                        sunIcon.style.display = 'none';
+                        moonIcon.style.display = 'block';
+                    } else {
+                        sunIcon.style.display = 'block';
+                        moonIcon.style.display = 'none';
+                    }
+                    transitionIcons.classList.add('animate-rise-fade');
+                }
+            });
+
+            // Listen for theme changes from other tabs
+            window.addEventListener('storage', (e) => {
+                if (e.key === ThemeManager.STORAGE_KEY) {
+                    const isDark = ThemeManager.isDarkMode();
+                    themeToggle.checked = isDark;
+                    ThemeManager.applyTheme(isDark);
+                }
+            });
+        });
+
+        // 2. YOUTUBE API
+        var player;
+        function onYouTubeIframeAPIReady() {
+            var originUrl = window.location.origin;
+            player = new YT.Player('youtube-player', {
+                height: '100%', width: '100%',
+                videoId: 'woM6wsymvsc',
+                playerVars: { 'playsinline': 1, 'rel': 0, 'origin': originUrl },
+                events: { 'onReady': onPlayerReady, 'onError': onPlayerError }
+            });
+        }
+        function onPlayerReady(event) { console.log("Video ready"); }
+        function onPlayerError(event) { 
+            console.error("Lỗi video: " + event.data);
+            document.querySelector('.video-box').innerHTML = '<div style="color:white;text-align:center;padding-top:20%;">Lỗi tải video (Mã: '+event.data+')</div>';
+        }
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function seekTo(seconds) {
+            if (player && player.seekTo) { player.seekTo(seconds, true); player.playVideo(); }
+        }
+        function setActive(el) {
+            document.querySelectorAll('.chapter-item').forEach(i => i.classList.remove('playing'));
+            el.classList.add('playing');
+        }
+
+        // 3. SCROLL SPY
+        const cards = document.querySelectorAll('.chapter-card');
+        const links = document.querySelectorAll('.menu-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            cards.forEach(card => {
+                if (scrollY >= card.offsetTop - 150) current = card.getAttribute('id');
+            });
+            links.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2260 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Hướng Dẫn Sử Dụng - Vectoria</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="js/utils/theme-manager.js"></script>
+
+    <style>
+      /* =================== 1. CẤU HÌNH CƠ BẢN =================== */
+      :root {
+        --primary: #3a78ff;
+        --accent: #3a78ff;
+        --bg-body: #f1f5f9;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-sub: #64748b;
+        --border: #e2e8f0;
+        --sidebar-width: 250px;
+        --topbar-h: 60px;
+        --shadow-lg: 0 10px 30px rgba(16, 24, 40, 0.1);
+        --hover-bg: rgba(0, 0, 0, 0.05);
+        /* Màu riêng cho trang Hướng dẫn */
+        --hd-warning-bg: #fffbeb;
+        --hd-warning-border: #f59e0b;
+        --hd-warning-text: #b45309;
+        --hd-info-bg: #eff6ff;
+        --hd-info-border: #3b82f6;
+      }
+
+      body.dark {
+        --bg-body: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --border: #334155;
+        --shadow-lg: 0 16px 44px rgba(0, 0, 0, 0.45);
+        --hover-bg: rgba(255, 255, 255, 0.1);
+        --hd-warning-bg: rgba(245, 158, 11, 0.1);
+        --hd-warning-border: #d97706;
+        --hd-warning-text: #fcd34d;
+        --hd-info-bg: rgba(59, 130, 246, 0.1);
+        --hd-info-border: #3b82f6;
+      }
+
+      html,
+      body {
+        scroll-behavior: smooth;
+        /* TUYỆT CHIÊU: Khóa cứng chiều ngang, chống Drag qua lại! */
+        max-width: 100vw;
+        overflow-x: clip;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        padding-top: var(--topbar-h);
+        width: 100%;
+        min-height: 100vh;
+        /* ĐÃ XÓA overflow-y: auto ĐỂ CỨU HIỆU ỨNG FREEZE/STICKY */
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      /* Xử lý nhảy sáng */
+      body.preload * {
+        transition: none !important;
+      }
+
+      /* =================== STYLE MENU MỤC LỤC ĐA CẤP =================== */
+      /* 1. Xóa dấu chấm tròn và căn lề gốc */
+      .custom-nav ul,
+      .custom-nav li {
+        list-style: none !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* 2. Định dạng thẻ Link chuẩn để ăn màu xanh và Hover */
+      .custom-nav .nav-link,
+      .custom-nav .sub-link {
+        display: flex !important;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 5px;
+        padding: 12px 20px;
+        color: var(--text-sub);
+        text-decoration: none;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: none !important;
+      }
+      .custom-nav .nav-link > a,
+      .custom-nav .sub-link > a {
+        flex-grow: 1;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .custom-nav .nav-link:hover,
+      .custom-nav .sub-link:hover {
+        background: #f8fafc;
+        color: var(--primary);
+      }
+
+      /* 3. Phân cấp thụt lề cho 3 cấp độ */
+      .custom-nav .sub-menu .sub-link {
+        padding-left: 40px;
+      }
+      .custom-nav .sub-menu .sub-menu .sub-link {
+        padding-left: 60px !important;
+        font-size: 0.85rem;
+      }
+
+      /* 4. Hover, Active & Line Highlight via :has() (Sạch lề 100%) */
+      .custom-nav .nav-item,
+      .custom-nav .sub-menu li {
+        position: relative;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+      }
+      .custom-nav .nav-item:has(> .active),
+      .custom-nav .sub-menu li:has(> .active) {
+        border-left: 3px solid var(--primary);
+        background-color: var(--hover-bg);
+      }
+      .custom-nav .active {
+        border-left: none !important;
+        background-color: transparent !important;
+        color: var(--primary) !important;
+        font-weight: 600;
+      }
+
+      /* 5. Mũi tên & Dropdown */
+      .custom-nav .sub-menu {
+        display: none;
+      }
+      .custom-nav .has-dropdown.open > .sub-menu {
+        display: block !important;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      /* Mũi tên mặc định (Chevron Down) -> Xoay 0 độ = CHĨA XUỐNG */
+      .custom-nav .arrow-icon {
+        margin-left: auto;
+        transition: transform 0.3s ease;
+        transform: rotate(0deg);
+        font-size: 0.7rem;
+      }
+
+      /* Mở dropdown -> Xoay 90 độ (Chevron Down xoay 90 độ = CHĨA TRÁI) */
+      .custom-nav .has-dropdown.open > .nav-link .arrow-icon,
+      .custom-nav .has-dropdown.open > .toggle-btn .arrow-icon {
+        transform: rotate(90deg) !important;
+      }
+
+      /* 6. Mobile & Dark Mode */
+      body.dark .custom-nav .nav-link,
+      body.dark .custom-nav .sub-link {
+        color: #94a3b8;
+      }
+      body.dark .custom-nav .nav-item:has(> .active),
+      body.dark .custom-nav .sub-menu li:has(> .active) {
+        background-color: #1e293b;
+        border-left-color: #60a5fa;
+      }
+      body.dark .custom-nav .active {
+        color: #60a5fa !important;
+      }
+      body.dark .custom-nav .nav-link:hover,
+      body.dark .custom-nav .sub-link:hover {
+        background: #1e293b;
+        color: #60a5fa;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        max-height: calc(100vh - 140px);
+        overflow-y: auto;
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px 0;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+      }
+      body.dark .sidebar::-webkit-scrollbar-thumb {
+        background-color: #475569;
+      }
+      .sidebar h3,
+      .custom-nav .nav-title {
+        margin: 0;
+        padding: 0 20px 15px 20px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-main);
+      }
+
+      /* GIAO DIỆN MOBILE CHUẨN */
+      @media screen and (max-width: 960px) {
+        .sidebar {
+          width: 100% !important;
+          height: auto !important;
+          max-height: none !important;
+          z-index: 990 !important;
+          position: sticky !important;
+          top: var(--topbar-h) !important;
+          border-radius: 0 !important;
+          border: none !important;
+          border-bottom: 1px solid var(--border) !important;
+          background-color: var(--bg-body) !important;
+          padding: 10px 15px !important;
+          margin: 0 !important;
+          overflow-y: visible !important;
+        }
+        .sidebar h3.nav-title {
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          background: var(--bg-card) !important;
+          padding: 15px 20px !important;
+          margin: 0 !important;
+          border-radius: 12px !important;
+          border: 1px solid var(--border) !important;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+          cursor: pointer !important;
+          color: var(--primary) !important;
+          transition: all 0.3s ease !important;
+        }
+        .sidebar h3.nav-title i:not(.fa-list-ul) {
+          display: none !important;
+        }
+        .sidebar h3.nav-title::after {
+          content: "\f054";
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          transition: transform 0.3s ease;
+        }
+        .sidebar.mobile-open h3.nav-title::after {
+          transform: rotate(90deg) !important;
+        }
+        .custom-nav .nav-list {
+          display: none !important;
+          flex-direction: column !important;
+          background: var(--bg-card) !important;
+          padding: 10px 0 15px 0 !important;
+          margin: -5px 0 0 0 !important;
+          border-radius: 0 0 12px 12px !important;
+          border: 1px solid var(--border) !important;
+          border-top: none !important;
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1) !important;
+          max-height: 50vh !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+        }
+        .sidebar.mobile-open h3.nav-title {
+          border-radius: 12px 12px 0 0 !important;
+          border-bottom: 1px dashed var(--border) !important;
+        }
+        .sidebar.mobile-open .nav-list {
+          display: flex !important;
+        }
+        .custom-nav a.nav-link,
+        .custom-nav a.sub-link {
+          background: transparent !important;
+          border: none !important;
+          border-left: 3px solid transparent !important;
+          border-radius: 0 !important;
+          margin-bottom: 0 !important;
+          padding-top: 12px !important;
+          padding-bottom: 12px !important;
+          padding-right: 15px !important;
+        }
+        .custom-nav a.nav-link {
+          padding-left: 20px !important;
+        }
+        .custom-nav a.sub-link {
+          padding-left: 40px !important;
+        }
+        .custom-nav .sub-menu .sub-menu .sub-link {
+          padding-left: 60px !important;
+        }
+        body.dark .sidebar h3.nav-title,
+        body.dark .custom-nav .nav-list {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+        }
+        body.dark .sidebar.mobile-open h3.nav-title {
+          border-bottom-color: #334155 !important;
+        }
+      }
+
+      /* =================== 2. GIAO DIỆN CHUNG =================== */
+      #topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topbar-h);
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 1000;
+        box-sizing: border-box;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .topbar-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+      }
+
+      #topbar .brand {
+        text-align: center;
+        font-weight: 800;
+        font-size: 18px;
+        color: var(--accent);
+        white-space: nowrap;
+        margin-left: 30px;
+      }
+
+      .topbar-icon,
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-sub);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        text-decoration: none;
+      }
+
+      .topbar-icon:hover,
+      .icon-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .settings-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .settings-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 260px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      .settings-dropdown.show {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .setting-item:hover {
+        background: var(--hover-bg);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        opacity: 0.5;
+        transition: 0.3s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--accent);
+        opacity: 1;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      .theme-transition-icons {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(100px) scale(0.5);
+      }
+
+      #sunIcon,
+      #moonIcon {
+        font-size: 8rem;
+        position: absolute;
+      }
+
+      #sunIcon {
+        color: #f59e0b;
+      }
+
+      #moonIcon {
+        color: #f8fafc;
+      }
+
+      .animate-rise-fade {
+        animation: riseAndFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes riseAndFade {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(150px) scale(0.5);
+        }
+
+        40% {
+          opacity: 1;
+          transform: translate(-50%, -50%) translateY(0px) scale(1.2);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translateY(-100px) scale(0.8);
+        }
+      }
+
+      /* =================== 3. BỐ CỤC CHÍNH =================== */
+      .container {
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        gap: 30px;
+        position: relative;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 20px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      .sidebar h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.1rem;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 10px;
+        color: var(--text-main);
+      }
+
+      .custom-nav {
+        padding: 15px 0 !important;
+      }
+
+      .custom-nav .nav-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        padding: 0 20px 15px 20px;
+        margin: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .custom-nav .nav-list {
+        list-style: none;
+        padding: 10px 0 0 0;
+        margin: 0;
+      }
+
+      .custom-nav .nav-item {
+        margin-bottom: 2px;
+      }
+
+      .custom-nav .nav-link {
+        padding: 12px 20px;
+      }
+
+      .custom-nav .sub-link {
+        padding: 10px 20px 10px 35px;
+        font-size: 0.9rem;
+      }
+
+      .custom-nav .nav-link,
+      .custom-nav .sub-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-sub);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+      }
+
+      .custom-nav .nav-link:hover,
+      .custom-nav .sub-link:hover {
+        color: var(--primary);
+        background: var(--hover-bg);
+      }
+
+      .custom-nav .arrow-icon {
+        font-size: 0.8rem;
+        color: var(--muted);
+        transition: transform 0.3s ease;
+      }
+
+      .custom-nav .sub-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+      }
+
+      .custom-nav .has-dropdown.open > .sub-menu {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      .custom-nav .active {
+        background-color: var(--hd-info-bg);
+        color: var(--primary) !important;
+        font-weight: 600;
+        border-left: 3px solid var(--primary);
+      }
+
+      /* Main Content */
+      .main-content {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      .chapter-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 40px;
+        margin-bottom: 30px;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      /* Typography Hướng Dẫn */
+      .lesson-title {
+        font-size: 2rem;
+        margin: 0 0 10px;
+        color: var(--primary);
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+        margin: 0 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+      }
+
+      #ly-thuyet {
+        font-size: 1.15rem;
+        line-height: 1.7;
+        overflow-wrap: break-word;
+      }
+
+      .hd-h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+
+      .hd-h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 30px 0 15px 0;
+        color: var(--text-main);
+      }
+
+      .hd-h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 20px 0 10px 0;
+        color: var(--text-main);
+      }
+
+      /* Cấu hình Hình ảnh Hướng Dẫn */
+      .hd-img-container {
+        margin: 25px 0;
+        text-align: center;
+      }
+
+      .hd-img {
+        max-width: 100%;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .hd-img-caption {
+        font-style: italic;
+        font-size: 0.95rem;
+        color: var(--text-sub);
+        margin-top: 10px;
+        display: block;
+      }
+
+      /* Boxes Cảnh báo & Lưu ý */
+      .hd-box-info {
+        background-color: var(--hd-info-bg);
+        border-left: 4px solid var(--hd-info-border);
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .hd-box-warning {
+        background-color: var(--hd-warning-bg);
+        border-left: 4px solid var(--hd-warning-border);
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+        color: var(--hd-warning-text);
+      }
+
+      .hd-box-title {
+        font-weight: 700;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Nút Highlight trong Text */
+      .hd-btn-text {
+        background-color: var(--primary);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      /* Responsive */
+      @media (max-width: 960px) {
+        .container {
+          flex-direction: column;
+          padding: 0;
+          gap: 0;
+        }
+
+        .main-content {
+          padding: 15px;
+        }
+
+        .sidebar {
+          width: 100% !important;
+          height: auto !important;
+          max-height: none !important;
+          z-index: 990 !important;
+          position: sticky !important;
+          top: var(--topbar-h) !important;
+          border-radius: 0 !important;
+          border: none !important;
+          border-bottom: 1px solid var(--border) !important;
+          background-color: var(--bg-body) !important;
+          padding: 10px 15px 10px 5px !important; /* XÓA KHOẢNG TRỐNG ĐỈNH ĐỂ DÍNH SÁT TOPBAR */
+          margin: 0 !important;
+          overflow-y: visible !important;
+        }
+
+        .sidebar h3 {
+          display: none;
+        }
+
+        .chapter-card {
+          scroll-margin-top: 130px;
+          padding: 20px;
+        }
+      }
+
+      /* ================= CẤU HÌNH ẢNH HƯỚNG DẪN ================= */
+      .hd-img-container {
+        margin: 25px 0;
+        text-align: center;
+      }
+
+      .guide-img {
+        /* Tuyệt chiêu co giãn: 
+           Độ rộng tối đa là 100% độ rộng của khung chứa nó.
+           Nó sẽ tự teo nhỏ lại nếu khung chứa nó bị bóp nhỏ, 
+           nhưng sẽ không bao giờ phình to hơn kích thước thật của ảnh. */
+        max-width: 100%;
+        height: auto; /* Giữ nguyên tỷ lệ ảnh, không bị méo */
+
+        display: block; /* Ép về khối để margin-auto hoạt động */
+        margin-left: auto; /* Căn giữa */
+        margin-right: auto; /* Căn giữa */
+
+        /* Mấy cái lề viền bóng đổ cũ của ông giữ nguyên */
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-color: #fff;
+        transition:
+          filter 0.3s ease,
+          background-color 0.3s ease,
+          border-color 0.3s;
+      }
+
+      /* MA THUẬT DARK MODE CHO ẢNH (BÊ TỪ DINH_THUC.HTML SANG) */
+      body.dark .guide-img {
+        /* 1. invert(0.9): Đảo ngược 90% màu sắc (Trắng -> Đen xám)
+               2. hue-rotate(180deg): Xoay vòng màu để bù trừ lại (Tránh bị sai lệch màu quá nhiều)
+               3. brightness(1.1): Kéo sáng lên một chút cho chữ dễ đọc
+            */
+        filter: invert(0.9) hue-rotate(180deg) brightness(1.1);
+        background-color: transparent;
+        border-color: #475569;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      .hd-img-caption {
+        font-style: italic;
+        font-size: 0.95rem;
+        color: var(--text-sub);
+        margin-top: 10px;
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body class="preload">
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        localStorage.getItem("theme-mode") === "dark"
+      ) {
+        document.documentElement.classList.add("dark");
+        document.body.classList.add("dark", "dark-mode");
+      }
+    </script>
+
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <div id="topbar">
+      <div class="topbar-left">
+        <a href="javascript:history.back()" class="topbar-icon" title="Quay lại"
+          ><i class="fa-solid fa-arrow-left"></i
+        ></a>
+        <a href="index.html" class="topbar-icon" title="Về trang chủ"
+          ><i class="fa-solid fa-house"></i
+        ></a>
+        <a href="tltk.html" class="topbar-icon" title="Tài liệu tham khảo"
+          ><i class="fa-solid fa-file-lines"></i
+        ></a>
+      </div>
+
+      <div class="brand">Hướng Dẫn Sử Dụng</div>
+
+      <div class="topbar-right">
+        <div class="settings-container">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+              <label class="switch"
+                ><input type="checkbox" id="themeToggle" /><span
+                  class="slider round"
+                ></span
+              ></label>
+            </div>
+            <hr
+              style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0;
+                opacity: 0.5;
+              "
+            />
+            <a
+              href="contact.html"
+              class="setting-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <aside class="sidebar custom-nav">
+        <h3 class="nav-title"><i class="fa-solid fa-list-ul"></i> Mục lục</h3>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#hd-tong-quan" class="nav-link" style="font-weight: 700"
+              >TỔNG QUAN</a
+            >
+          </li>
+
+          <li class="nav-item">
+            <a href="#hd-trang-chu" class="nav-link" style="font-weight: 700"
+              >TRANG CHỦ</a
+            >
+          </li>
+
+          <li class="nav-item has-dropdown open">
+            <div class="nav-link toggle-btn">
+              <a href="#hd-trang-tinh-toan" style="font-weight: 700"
+                >TRANG TÍNH TOÁN</a
+              >
+              <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            </div>
+            <ul class="sub-menu">
+              <li class="nav-item">
+                <a href="#hd-giao-dien-chinh" class="sub-link active"
+                  >1. Giao diện chính</a
+                >
+              </li>
+              <li class="nav-item">
+                <a href="#hd-giao-dien-chung" class="sub-link"
+                  >2. Giao diện chung công cụ tính toán</a
+                >
+              </li>
+              <li class="nav-item">
+                <a href="#hd-chuc-nang-khoi-tao" class="sub-link"
+                  >3. Chức năng khởi tạo vector</a
+                >
+              </li>
+
+              <li class="nav-item has-dropdown">
+                <div class="sub-link toggle-btn">
+                  <a href="#hd-cac-cong-cu"
+                    >4. Các công cụ liên quan đến chủ đề Không gian vector</a
+                  >
+                  <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                </div>
+                <ul class="sub-menu">
+                  <li class="nav-item">
+                    <a href="#hd-4-1" class="sub-link"
+                      >4.1. Bài toán về Độc lập tuyến tính</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-4-2" class="sub-link"
+                      >4.2. Bài toán về Hạng của hệ vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-4-3" class="sub-link"
+                      >4.3. Bài toán về Cơ sở và số chiều</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-4-4" class="sub-link"
+                      >4.4. Bài toán về Tọa độ vector trong cơ sở</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item has-dropdown">
+                <div class="sub-link toggle-btn">
+                  <a href="#hd-cac-phep-tinh">5. Các phép tính trên vector</a>
+                  <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                </div>
+                <ul class="sub-menu">
+                  <li class="nav-item">
+                    <a href="#hd-5-1" class="sub-link"
+                      >5.1. Phép cộng 2 vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-2" class="sub-link"
+                      >5.2. Phép kéo dãn vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-3" class="sub-link"
+                      >5.3. Phép tìm hình chiếu vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-4" class="sub-link"
+                      >5.4. Phép chuẩn hóa vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-5" class="sub-link"
+                      >5.5. Phép tìm tích vô hướng của 2 vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-6" class="sub-link"
+                      >5.6. Phép tìm tích có hướng của 2 vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-7" class="sub-link"
+                      >5.7. Phép tính tìm độ dài của vector</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="#hd-5-8" class="sub-link"
+                      >5.8. Phép tìm góc giữa 2 vector</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-dropdown">
+            <div class="nav-link toggle-btn">
+              <a href="#hd-trang-kien-thuc" style="font-weight: 700"
+                >TRANG TÌM HIỂU KIẾN THỨC</a
+              >
+              <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            </div>
+            <ul class="sub-menu">
+              <li class="nav-item">
+                <a href="#hd-kt-1" class="sub-link"
+                  >1. Giao diện trang tổng quan</a
+                >
+              </li>
+              <li class="nav-item">
+                <a href="#hd-kt-2" class="sub-link"
+                  >2. Giao diện Thẻ Kiến thức chuẩn bị</a
+                >
+              </li>
+              <li class="nav-item">
+                <a href="#hd-kt-3" class="sub-link"
+                  >3. Giao diện chung của các trang kiến thức</a
+                >
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <div class="chapter-card">
+          <h1 class="hd-h1" id="hd-tong-quan">TỔNG QUAN</h1>
+          <p>
+            Vectoria là hệ thống website hỗ trợ học tập và thực hành Đại số
+            tuyến tính, tập trung vào các nội dung về vector và không gian
+            vector. Nền tảng được thiết kế nhằm kết hợp giữa lý thuyết học thuật
+            và công cụ tính toán trực quan, giúp người học vừa nắm vững kiến
+            thức nền tảng vừa có thể quan sát, mô phỏng và kiểm chứng kết quả
+            trong không gian 2D và 3D.
+          </p>
+          <p>Hệ thống bao gồm hai thành phần chính:</p>
+          <ul>
+            <li>
+              <strong>Trang Tính toán:</strong> Cung cấp công cụ khởi tạo
+              vector, thực hiện các phép toán trên vector và giải các bài toán
+              như độc lập tuyến tính, hạng của hệ vector, cơ sở và số chiều, tọa
+              độ của vector trong một cơ sở.
+            </li>
+            <li>
+              <strong>Trang Kiến thức:</strong> Cung cấp nội dung lý thuyết,
+              khái niệm và ví dụ minh họa phục vụ việc tham khảo và củng cố kiến
+              thức.
+            </li>
+          </ul>
+          <p>
+            Vectoria sử dụng hệ thống nhận diện với tông màu xanh dương – trắng,
+            thể hiện định hướng học thuật và công nghệ.
+          </p>
+          <p>
+            Logo Vectoria mang cấu trúc hình học đối xứng, tượng trưng cho tính
+            hệ thống và nền tảng toán học. Các liên kết thể hiện sự kết nối tri
+            thức, biểu tượng trung tâm đại diện cho trực quan hóa. Tông xanh
+            dương nhấn mạnh tính học thuật và công nghệ.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-01.png"
+              alt="Logo Vectoria"
+              class="guide-img"
+              style="max-width: 400px; border: none; box-shadow: none"
+            />
+          </div>
+
+          <p>Hệ thống được triển khai trực tuyến tại địa chỉ:</p>
+          <p>
+            <a
+              href="https://vectoria.io.vn"
+              target="_blank"
+              style="color: var(--primary)"
+              >https://vectoria.io.vn</a
+            >
+          </p>
+          <p>
+            Người dùng có thể truy cập bằng trình duyệt web trên máy tính để sử
+            dụng đầy đủ các chức năng của hệ thống.
+          </p>
+          <p>
+            Tài liệu này trình bày chi tiết cấu trúc giao diện và hướng dẫn sử
+            dụng từng chức năng của website.
+          </p>
+
+          <h1 class="hd-h1" id="hd-trang-chu" style="margin-top: 60px">
+            TRANG CHỦ
+          </h1>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-02.png"
+              alt="Giao diện Trang chủ"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Trang chủ bao gồm: Giới thiệu chung và Các nút điều hướng đến các
+            trang chức năng chính:
+          </p>
+          <p>
+            <strong>Trang tính toán:</strong> Khu vực làm việc chính, nơi thực
+            hiện các phép toán và bài toán về vector.
+          </p>
+          <p>
+            <strong>Trang kiến thức:</strong> Cung cấp lý thuyết, khái niệm và
+            công thức liên quan để tham khảo.
+          </p>
+
+          <h1 class="hd-h1" id="hd-trang-tinh-toan" style="margin-top: 60px">
+            TRANG TÍNH TOÁN
+          </h1>
+
+          <h2 class="hd-h2" id="hd-giao-dien-chinh">1. Giao diện chính</h2>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-03.png"
+              alt="Giao diện chính trang tính toán"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Nút mở/ thu gọn thanh công cụ (Menu):</strong> Cho phép
+            mở hoặc thu gọn thanh công cụ bên trái màn hình.
+          </p>
+          <p>
+            <strong>2. Nút điều hướng:</strong> Nhấn vào biểu tượng Trang chủ
+            <i class="fa-solid fa-house"></i> để quay về trang chính hoặc chọn
+            biểu tượng Trang kiến thức <i class="fa-solid fa-book-open"></i> để
+            xem kiến thức liên quan.
+          </p>
+          <p>
+            <strong>3. Cài đặt:</strong> Nhấn vào biểu tượng bánh răng để mở
+            bảng thiết lập hệ thống, bao gồm:
+          </p>
+          <ul>
+            <li><strong>Chế độ tối:</strong> Bật/ Tắt giao diện nền tối.</li>
+            <li>
+              <strong>Hiệu ứng (phép tính):</strong> Bật/ Tắt hiệu ứng minh họa
+              khi thực hiện phép toán.
+            </li>
+            <li><strong>Liên hệ/ Góp ý:</strong> Gửi phản hồi về hệ thống.</li>
+          </ul>
+          <p>
+            <strong>4. Chế độ không gian (Mode):</strong> Phần này cho phép bạn
+            có thể chuyển qua lại giữa chiều không gian 2D và 3D để dễ quan sát.
+          </p>
+          <p>
+            <strong>5. Căn giữa/ Reset góc nhìn:</strong> Đưa hệ trục tọa độ về
+            vị trí trung tâm (như định dạng ban đầu) sau khi đã xoay hoặc phóng
+            to/ thu nhỏ không gian hiển thị.
+          </p>
+
+          <h2 class="hd-h2" id="hd-giao-dien-chung">
+            2. Giao diện chung công cụ tính toán
+          </h2>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-04.png"
+              alt="Giao diện chung công cụ tính toán"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Nhấn vào nút Menu để mở thanh công cụ chức năng bên trái màn hình.
+          </p>
+          <p>Giao diện tính toán sẽ được chia làm các khu vực rõ ràng, gồm:</p>
+          <p>
+            <strong>Thanh tiêu đề:</strong> Hiển thị tên trang và phím tắt tương
+            tự như giao diện chính.
+          </p>
+          <p>
+            <strong>Khu vực làm việc chính:</strong> Nơi hiển thị giao diện nhập
+            liệu và kết quả tính toán. Có 3 công cụ chức năng:
+          </p>
+          <ul>
+            <li>
+              <strong>1. Khởi tạo vector:</strong> Trước khi thực hiện tính
+              toán, bạn cần khởi tạo vector. Có thể thêm, chỉnh sửa, xoá, ẩn/
+              hiện hoặc làm nổi bật vector.
+            </li>
+            <li>
+              <strong>2. Không gian vector:</strong> Phần này giúp bạn trực quan
+              hoá và gợi ý các lời giải mẫu cho các bài toán liên quan đến không
+              gian vector như là: Xác định độc lập hay phụ thuộc tuyến tính, tìm
+              hạng của hệ vector, tìm cơ sở và số chiều của không gian vector,
+              tìm toạ độ của vector trong cơ sở.
+            </li>
+            <li>
+              <strong>3. Phép tính:</strong> Ở phần này bạn có thể thực hiện các
+              phép tính toán trên vector như phép cộng 2 vector, phép kéo dãn,
+              phép tìm hình chiếu, phép chuẩn hoá vector, tính tích vô hướng của
+              2 vector, tìm tích có hướng của 2 vector, tính độ dài vector và
+              tính góc giữa 2 vector.
+            </li>
+          </ul>
+          <p>
+            <strong>Khu vực kết quả:</strong> Hiển thị kết quả chi tiết sau khi
+            tính toán. Có thể thực hiện thao tác kéo di chuyển và xoay, cũng có
+            thể phóng to thu nhỏ bằng cách lăn nút cuộn của chuột hoặc thao tác
+            phóng to/ thu nhỏ trên touchpad.
+          </p>
+
+          <h2 class="hd-h2" id="hd-chuc-nang-khoi-tao">
+            3. Chức năng khởi tạo vector
+          </h2>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-05.png"
+              alt="Chức năng khởi tạo vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Trước khi thực hiện tính toán, bạn cần khởi tạo vector với các thông
+            tin toạ độ.
+          </p>
+          <p>
+            <strong>1. Biểu tượng Hướng dẫn:</strong> Cho phép nhập toạ độ
+            vector cần thêm, tối đa là 3 chiều (2D và 3D). Định dạng hợp lệ là
+            "[x,y,z]" hoặc "x,y,z". Đối với số thực thì dùng dấu chấm (.) để
+            ngăn cách phần thập phân và dùng dấu gạch (/) để biểu diễn phân số.
+          </p>
+          <p>
+            <strong>2. Khu vực nhập toạ độ:</strong> Cho phép nhập toạ độ vector
+            cần thêm, tối đa là 3 chiều (2D và 3D).
+          </p>
+          <p>
+            <strong
+              >3. Menu Ký hiệu toán học
+              <i class="fa-solid fa-bars"></i>:</strong
+            >
+            Nhấn để mở danh sách các ký hiệu và hàm toán học, bao gồm: Căn bậc
+            hai, Căn bậc n, Sin, Cos, Tan, Cot, Log cơ số a, Log tự nhiên (ln),
+            π, e. Các ký hiệu được chèn trực tiếp vào ô nhập tọa độ.
+          </p>
+          <p>
+            <strong>4. Nút Thêm vector:</strong> Sau khi nhập tọa độ hợp lệ,
+            nhấn nút này hoặc phím Enter để vẽ vector đó lên không gian mô phỏng
+            (bên phải màn hình) và thêm vector đó vào danh sách quản lý các
+            vector ở phần (6).
+          </p>
+          <p><strong>5. Bảng điều khiển:</strong> Có thể tuỳ chỉnh:</p>
+          <ul>
+            <li>
+              <strong>Tự động chuyển chiều không gian:</strong> Bật/ Tắt chế độ
+              tự động điều hiển thị khi đổi giữa 2D và 3D.
+            </li>
+            <li>
+              <strong>Xóa hết vector:</strong> Xóa toàn bộ vector hiện có trong
+              danh sách và không gian hiển thị.
+            </li>
+          </ul>
+          <p>
+            <strong>6. Thanh tìm kiếm:</strong> Cho phép tìm nhanh vector trong
+            danh sách theo toạ độ.
+          </p>
+          <p>
+            <strong>7. Danh sách Vector đã tạo:</strong> Hiển thị các vector đã
+            được thêm vào hệ thống. Vector được thêm mới sẽ xuất hiện ở cuối
+            danh sách. Mỗi vector sẽ gồm: mã số thứ tự, toạ độ và màu đại diện
+            trên không gian mô phỏng. Các nút chức năng:
+          </p>
+          <ul>
+            <li><strong>Chú ý:</strong> Bật/ Tắt chế độ làm nổi bật vector.</li>
+            <li>
+              <strong>Ẩn:</strong> Tạm thời ẩn vector khỏi không gian hiển thị.
+            </li>
+            <li>
+              <strong>Xóa:</strong> Loại bỏ hoàn toàn vector khỏi hệ thống.
+            </li>
+          </ul>
+
+          <h2 class="hd-h2" id="hd-cac-cong-cu">
+            4. Các công cụ liên quan đến chủ đề Không gian vector
+          </h2>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-06.png"
+              alt="Các công cụ Không gian vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Sau khi thực hiện khởi tạo vector, bạn có thể thực hiện trực quan
+            hoá, tính toán và tham khảo lời giải cho một số bài toán trong không
+            gian vector bằng cách bấm vào chức năng Không gian vector rồi bấm
+            vào Chọn bài toán để chọn dạng bài toán mà bạn muốn thực hiện tính
+            toán.
+          </p>
+
+          <h3 class="hd-h3" id="hd-4-1">4.1. Bài toán về Độc lập tuyến tính</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-07.png"
+              alt="Bài toán Độc lập tuyến tính"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Thanh tìm kiếm:</strong> Cho phép tìm nhanh vector trong
+            danh sách theo toạ độ. Kết quả tìm kiếm được lọc theo nội dung nhập
+            vào.
+          </p>
+          <p>
+            <strong>2. Khu vực chọn vector:</strong> Bạn có thể chọn từng vector
+            bằng cách đánh dấu vào ô tương ứng hoặc chọn tất cả vector bằng tùy
+            chọn Chọn tất cả. Cuộn danh sách để xem đầy đủ các vector. Chỉ các
+            vector được chọn mới được sử dụng trong quá trình kiểm tra.
+          </p>
+
+          <div class="hd-box-info">
+            <div class="hd-box-title">
+              <i class="fa-solid fa-circle-info"></i> Lưu ý:
+            </div>
+            Cần chọn ít nhất một vector trước khi thực hiện kiểm tra.
+          </div>
+
+          <p>
+            <strong>3. Nút Kiểm tra:</strong> Sau khi chọn được hệ vector cần
+            xét, bấm nút này để thực hiện kiểm tra tính độc lập hoặc phụ thuộc
+            tuyến tính.
+          </p>
+          <p>
+            <strong>4. Khu vực kết quả:</strong> Hiển thị kết luận về tính độc
+            lập tuyến tính của hệ vector đã chọn.
+          </p>
+
+          <h3 class="hd-h3" id="hd-4-2">4.2. Bài toán về Hạng của hệ vector</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-08.png"
+              alt="Bài toán Hạng của hệ vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Thanh tìm kiếm:</strong> Cho phép tìm nhanh vector trong
+            danh sách theo toạ độ. Kết quả tìm kiếm được lọc theo nội dung nhập
+            vào.
+          </p>
+          <p>
+            <strong>2. Khu vực chọn vector:</strong> Bạn có thể chọn từng vector
+            bằng cách đánh dấu vào ô tương ứng hoặc chọn tất cả vector bằng tùy
+            chọn Chọn tất cả. Cuộn danh sách để xem đầy đủ các vector. Chỉ các
+            vector được chọn mới được sử dụng trong quá trình kiểm tra.
+          </p>
+
+          <div class="hd-box-info">
+            <div class="hd-box-title">
+              <i class="fa-solid fa-circle-info"></i> Lưu ý:
+            </div>
+            Cần chọn ít nhất một vector trước khi thực hiện tính hạng.
+          </div>
+
+          <p>
+            <strong>3. Nút Tính hạng:</strong> Sau khi chọn được hệ vector cần
+            xét, bấm nút này để hệ thống để thực hiện tính hạng của hệ vector.
+          </p>
+          <p>
+            <strong>4. Khu vực kết quả:</strong> Hiển thị giá trị hạng của hệ
+            vector đã chọn. Giá trị hạng là số nguyên không âm, phản ánh số
+            vector độc lập tuyến tính tối đa trong hệ.
+          </p>
+
+          <h3 class="hd-h3" id="hd-4-3">4.3. Bài toán về Cơ sở và số chiều</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-09.png"
+              alt="Bài toán Cơ sở và số chiều"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Thanh tìm kiếm:</strong> Cho phép tìm nhanh vector trong
+            danh sách theo toạ độ. Kết quả tìm kiếm được lọc theo nội dung nhập
+            vào.
+          </p>
+          <p>
+            <strong>2. Khu vực chọn vector:</strong> Bạn có thể chọn từng vector
+            bằng cách đánh dấu vào ô tương ứng hoặc chọn tất cả vector bằng tùy
+            chọn Chọn tất cả. Cuộn danh sách để xem đầy đủ các vector. Chỉ các
+            vector được chọn mới được sử dụng trong quá trình kiểm tra.
+          </p>
+
+          <div class="hd-box-info">
+            <div class="hd-box-title">
+              <i class="fa-solid fa-circle-info"></i> Lưu ý:
+            </div>
+            Cần chọn ít nhất một vector trước khi thực hiện tính cơ sở.
+          </div>
+
+          <p>
+            <strong>3. Tính cơ sở:</strong> Sau khi chọn hệ vector, nhấn nút này
+            để hệ thống: Xác định một hệ vector cơ sở và tính số chiều của không
+            gian sinh bởi hệ vector đã chọn.
+          </p>
+          <p>
+            <strong>4. Lời giải:</strong> Bạn có thể tham khảo hướng dẫn giải
+            một số bài tập về tính cơ sở và số chiều của hệ vector bằng cách bấm
+            vào nút Lời giải.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-10.png"
+              alt="Khu vực kết quả và hiệu ứng"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>5. Khu vực điều chỉnh Hiệu ứng (Animation):</strong> Bạn có
+            thể điều chỉnh tốc độ hiệu ứng bằng cách kéo thanh tốc độ sang trái
+            (tăng tốc độ) hoặc sang phải (giảm tốc độ) và có thể chọn Dừng và
+            Huỷ Hiệu ứng.
+          </p>
+          <p>
+            <strong>6. Khu vực hiển thị kết quả:</strong> Kết quả về số chiều và
+            danh sách các vector tạo thành một cơ sở của hệ đã chọn.
+          </p>
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-11.png"
+              alt="Lời giải Cơ sở - Cách 1"
+              class="guide-img"
+              style="margin-bottom: 10px"
+            />
+            <img
+              src="assets/images/hdsd/hdsd-12.png"
+              alt="Lời giải Cơ sở - Cách 2"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Bạn có thể lựa chọn tham khảo cách tìm cơ sở và số chiều bằng cách
+            bấm vào ô Cách 1: Ma trận hoặc Cách 2: Hệ phương trình. Trong Cách 2
+            sẽ có 2 lựa chọn là hướng Tổng quát hoặc hướng Xét từng vector
+          </p>
+
+          <h3 class="hd-h3" id="hd-4-4">
+            4.4. Bài toán về Toạ độ vector trong cơ sở
+          </h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-13.png"
+              alt="Bài toán Toạ độ vector trong cơ sở"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector muốn tìm toạ độ:</strong> Bấm vào thanh này
+            để lựa chọn vector mà bạn muốn tìm toạ độ.
+          </p>
+          <p>
+            <strong>2. Thanh tìm kiếm:</strong> Cho phép tìm nhanh vector trong
+            danh sách theo toạ độ. Kết quả tìm kiếm được lọc theo nội dung nhập
+            vào.
+          </p>
+          <p>
+            <strong>3. Khu vực chọn vector:</strong> Bạn có thể chọn từng vector
+            bằng cách đánh dấu vào ô tương ứng hoặc chọn tất cả vector bằng tùy
+            chọn Chọn tất cả. Cuộn danh sách để xem đầy đủ các vector. Chỉ các
+            vector được chọn mới được sử dụng trong quá trình kiểm tra.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-14.png"
+              alt="Lưu ý khi chọn hệ cơ sở"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>4. Xuất toạ độ:</strong> Sau khi chọn được hệ vector, bấm
+            vào nút Xuất toạ độ để thực hiện tính toạ độ của vector theo cơ sở
+            đã chọn. Hệ thống chỉ thực hiện tính toán khi người dùng nhấn nút
+            này.
+          </p>
+          <p>
+            <strong>5. Lời giải:</strong> Hiển thị các bước giải chi tiết của
+            quá trình tìm tọa độ vector theo cơ sở. Người dùng có thể theo dõi
+            phương pháp lập hệ phương trình hoặc sử dụng ma trận chuyển cơ sở.
+          </p>
+
+          <p>
+            <strong>6. Khu vực hiển thị kết quả:</strong> Hiển thị toạ độ của
+            vector theo cơ sở đã chọn.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-15.png"
+              alt="Lời giải Tọa độ - Cách 1"
+              class="guide-img"
+              style="margin-bottom: 10px"
+            />
+            <img
+              src="assets/images/hdsd/hdsd-16.png"
+              alt="Lời giải Tọa độ - Cách 2"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Bạn có thể lựa chọn tham khảo cách tìm toạ độ vector theo cơ sở bằng
+            cách bấm vào ô Cách 1: Lập hệ phương trình hoặc Cách 2: Ma trận
+            chuyển cơ sở.
+          </p>
+
+          <h2 class="hd-h2" id="hd-cac-phep-tinh">
+            5. Các phép tính trên vector
+          </h2>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-17.png"
+              alt="Menu Các phép tính trên vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            Sau khi thực hiện khởi tạo vector, bạn có thể thực hiện trực quan
+            hoá và thực hiện các phép tính toán trên vector bằng cách bấm vào
+            chức năng Phép tính rồi bấm vào Chọn phép tính để chọn phép tính
+            trên vector mà bạn muốn thực hiện.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-1">5.1. Phép cộng 2 vector</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-18.png"
+              alt="Thực hiện Phép cộng 2 vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn 2 vector mà bạn muốn thực hiện
+            phép cộng bằng cách bấm vào thanh hiển thị và chọn vector. Chỉ các
+            vector đã được khởi tạo mới xuất hiện trong danh sách.
+          </p>
+          <p>
+            <strong>2. Thực hiện:</strong> Sau khi chọn đủ hai vector, nhấn nút
+            này để hệ thống: Tính tổng của hai vector, hiển thị kết quả toạ độ
+            và vẽ vector tổng trên không gian mô phỏng.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Toạ độ của vector tổng sẽ được
+            hiển thị bên cạnh. Vector tổng sẽ được hiển thị ở phần mô phỏng bên
+            phải, đồng thời hệ thống sẽ tự thêm vector tổng vào danh sách các
+            vector.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-2">5.2. Phép kéo dãn vector</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-19.png"
+              alt="Thực hiện Phép kéo dãn vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p><strong>1. Hệ số k:</strong> Nhập hệ số kéo dãn k.</p>
+          <p>
+            <strong>2. Chọn vector:</strong> Chọn vector mà bạn muốn thực hiện
+            phép kéo dãn bằng cách bấm vào thanh hiển thị và chọn vector. Chỉ
+            các vector đã được khởi tạo mới xuất hiện trong danh sách.
+          </p>
+          <p>
+            <strong>3. Thực hiện:</strong> Bấm vào nút này để hệ thống thực hiện
+            kéo dãn vector đã được chọn với hệ số kéo dãn k đã được nhập.
+          </p>
+          <p>
+            <strong>4. Khu vực kết quả:</strong> Toạ độ của vector mới (vector
+            sau kéo dãn) sẽ được hiển thị bên cạnh. Vector đó cũng sẽ được hiển
+            thị ở phần mô phỏng bên phải, đồng thời hệ thống sẽ tự thêm vector
+            đó vào danh sách các vector.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-3">5.3. Phép tìm hình chiếu vector</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-20.png"
+              alt="Thực hiện Phép tìm hình chiếu vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn 2 vector mà bạn muốn thực hiện
+            phép chiếu bằng cách bấm vào thanh hiển thị và chọn vector. Phép
+            chiếu thực hiện chiếu Vector 1 lên Vector 2, nghĩa là thực hiện bài
+            toán "Tìm hình chiếu của vector 1 (v1) lên vector 2 (v2)".
+          </p>
+          <p>
+            <strong>2. Thực hiện:</strong> Bấm vào nút này để hệ thống thực hiện
+            tính hình chiếu của vector 1 (v1) lên vector 2 (v2) đã được chọn.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Toạ độ của vector hình chiếu sẽ
+            được hiển thị bên dưới. Vector hình chiếu cũng sẽ được hiển thị ở
+            phần mô phỏng bên phải, đồng thời hệ thống sẽ tự thêm vector đó vào
+            danh sách các vector.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-4">5.4. Phép chuẩn hoá vector</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-21.png"
+              alt="Thực hiện Phép chuẩn hoá vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn vector mà bạn muốn thực hiện
+            chuẩn hoá bằng cách bấm vào thanh hiển thị và chọn vector. Chỉ các
+            vector đã được khởi tạo mới xuất hiện trong danh sách.
+          </p>
+          <p>
+            <strong>2. Thực hiện:</strong> Bấm vào nút này để hệ thống thực hiện
+            chuẩn hóa vector đã được chọn.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Toạ độ của vector mới (vector
+            đã được chuẩn hoá) sẽ được hiển thị bên dưới. Vector chuẩn hoá cũng
+            sẽ được hiển thị ở phần mô phỏng bên phải, đồng thời hệ thống sẽ tự
+            thêm vector đó vào danh sách các vector.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-5">
+            5.5. Phép tìm tích vô hướng của 2 vector
+          </h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-22.png"
+              alt="Thực hiện Phép tìm tích vô hướng của 2 vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn 2 vector mà bạn muốn thực hiện
+            tính tích vô hướng bằng cách bấm vào thanh hiển thị và chọn vector.
+            Chỉ các vector đã được khởi tạo mới xuất hiện trong danh sách.
+          </p>
+          <p>
+            <strong>2. Tính toán:</strong> Bấm vào nút này để hệ thống thực hiện
+            tính tích vô hướng của 2 vector đã chọn.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Tích vô hướng của 2 vector sẽ
+            được hiển thị bên phải.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-6">
+            5.6. Phép tìm tích có hướng của 2 vector
+          </h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-23.png"
+              alt="Thực hiện Phép tìm tích có hướng của 2 vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn 2 vector mà bạn muốn thực hiện
+            tìm tích có hướng bằng cách bấm vào thanh hiển thị và chọn vector.
+            Chỉ các vector đã được khởi tạo mới xuất hiện trong danh sách.
+          </p>
+          <p>
+            <strong>2. Tính toán:</strong> Bấm vào nút này để hệ thống thực hiện
+            tính tích vô hướng của 2 vector đã chọn.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Toạ độ của vector kết quả sẽ
+            được hiển thị bên dưới. Vector này cũng sẽ được hiển thị ở phần mô
+            phỏng bên phải, đồng thời hệ thống sẽ tự thêm vector vào danh sách
+            các vector.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-7">
+            5.7. Phép tính tìm độ dài của vector
+          </h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-24.png"
+              alt="Thực hiện Phép tính tìm độ dài của vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn vector mà bạn muốn thực hiện
+            tính độ dài bằng cách bấm vào thanh hiển thị và chọn vector. Chỉ các
+            vector đã được khởi tạo mới xuất hiện trong danh sách.
+          </p>
+          <p>
+            <strong>2. Tính toán:</strong> Bấm vào nút này để hệ thống thực hiện
+            tính độ dài của vector đã chọn.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Độ lớn của vector sẽ được hiển
+            thị ở bên phải.
+          </p>
+
+          <h3 class="hd-h3" id="hd-5-8">5.8. Phép tìm góc giữa 2 vector</h3>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-25.png"
+              alt="Thực hiện Phép tìm góc giữa 2 vector"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Chọn vector:</strong> Chọn 2 vector mà bạn muốn thực hiện
+            tìm góc giữa chúng bằng cách bấm vào thanh hiển thị và chọn vector.
+          </p>
+          <p>
+            <strong>2. Tính toán:</strong> Bấm vào nút này để hệ thống thực hiện
+            tính góc giữa 2 vector đã được chọn.
+          </p>
+          <p>
+            <strong>3. Khu vực kết quả:</strong> Số đo của góc hợp bởi 2 vector
+            sẽ được hiển thị ở bên phải. Góc này cũng sẽ được biểu diễn ở phần
+            mô phỏng bên phải.
+          </p>
+
+          <h1 class="hd-h1" id="hd-trang-kien-thuc" style="margin-top: 60px">
+            TRANG TÌM HIỂU KIẾN THỨC
+          </h1>
+
+          <h2 class="hd-h2" id="hd-kt-1">1. Giao diện trang tổng quan</h2>
+          <p>
+            Trang Kiến thức cung cấp các nội dung giải thích chi tiết về vector,
+            không gian vector, ma trận và các phép toán liên quan, hỗ trợ người
+            dùng hiểu rõ nền tảng lý thuyết trước khi thực hành trên hệ thống.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-26.png"
+              alt="Giao diện trang tổng quan kiến thức"
+              class="guide-img"
+              style="margin-bottom: 10px"
+            />
+          </div>
+
+          <p>
+            <strong>Logo Vectoria Knowledge:</strong> Giúp dễ dàng điều hướng về
+            trang chủ ban đầu.
+          </p>
+          <p>
+            <strong>Menu Cài đặt:</strong> Góc trên bên phải (biểu tượng bánh
+            răng). Khi nhấn vào biểu tượng này, hệ thống hiển thị bảng tùy chọn
+            gồm:
+          </p>
+          <ul>
+            <li><strong>Chế độ tối:</strong> Bật/ Tắt giao diện nền tối.</li>
+            <li>
+              <strong>Tài liệu tham khảo:</strong> Điều hướng đến danh sách tài
+              liệu học thuật, cung cấp nguồn lý thuyết phục vụ nội dung giảng
+              dạy.
+            </li>
+            <li>
+              <strong>Liên hệ/ Góp ý:</strong> Cho phép gửi phản hồi về nội dung
+              và hỗ trợ báo lỗi hoặc đề xuất cải tiến.
+            </li>
+          </ul>
+          <p>
+            <strong>Khu vực “Chủ đề học tập”:</strong> Hiển thị các thẻ chuyên
+            đề, gồm các nội dung: Kiến thức chuẩn bị, Không gian vector, Độc lập
+            và phụ thuộc tuyến tính, Hạng của hệ vector và hệ sinh, Cơ sở và số
+            chiều và Toạ độ trong không gian vector.
+          </p>
+          <p>
+            <strong>Khu vực “Tiện ích”:</strong> bao gồm các thẻ liên kết trực
+            tiếp đến Công cụ tính toán trực quan và Tài liệu tham khảo.
+          </p>
+
+          <h2 class="hd-h2" id="hd-kt-2">
+            2. Giao diện Thẻ Kiến thức chuẩn bị
+          </h2>
+          <p>
+            Mỗi thẻ đại diện cho một chuyên đề trong chương trình Đại số tuyến
+            tính. Bạn có thể nhấn vào từng thẻ để truy cập nội dung chi tiết,
+            gồm: Vector ở phổ thông, Ma trận và các phép toán, Định thức, Hạng
+            ma trận, Ma trận nghịch đảo, Hệ phương trình tuyến tính.
+          </p>
+          <p>
+            Bạn có thể bấm vào thanh Kiến thức chuẩn bị để trở lại giao diện
+            chính của trang Tìm hiểu kiến thức.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-27.png"
+              alt="Giao diện thẻ Kiến thức chuẩn bị"
+              class="guide-img"
+            />
+          </div>
+
+          <h2 class="hd-h2" id="hd-kt-3">
+            3. Giao diện chung của các trang kiến thức
+          </h2>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-28.png"
+              alt="Giao diện chung các trang kiến thức"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>1. Nút Quay lại:</strong> Quay về giao diện chính của trang
+            Tìm hiểu kiến thức.
+          </p>
+          <p>
+            <strong>2. Menu Cài đặt:</strong> Có thể Bật/ Tắt giao diện nền tối
+            và gửi Liên hệ/ Góp ý.
+          </p>
+          <p>
+            <strong>3. Thanh Mục lục:</strong> Hiển thị cấu trúc nội dung của
+            chuyên đề và cho phép điều hướng nhanh giữa các phần.
+          </p>
+          <p>
+            <strong>4. Khu vực Nội dung chính:</strong> Hiển thị nội dung học
+            thuật chi tiết và hệ thống. Có bao gồm các ví dụ cụ thể và lời giải
+            tham khảo tương ứng.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-29.png"
+              alt="Khối Video trực quan"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>5. Khối Video trực quan:</strong> Cung cấp nội dung minh họa
+            trực quan cho phần lý thuyết, hỗ trợ người học tiếp cận khái niệm
+            theo hình ảnh động.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-30.png"
+              alt="Khối Bài tập"
+              class="guide-img"
+            />
+          </div>
+
+          <p>
+            <strong>6. Khối Bài tập:</strong> Có đề và Lời giải tham khảo giúp
+            củng cố kiến thức. Sau khi hoàn thành các bài tập, bạn có thể thực
+            hiện tải lời giải về để đối chiếu ở phần cuối trang.
+          </p>
+
+          <div class="hd-img-container">
+            <img
+              src="assets/images/hdsd/hdsd-31.png"
+              alt="Lời giải tham khảo"
+              class="guide-img"
+            />
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="vectoria-footer distraction-element">
+      <div class="footer-container">
+        <div class="brand-col">
+          <div
+            class="partner-logo"
+            style="display: flex; align-items: center; gap: 10px"
+          >
+            <img src="assets/images/logoMoi.png" alt="Logo Nhóm/Trường" />
+            <img
+              src="assets/images/logoChu.png"
+              id="textLogo"
+              alt="Logo Chữ Vectoria"
+              style="height: 35px; width: auto"
+            />
+          </div>
+          <p>
+            Vectoria — Vương quốc của những Vector — được kiến tạo để thay đổi
+            hoàn toàn cách chúng ta nhìn nhận về vector. Không còn là những khái
+            niệm khô khan, tại nơi đây, mỗi vector đều mang một hình hài, một
+            hướng đi và sinh khí riêng. Chúng tôi khao khát trao cho bạn một góc
+            nhìn thấu thị để toàn bộ vẻ đẹp trừu tượng của không gian vector
+            được thu trọn vào tầm mắt.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              <a href="mailto:support@vectoria.io.vn">support@vectoria.io.vn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="margin: 0">
+          © 2026 Vectoria. Học và trực quan hóa Không gian vector.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // ==========================================
+      // 1. KHÔI PHỤC NÚT SETTINGS & CHẾ ĐỘ TỐI
+      // ==========================================
+      function initThemeSettings() {
+        const settingsBtn = document.getElementById("btnSettings");
+        if (!settingsBtn || settingsBtn.dataset.booted === "true") return;
+        settingsBtn.dataset.booted = "true";
+
+        const settingsDropdown = document.getElementById("settingsDropdown");
+        const themeToggle = document.getElementById("themeToggle");
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+        const transitionIcons = document.querySelector(
+          ".theme-transition-icons",
+        );
+
+        if (themeToggle) {
+          themeToggle.checked = document.body.classList.contains("dark");
+        }
+
+        if (settingsBtn && settingsDropdown) {
+          settingsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            settingsDropdown.classList.toggle("show");
+          });
+
+          document.addEventListener("click", (e) => {
+            if (
+              !settingsDropdown.contains(e.target) &&
+              !settingsBtn.contains(e.target)
+            ) {
+              settingsDropdown.classList.remove("show");
+            }
+          });
+        }
+
+        if (themeToggle) {
+          themeToggle.addEventListener("change", () => {
+            const isDark = ThemeManager.toggle();
+            themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+
+            if (transitionIcons) {
+              transitionIcons.classList.remove("animate-rise-fade");
+              void transitionIcons.offsetWidth;
+              if (isDark) {
+                if (sunIcon) sunIcon.style.display = "none";
+                if (moonIcon) moonIcon.style.display = "block";
+              } else {
+                if (sunIcon) sunIcon.style.display = "block";
+                if (moonIcon) moonIcon.style.display = "none";
+              }
+              transitionIcons.classList.add("animate-rise-fade");
+            }
+          });
+        }
+
+        window.addEventListener("storage", (e) => {
+          if (e.key === ThemeManager.STORAGE_KEY) {
+            const isDark = ThemeManager.isDarkMode();
+            if (themeToggle) themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+          }
+        });
+      }
+
+      // ==========================================
+      // 2. MỤC LỤC & CAMERA AN NINH BẮT SCROLL
+      // ==========================================
+      window.menuInitialized = false;
+
+      function bootVectoriaMenu() {
+        const sidebar = document.querySelector(".sidebar");
+        if (!sidebar || sidebar.dataset.booted === "true") return;
+        sidebar.dataset.booted = "true";
+
+        if (window.vectoriaObserver) window.vectoriaObserver.disconnect();
+
+        const topbarHeight =
+          document.getElementById("topbar")?.offsetHeight || 60;
+        let isClicking = false;
+        let clickTimeout;
+
+        // ĐỒNG BỘ MŨI TÊN HTML THÀNH CHỈA PHẢI
+        document.querySelectorAll(".custom-nav .arrow-icon").forEach((icon) => {
+          icon.classList.remove(
+            "fa-chevron-down",
+            "fa-chevron-left",
+            "fa-chevron-up",
+          );
+          icon.classList.add("fa-chevron-right");
+        });
+
+        // NÚT MỤC LỤC MOBILE
+        const navTitle = document.querySelector(".sidebar h3.nav-title");
+        if (navTitle) {
+          const newNavTitle = navTitle.cloneNode(true);
+          navTitle.replaceWith(newNavTitle);
+          newNavTitle.addEventListener("click", () => {
+            sidebar.classList.toggle("mobile-open");
+          });
+        }
+
+        // CLICK MENU & SCROLL
+        document.querySelectorAll(".custom-nav a").forEach((link) => {
+          link.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("href");
+            const isToggle = this.closest(".toggle-btn");
+
+            // NẾU LÀ MỤC CÓ MŨI TÊN -> CHỈ XỔ MENU, CẤM SCROLL
+            if (isToggle) {
+              e.preventDefault();
+              e.stopPropagation();
+              const parentLi = this.closest(".has-dropdown");
+              if (parentLi) {
+                parentLi.classList.toggle("open");
+              }
+              return; // Cắt đuôi tại đây!
+            }
+
+            // NẾU LÀ LINK BÌNH THƯỜNG -> THỰC HIỆN SCROLL
+            if (targetId && targetId !== "#") {
+              e.preventDefault();
+              isClicking = true;
+              clearTimeout(clickTimeout);
+
+              document
+                .querySelectorAll(".custom-nav .active")
+                .forEach((el) => el.classList.remove("active"));
+              this.classList.add("active");
+
+              let parentDropdown = this.closest(".has-dropdown");
+              while (parentDropdown) {
+                parentDropdown.classList.add("open");
+                parentDropdown =
+                  parentDropdown.parentElement?.closest(".has-dropdown");
+              }
+
+              if (window.innerWidth <= 960 && sidebar) {
+                sidebar.classList.remove("mobile-open");
+              }
+
+              const targetElement = document.querySelector(targetId);
+              if (targetElement) {
+                const offset =
+                  window.innerWidth <= 960 ? 140 : topbarHeight + 20;
+                const y =
+                  targetElement.getBoundingClientRect().top +
+                  window.pageYOffset -
+                  offset;
+                window.scrollTo({ top: y, behavior: "smooth" });
+              }
+
+              clickTimeout = setTimeout(() => {
+                isClicking = false;
+              }, 800);
+            }
+          });
+        });
+
+        // CAMERA AN NINH BẮT TỌA ĐỘ KHI CUỘN CHUỘT
+        const sections = document.querySelectorAll(
+          ".hd-h1[id], .hd-h2[id], .hd-h3[id]",
+        );
+        const menuLinks = document.querySelectorAll('.custom-nav a[href^="#"]');
+
+        const observerOptions = {
+          root: null,
+          rootMargin: `-${topbarHeight + 20}px 0px -50% 0px`,
+          threshold: 0,
+        };
+
+        window.vectoriaObserver = new IntersectionObserver((entries) => {
+          if (isClicking) return;
+
+          let activeId = null;
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              activeId = entry.target.getAttribute("id");
+            }
+          });
+
+          if (activeId) {
+            menuLinks.forEach((link) => {
+              if (link.getAttribute("href") === `#${activeId}`) {
+                const isToggleBtn = link.closest(".toggle-btn");
+
+                document
+                  .querySelectorAll(".custom-nav .active")
+                  .forEach((el) => el.classList.remove("active"));
+                link.classList.add("active");
+
+                if (window.innerWidth > 960) {
+                  let parentDropdown = link.closest(".has-dropdown");
+                  while (parentDropdown) {
+                    parentDropdown.classList.add("open");
+                    parentDropdown =
+                      parentDropdown.parentElement?.closest(".has-dropdown");
+                  }
+                }
+              }
+            });
+          }
+        }, observerOptions);
+
+        sections.forEach((sec) => window.vectoriaObserver.observe(sec));
+      }
+
+      // ==========================================
+      // 3. KHỞI ĐỘNG TOÀN BỘ HỆ THỐNG
+      // ==========================================
+      function initVectoria() {
+        initThemeSettings(); // GỌI HÀM SETTINGS ĐỂ PHỤC HỒI NÚT BÁNH RĂNG
+
+        if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+          MathJax.startup.promise
+            .then(() => {
+              bootVectoriaMenu();
+              setTimeout(() => window.dispatchEvent(new Event("scroll")), 300);
+            })
+            .catch(() => bootVectoriaMenu());
+        } else {
+          setTimeout(() => {
+            bootVectoriaMenu();
+            window.dispatchEvent(new Event("scroll"));
+          }, 500);
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initVectoria);
+      } else {
+        initVectoria();
+      }
+      setTimeout(initVectoria, 1500);
+    </script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="js/utils/live-collab.js"></script>
+  </body>
+</html>

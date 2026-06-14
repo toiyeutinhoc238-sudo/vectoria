@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tài liệu tham khảo - Vectoria</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="js/utils/theme-manager.js"></script>
+
+    <style>
+      /* =================== 1. CẤU HÌNH CƠ BẢN =================== */
+      :root {
+        --primary: #2563eb;
+        --accent: #3b82f6;
+        --bg-body: #f8fafc;
+        --bg-card: #ffffff;
+        --text-main: #0f172a;
+        --text-sub: #475569;
+        --border: #e2e8f0;
+        --topbar-h: 70px;
+      }
+
+      body.dark {
+        --bg-body: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --border: #334155;
+        --primary: #60a5fa;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: transparent !important;
+        color: var(--text-main);
+        margin: 0;
+        padding-top: var(--topbar-h);
+        min-height: 100vh;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      /* =================== BACKGROUND HỌC THUẬT =================== */
+      .academic-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -2;
+        background-color: var(--bg-body);
+        background-image: radial-gradient(
+          var(--border) 1.5px,
+          transparent 1.5px
+        );
+        background-size: 30px 30px;
+        background-position: 0 0;
+        transition: background-color 0.3s;
+      }
+
+      .ambient-glow-1,
+      .ambient-glow-2 {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(120px);
+        z-index: -1;
+        pointer-events: none;
+        animation: floatGlow 15s ease-in-out infinite alternate;
+      }
+
+      .ambient-glow-1 {
+        top: -15%;
+        left: -10%;
+        width: 50vw;
+        height: 50vw;
+        background: rgba(58, 120, 255, 0.06);
+      }
+
+      .ambient-glow-2 {
+        bottom: -20%;
+        right: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: rgba(16, 185, 129, 0.04);
+        animation-delay: -5s;
+      }
+
+      body.dark .ambient-glow-1 {
+        background: rgba(59, 130, 246, 0.12);
+      }
+
+      body.dark .ambient-glow-2 {
+        background: rgba(139, 92, 246, 0.08);
+      }
+
+      @keyframes floatGlow {
+        0% {
+          transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+          transform: translate(60px, 40px) scale(1.1);
+        }
+      }
+
+      /* =================== 2. HEADER =================== */
+      #topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topbar-h);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5%;
+        z-index: 1000;
+        box-sizing: border-box;
+        transition:
+          background 0.3s,
+          border 0.3s;
+      }
+
+      body.dark #topbar {
+        background: rgba(15, 23, 42, 0.95);
+      }
+
+      .main-logo {
+        height: 40px;
+        width: auto;
+        transition: filter 0.3s ease;
+      }
+
+      body.dark .main-logo {
+        filter: invert(1) hue-rotate(180deg) brightness(1.2);
+      }
+
+      .topbar-icon,
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-sub);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        text-decoration: none;
+      }
+
+      .topbar-icon:hover,
+      .icon-btn:hover {
+        background: var(--text-main);
+        color: var(--bg-card);
+        border-color: var(--text-main);
+      }
+
+      /* THEME SWITCH (ĐỒNG BỘ VECTOR_SPACE) */
+      .settings-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .settings-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 260px;
+        /* Mở rộng giống mẫu */
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      body.dark .settings-dropdown {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .settings-dropdown.show {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .setting-item:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      body.dark .setting-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        transition: 0.3s;
+        border-radius: 34px;
+        opacity: 0.5;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--primary);
+        opacity: 1;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      /* HIỆU ỨNG SUN/MOON (CHỐNG ĐÈ CSS) */
+      div.theme-transition-icons {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+        pointer-events: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        opacity: 0;
+        visibility: visible !important;
+      }
+
+      div.theme-transition-icons i {
+        font-size: 8rem !important;
+        position: absolute !important;
+        margin: 0 !important;
+      }
+
+      div.theme-transition-icons #sunIcon {
+        color: #f59e0b !important;
+      }
+
+      div.theme-transition-icons #moonIcon {
+        color: #f8fafc !important;
+      }
+
+      div.theme-transition-icons.animate-rise-fade {
+        animation: vectoriaRiseFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)
+          forwards !important;
+      }
+
+      @keyframes vectoriaRiseFade {
+        0% {
+          opacity: 0;
+          transform: translateY(150px) scale(0.5);
+        }
+
+        40% {
+          opacity: 1;
+          transform: translateY(0px) scale(1.2);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translateY(-100px) scale(0.8);
+        }
+      }
+
+      /* =================== 3. TÀI LIỆU THAM KHẢO =================== */
+      .archive-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 50px 20px;
+      }
+
+      .archive-header {
+        border-bottom: 2px solid var(--text-main);
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+      }
+
+      body.dark .archive-header {
+        border-bottom-color: var(--text-sub);
+      }
+
+      .archive-header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 10px 0;
+        letter-spacing: -0.5px;
+      }
+
+      .archive-meta {
+        font-size: 1.05rem;
+        color: var(--text-sub);
+        margin: 0;
+      }
+
+      .bib-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .bib-item {
+        display: flex;
+        align-items: center;
+        padding: 18px 25px;
+        border-radius: 8px;
+        background: transparent;
+        border-left: 3px solid transparent;
+        transition: all 0.2s ease;
+        gap: 20px;
+      }
+
+      .bib-item:hover {
+        background: var(--bg-card);
+        border-left: 3px solid var(--primary);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      body.dark .bib-item:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .bib-index {
+        font-family: "Roboto Mono", monospace;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+        min-width: 45px;
+        flex-shrink: 0;
+      }
+
+      .bib-text {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: var(--text-main);
+        flex-grow: 1;
+        text-align: justify;
+      }
+
+      .bib-text i {
+        color: var(--text-main);
+      }
+
+      .bib-action {
+        flex-shrink: 0;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+      }
+
+      .bib-item:hover .bib-action {
+        opacity: 1;
+      }
+
+      .btn-dl {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+        border-radius: 6px;
+        background: rgba(58, 120, 255, 0.1);
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        font-family: "Inter", sans-serif;
+        border: 1px solid transparent;
+      }
+
+      .btn-dl:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: translateY(-2px);
+      }
+
+      body.dark .btn-dl {
+        background: rgba(96, 165, 250, 0.15);
+        color: #60a5fa;
+      }
+
+      body.dark .btn-dl:hover {
+        background: #60a5fa;
+        color: #0f172a;
+      }
+
+      @media (max-width: 768px) {
+        .bib-item {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 20px 15px;
+        }
+
+        .bib-text {
+          text-align: left;
+        }
+
+        .bib-action {
+          width: 100%;
+          text-align: right;
+          margin-top: 10px;
+          opacity: 1;
+        }
+      }
+
+      /* =================== 4. FOOTER =================== */
+      .main-footer {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-sub);
+        font-size: 0.95rem;
+        border-top: 1px solid var(--border);
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="academic-bg"></div>
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <div id="topbar">
+      <div class="topbar-left">
+        <a
+          href="javascript:history.back()"
+          class="topbar-icon"
+          title="Quay lại"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+      </div>
+      <div
+        class="logo"
+        style="position: absolute; left: 50%; transform: translateX(-50%)"
+      >
+        <div
+          style="
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+          "
+        >
+          Vectoria References
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="settings-container">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span
+                ><i class="fa-solid fa-moon" style="margin-right: 8px"></i> Chế
+                độ tối</span
+              >
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <hr
+              style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0;
+                opacity: 0.5;
+              "
+            />
+            <a
+              href="contact.html"
+              class="setting-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <span
+                ><i class="fa-solid fa-envelope" style="margin-right: 8px"></i>
+                Liên hệ / Góp ý</span
+              >
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="archive-container">
+      <div class="archive-header">
+        <h1>Tài Liệu Tham Khảo</h1>
+        <p class="archive-meta">
+          Danh mục các tài liệu, giáo trình và bài giảng Đại số tuyến tính.
+        </p>
+      </div>
+
+      <div class="bib-list">
+        <div class="bib-item">
+          <div class="bib-index">[1]</div>
+          <div class="bib-text">
+            Đ. V. Vinh, <i>Đại số tuyến tính</i>. TP. Hồ Chí Minh: NXB Đại học
+            Quốc gia TP. Hồ Chí Minh, 2019.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1ajmC1ANFjC1kQhy08RgGrQLOJJQaDZnQ"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[2]</div>
+          <div class="bib-text">
+            Đ. Đ. Thảo,
+            <i
+              >Kiến thức cơ bản về đại số tuyến tính, giải tích ma trận và xác
+              suất thống kê</i
+            >. Hà Nội, 2023. [Tài liệu lưu hành nội bộ].
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1_XchW4RJ9KOrf_JLF5fdAkr0knCTTKQd"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[3]</div>
+          <div class="bib-text">
+            N. L. Anh, <i>Đại số tuyến tính</i>. 2019. [Tài liệu lưu hành nội
+            bộ].
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=19EYTfLjFOkic_DNnYpmhMhKt_XMzpSrC"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[4]</div>
+          <div class="bib-text">
+            N. H. V. Hưng, <i>Đại số tuyến tính</i>. Hà Nội: NXB Giáo dục Hà
+            Nội, 1999.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1Ra0947JJCd5hZSiI51jtEmVltBvG93MV"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[5]</div>
+          <div class="bib-text">
+            Bộ Giáo dục và Đào tạo,
+            <i>Toán 10 - Tập một (Kết nối tri thức với cuộc sống)</i>. Hà Nội:
+            NXB Giáo dục Việt Nam, 2021.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1uytIoDZek4GKYQmjA4pKtoEM0oOc-xKq"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[6]</div>
+          <div class="bib-text">
+            Bộ Giáo dục và Đào tạo,
+            <i>Toán 12 - Tập một (Kết nối tri thức với cuộc sống)</i>. Hà Nội:
+            NXB Giáo dục Việt Nam, 2021.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=11-7We3tUcU4oT_-sYiG2GveahYksC3ld"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[7]</div>
+          <div class="bib-text">
+            D. C. Lay, S. R. Lay, and J. J. McDonald,
+            <i>Linear Algebra and Its Applications</i>, Fifth Edition. Boston:
+            Pearson, 2016.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1vOTXIKSeae58cMwi6rme6fu7Zu7hBUdI"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[8]</div>
+          <div class="bib-text">
+            F. Zhang, <i>Linear Algebra: Challenging Problems for Students</i>,
+            Second Edition. Baltimore: The Johns Hopkins University Press, 2009.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=16Z1eKj8AJtTnhpnNKFXliTrzxL0KpQM_"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[9]</div>
+          <div class="bib-text">
+            M. V. Quang, <i>Đại số tuyến tính</i>. TP. Hồ Chí Minh: Trường Đại
+            học Sư phạm TP. Hồ Chí Minh, 2006. [Tài liệu ôn thi cao học].
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1u4MWR4K4C8aFmr-XVone9Y1_6fE2gyZH"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[10]</div>
+          <div class="bib-text">
+            N. V. Thùy, <i>Ôn thi cuối kỳ Đại số tuyến tính</i>. Khoa Toán-Tin
+            học, Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM, TP. Hồ Chí Minh,
+            2025. [Tài liệu ôn tập].
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1M6HNVKrxlA6kao5VWvoBnNzxYlJ2bgeL"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+
+        <div class="bib-item">
+          <div class="bib-index">[11]</div>
+          <div class="bib-text">
+            H.H. Dinh, <i>Bài giảng Toán cao cấp A2 - C2</i>. Khoa Khoa học cơ
+            bản, Trường Đại học Công nghiệp TP. Hồ Chí Minh, 2017.
+          </div>
+          <div class="bib-action">
+            <a
+              href="https://drive.google.com/uc?export=download&id=1vJlhB_L5QuaeHyULSmUc5SfW8qBn9WNB"
+              target="_blank"
+              class="btn-dl"
+              ><i class="fa-solid fa-file-pdf"></i> Tải PDF</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="vectoria-footer distraction-element">
+      <div class="footer-container">
+        <div class="brand-col">
+          <div
+            class="partner-logo"
+            style="display: flex; align-items: center; gap: 10px"
+          >
+            <img src="assets/images/logoMoi.png" alt="Logo Nhóm/Trường" />
+            <img
+              src="assets/images/logoChu.png"
+              id="textLogo"
+              alt="Logo Chữ Vectoria"
+              style="height: 35px; width: auto"
+            />
+          </div>
+          <p>
+            Vectoria — Vương quốc của những Vector — được kiến tạo để thay đổi
+            hoàn toàn cách chúng ta nhìn nhận về vector. Không còn là những khái
+            niệm khô khan, tại nơi đây, mỗi vector đều mang một hình hài, một
+            hướng đi và sinh khí riêng. Chúng tôi khao khát trao cho bạn một góc
+            nhìn thấu thị để toàn bộ vẻ đẹp trừu tượng của không gian vector
+            được thu trọn vào tầm mắt.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              <a href="mailto:support@vectoria.io.vn">support@vectoria.io.vn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="margin: 0">
+          © 2026 Vectoria. Học và trực quan hóa Không gian vector.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // XỬ LÝ THEME ĐỒNG BỘ HÓA VỚI THEME-MANAGER CỦA TOÀN HỆ THỐNG
+      document.addEventListener("DOMContentLoaded", () => {
+        const settingsBtn = document.getElementById("btnSettings");
+        const dropdown = document.getElementById("settingsDropdown");
+        const themeToggle = document.getElementById("themeToggle");
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+        const transitionIcons = document.querySelector(
+          ".theme-transition-icons",
+        );
+
+        // 1. Set trạng thái nút gạt ban đầu dựa trên ThemeManager
+        if (themeToggle) {
+          themeToggle.checked = ThemeManager.isDarkMode();
+        }
+
+        // 2. Xử lý mở/đóng Menu cài đặt
+        if (settingsBtn && dropdown) {
+          settingsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("show");
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!dropdown.contains(e.target) && e.target !== settingsBtn) {
+              dropdown.classList.remove("show");
+            }
+          });
+        }
+
+        // 3. Logic khi bấm nút gạt (Tích hợp hiệu ứng Sun/Moon)
+        if (themeToggle) {
+          themeToggle.addEventListener("change", () => {
+            // Dùng hàm chuẩn của hệ thống thay vì tự set LocalStorage
+            const isDark = ThemeManager.toggle();
+            themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+
+            // Chạy hiệu ứng Sun/Moon
+            if (transitionIcons) {
+              transitionIcons.classList.remove("animate-rise-fade");
+              void transitionIcons.offsetWidth; // Trigger reflow
+
+              if (isDark) {
+                sunIcon.style.display = "none";
+                moonIcon.style.display = "block";
+              } else {
+                sunIcon.style.display = "block";
+                moonIcon.style.display = "none";
+              }
+
+              transitionIcons.classList.add("animate-rise-fade");
+            }
+          });
+        }
+
+        // 4. Lắng nghe thay đổi từ các tab/trang khác để tự cập nhật Real-time
+        window.addEventListener("storage", (e) => {
+          if (e.key === ThemeManager.STORAGE_KEY) {
+            const isDark = ThemeManager.isDarkMode();
+            if (themeToggle) themeToggle.checked = isDark;
+            ThemeManager.applyTheme(isDark);
+          }
+        });
+      });
+    </script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="js/utils/live-collab.js"></script>
+  </body>
+</html>

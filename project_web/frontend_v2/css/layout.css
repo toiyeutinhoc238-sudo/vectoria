@@ -1,0 +1,202 @@
+/* =================== TOPBAR =================== */
+#topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--topbar-h);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  z-index: 300;
+}
+
+#topbar .brand {
+  text-align: center;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+#topbar .spacer {
+  width: 30px;
+}
+
+/* Hamburger */
+#hamburger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 22px;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+}
+
+#hamburger span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--fg);
+  transition:
+    transform var(--t-fast),
+    opacity var(--t-fast);
+}
+
+/* =================== APP LAYOUT =================== */
+#app {
+  position: absolute;
+  inset: var(--topbar-h) 0 0 0;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - var(--topbar-h));
+}
+
+/* ----- Sidebar overlay ----- */
+#controls {
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0;
+  height: calc(100vh - var(--topbar-h));
+  width: min(88vw, 380px);
+  max-width: 92vw;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-100%);
+  transition: transform var(--t-slow);
+  z-index: 250;
+  padding: 14px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#controls.open {
+  transform: translateX(0);
+}
+
+/* Overlay: tồn tại nhưng KHÔNG chặn tương tác (theo yêu cầu vừa input vừa kéo/zoom đồ thị) */
+#overlay {
+  position: fixed;
+  inset: var(--topbar-h) 0 0 0;
+  background: transparent; /* không làm tối */
+  opacity: 0;
+  pointer-events: none; /* QUAN TRỌNG: không chặn viewer */
+  z-index: 200;
+  display: block; /* luôn tồn tại nhưng vô hình */
+  transition: opacity 180ms ease;
+}
+
+#overlay.show {
+  opacity: 0; /* vẫn 0 theo yêu cầu không tối */
+}
+
+/* =================== VIEWER LAYOUT =================== */
+#viewerWrap {
+  flex: 1 1 auto;
+  position: relative;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  user-select: none;
+  margin-left: 0;
+  box-shadow: var(--shadow-md);
+  height: 100%;
+  display: flex;
+}
+
+#viewer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#canvas2d {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#threeLayer {
+  position: absolute;
+  inset: 0;
+  display: none;
+  outline: none;
+}
+
+/* ép canvas ThreeJS fill 100% */
+#threeLayer canvas,
+#viewerWrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+#threeLayer canvas,
+#canvas2d {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* =================== RESPONSIVE =================== */
+@media (min-width: 1100px) {
+  #controls {
+    width: 380px;
+  }
+}
+
+/* ================= TOPBAR ICON BUTTONS ================= */
+
+/* ================= TOPBAR ICONS (SVG) ================= */
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg); /* QUAN TRỌNG: icon trắng/đen */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--t-fast),
+    box-shadow var(--t-fast),
+    transform var(--t-fast);
+}
+
+.topbar-icon:hover {
+  background: color-mix(in oklab, var(--accent) 10%, var(--card));
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-icon:active {
+  transform: translateY(0.5px);
+}
+
+/* SVG size */
+.topbar-icon .icon {
+  width: 40px;
+  height: 40px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

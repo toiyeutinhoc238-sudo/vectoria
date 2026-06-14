@@ -1,0 +1,97 @@
+/* =================== PILLS (badges) =================== */
+.pill {
+  position: absolute;
+  top: 12px;
+  z-index: 60;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  background: var(--pill-bg);
+  border-radius: 999px;
+  user-select: none;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
+}
+
+#themeBadge {
+  right: 120px;
+}
+#modeBadge {
+  right: 12px;
+}
+
+/* =================== 3D LABELS =================== */
+.axis-label {
+  color: var(--label-fg, #ddd);
+  font:
+    600 14px/1.1 Arial,
+    sans-serif;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 2px 5px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* wrapper cho CSS2DObject – KHÔNG động vào transform của renderer */
+.axis-label-outer {
+  position: relative;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+/* phần chữ thật */
+.axis-label-inner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  white-space: nowrap;
+  line-height: 1;
+  background: transparent; /* không còn hộp */
+  padding: 0;
+  color: var(--label-fg, #ddd);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* canh mép theo từng trục */
+.axis-label-inner.axis-x {
+  transform: translate(-50%, 0);
+} /* mép trên trùng trục X */
+.axis-label-inner.axis-y {
+  transform: translate(0, -50%);
+} /* mép trái trùng trục Y */
+.axis-label-inner.axis-z {
+  transform: translate(0, -50%);
+} /* mép trái trùng trục Z */
+
+.axis-letter {
+  color: var(--label-fg, #ddd);
+  font:
+    700 16px/1.1 Arial,
+    sans-serif;
+  background: transparent;
+  padding: 0;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.tip-label {
+  color: var(--label-fg, #eee);
+  font:
+    600 13px/1.1 Arial,
+    sans-serif;
+  background: color-mix(in srgb, var(--card, #222) 70%, transparent 30%);
+  padding: 4px 6px;
+  border-radius: 6px;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+/* Badge ° dùng biến chip (optional – JS đã set inline rồi) */
+.tip-label.angle-badge {
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  color: var(--chip-fg);
+}

@@ -1,0 +1,511 @@
+/* =========================================
+   1. VARIABLES (BIẾN MÀU & CẤU HÌNH)
+   ========================================= */
+:root {
+  /* Màu chủ đạo (Light Mode) */
+  --primary-blue: #3b82f6;
+  --primary-dark: #2563eb;
+
+  /* Màu nền & Viền */
+  --bg-page: #f0f4f8;
+  --bg-card: #ffffff;
+  --card-border: #d1d5db;
+  --card-border-hover: #3b82f6;
+
+  /* Màu chữ */
+  --text-main: #111827;
+  --text-sub: #4b5563;
+  --white: #ffffff;
+
+  /* Icon */
+  --icon-bg: #f0f7ff;
+
+  /* Shadow (Đổ bóng) */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-hover:
+    0 10px 15px -3px rgba(59, 130, 246, 0.2),
+    0 4px 6px -2px rgba(59, 130, 246, 0.1);
+  /* Đồng bộ transition khi đổi theme */
+  --theme-transition: 1.5s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+/* Cấu hình cho DARK MODE */
+html.dark,
+body.dark,
+body.dark-mode {
+  --bg-page: #0f172a; /* Nền tối thẫm */
+  --bg-card: #1e293b; /* Card xám xanh */
+  --text-main: #f1f5f9; /* Chữ trắng */
+  --text-sub: #94a3b8; /* Chữ xám sáng */
+  --card-border: #334155; /* Viền tối */
+  --icon-bg: #334155; /* Nền icon tối */
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================================
+   2. RESET & GLOBAL STYLES
+   ========================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Áp transition đồng bộ cho các thuộc tính màu/chuyển theme */
+*,
+*::before,
+*::after {
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition),
+    border-color var(--theme-transition),
+    box-shadow var(--theme-transition),
+    opacity var(--theme-transition),
+    filter var(--theme-transition);
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.container {
+  width: 1200px;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+/* =========================================
+   3. ANIMATION: SUN & MOON (HIỆU ỨNG CHUYỂN CẢNH)
+   ========================================= */
+.theme-transition-icons {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none; /* Không chặn click chuột */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#sunIcon,
+#moonIcon {
+  font-size: 8rem;
+  position: absolute;
+  opacity: 0;
+  transform: translateY(100px) scale(0.5);
+}
+
+#sunIcon {
+  color: #f59e0b;
+  filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.5));
+}
+
+#moonIcon {
+  color: #f1f5f9;
+  filter: drop-shadow(0 0 20px rgba(241, 245, 249, 0.5));
+}
+
+/* Class kích hoạt animation */
+.animate-rise-fade {
+  animation: riseAndFade 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes riseAndFade {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(0px) scale(1.1);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+}
+
+/* =========================================
+   4. HEADER
+   ========================================= */
+.main-header {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  padding: 1rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color var(--theme-transition);
+}
+
+body.dark-mode .main-header {
+  background-color: #1e293b;
+}
+
+html.dark .main-header,
+body.dark .main-header {
+  background-color: #1e293b;
+}
+
+.header-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.logo a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   5. SETTINGS BUTTON & DROPDOWN
+   ========================================= */
+.settings-container {
+  position: absolute;
+  right: 0;
+  z-index: 10050; /* ensure settings sit above other fixed elements */
+  pointer-events: auto; /* guard against accidental overlays */
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: var(--white);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10051; /* keep the interactive button above dropdown animation */
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: rotate(90deg);
+}
+
+.settings-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 250px;
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: none;
+  z-index: 200;
+}
+
+.settings-dropdown.show {
+  display: block;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* --- Toggle Switch (Nút gạt) --- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-blue);
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+/* =========================================
+   6. HERO BANNER
+   ========================================= */
+.hero-banner {
+  position: relative;
+  color: var(--white);
+  text-align: center;
+  padding: 3.5rem 1rem;
+  margin-bottom: 2.5rem;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+  overflow: hidden;
+}
+
+/* Cross-fade two layered backgrounds so gradient transition eases smoothly */
+.hero-banner::before,
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transition: opacity var(--theme-transition);
+  will-change: opacity;
+}
+
+/* Light theme background (visible by default) */
+.hero-banner::before {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  opacity: 1;
+}
+
+/* Dark theme background (fades in when dark) */
+.hero-banner::after {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  opacity: 0;
+}
+
+/* When dark class is set, cross-fade backgrounds */
+html.dark .hero-banner::before,
+body.dark .hero-banner::before {
+  opacity: 0;
+}
+
+html.dark .hero-banner::after,
+body.dark .hero-banner::after {
+  opacity: 1;
+}
+
+.hero-banner h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-banner p {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+/* =========================================
+   7. TOPIC GRID & CARDS
+   ========================================= */
+.section-heading {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: var(--text-main);
+  position: relative;
+  font-weight: 700;
+  transition: color 1.5s ease;
+}
+
+.section-heading::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 5px;
+  background: var(--primary-blue);
+  margin: 10px auto 0;
+  border-radius: 10px;
+}
+
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  padding-bottom: 60px;
+}
+
+/* --- Card Style --- */
+.topic-card {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 2px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  border-radius: 16px;
+  padding: 35px 25px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  /* Transition chậm cho màu nền, nhanh cho hover */
+  transition:
+    background-color 1.5s ease,
+    border-color 1.5s ease,
+    color 1.5s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.topic-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-blue);
+  box-shadow:
+    0 10px 15px -3px rgba(59, 130, 246, 0.2),
+    0 4px 6px -2px rgba(59, 130, 246, 0.1);
+}
+
+/* Thanh màu trên đầu card */
+.topic-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--card-border);
+  transition: background-color 1.5s ease;
+}
+
+.topic-card:hover::before {
+  background: var(--primary-blue);
+  transition: 0.3s ease;
+}
+
+/* --- Icon Box --- */
+.icon-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--icon-bg);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--card-border);
+  transition:
+    background-color 1.5s ease,
+    border-color 1.5s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.topic-card:hover .icon-box {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border-color: var(--primary-blue);
+  transform: rotateY(180deg);
+}
+
+.topic-card:hover .icon-box i {
+  transform: rotateY(-180deg);
+  transition: 0.3s;
+}
+
+.topic-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+  transition: color 1.5s ease;
+}
+
+.topic-card p {
+  font-size: 1rem;
+  color: var(--text-sub);
+  margin-bottom: 0;
+  line-height: 1.5;
+  transition: color 1.5s ease;
+}
+
+/* =========================================
+   8. FOOTER
+   ========================================= */
+.main-footer {
+  margin-top: auto;
+  background: #f0f4f8;
+  color: #4b5563;
+  text-align: center;
+  padding: 25px;
+  font-size: 0.95rem;
+  border-top: 4px solid var(--primary-blue);
+  transition:
+    background-color 1.5s ease,
+    color 1.5s ease,
+    border-top-color 1.5s ease;
+}
+
+body.dark-mode .main-footer,
+html.dark .main-footer,
+body.dark .main-footer {
+  background: #0f172a;
+  color: #94a3b8;
+  border-top-color: #60a5fa;
+}

@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nguồn gốc Vectoria</title>
+
+    <link rel="stylesheet" href="css/knowledge.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="js/utils/theme-manager.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+      (function () {
+        try {
+          const isDark = localStorage.getItem("theme") === "dark";
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+            document.body.classList.add("dark");
+          }
+          const style = document.createElement("style");
+          style.textContent = `
+                    .no-transition, .no-transition * { transition: none !important; }
+                    div.theme-transition-icons { opacity: 0 !important; visibility: visible !important; }
+                    div.theme-transition-icons.animate-rise-fade { opacity: 1 !important; transition: opacity 0.1s ease !important; }
+                    div.theme-transition-icons * { transition: all 0.3s ease !important; }
+                `;
+          document.head.appendChild(style);
+          document.documentElement.classList.add("no-transition");
+          window.addEventListener("load", () => {
+            setTimeout(() => {
+              document.documentElement.classList.remove("no-transition");
+            }, 50);
+          });
+        } catch (e) {}
+      })();
+    </script>
+
+    <style>
+      /* =================== CẤU HÌNH GỐC =================== */
+      :root {
+        --primary: #3a78ff;
+        --primary-light: #60a5fa;
+        --primary-dark: #1e3a8a;
+        --primary-glow: rgba(58, 120, 255, 0.4);
+        --bg-body: #f4f7fb;
+        --bg-card: rgba(255, 255, 255, 0.85);
+        --bg-glass: rgba(255, 255, 255, 0.6);
+        --text-main: #0f172a;
+        --text-sub: #475569;
+        --border: rgba(58, 120, 255, 0.2);
+        --topbar-h: 70px;
+      }
+
+      body.dark {
+        --bg-body: #050b14;
+        --bg-card: rgba(15, 23, 42, 0.7);
+        --bg-glass: rgba(10, 15, 30, 0.6);
+        --text-main: #f8fafc;
+        --text-sub: #94a3b8;
+        --border: rgba(255, 255, 255, 0.1);
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        overflow-x: hidden;
+        transition:
+          background-color 0.5s ease,
+          color 0.5s ease;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* =================== TOPBAR =================== */
+      #topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topbar-h);
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        z-index: 10000;
+        box-sizing: border-box;
+      }
+      .brand {
+        font-weight: 900;
+        font-size: 26px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--primary);
+        text-shadow: 0 0 15px var(--primary-glow);
+        text-decoration: none;
+      }
+      .icon-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1.2rem;
+        text-decoration: none;
+      }
+      .icon-btn:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+        box-shadow: 0 5px 15px var(--primary-glow);
+        transform: translateY(-2px);
+      }
+
+      /* SETTING DROPDOWN (Giữ form gốc) */
+      .settings-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .settings-dropdown {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        width: 220px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 10001;
+        backdrop-filter: blur(20px);
+      }
+      .settings-dropdown.show {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-radius: 8px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .setting-item:hover {
+        background: rgba(58, 120, 255, 0.1);
+        color: var(--primary);
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        opacity: 0.5;
+        transition: 0.3s;
+        border-radius: 34px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--primary);
+        opacity: 1;
+      }
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      /* Nút Theme Transition Icon */
+      div.theme-transition-icons {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+        pointer-events: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        opacity: 0;
+        visibility: visible !important;
+      }
+      div.theme-transition-icons i {
+        font-size: 8rem !important;
+        position: absolute !important;
+        margin: 0 !important;
+      }
+      div.theme-transition-icons #sunIcon {
+        color: #f59e0b !important;
+      }
+      div.theme-transition-icons #moonIcon {
+        color: #f8fafc !important;
+      }
+      div.theme-transition-icons.animate-rise-fade {
+        animation: vectoriaRiseFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)
+          forwards !important;
+      }
+      @keyframes vectoriaRiseFade {
+        0% {
+          opacity: 0;
+          transform: translateY(150px) scale(0.5);
+        }
+        40% {
+          opacity: 1;
+          transform: translateY(0px) scale(1.2);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-100px) scale(0.8);
+        }
+      }
+
+      /* =================== SCROLL CINEMATIC WRAPPER =================== */
+      /* Đây là rạp chiếu phim. Kéo dài 600vh để user cuộn chuột từ từ */
+      #cinematic-trigger {
+        width: 100%;
+        height: 600vh;
+        position: relative;
+      }
+
+      #cinematic-wrapper {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background-color: #7dd3fc; /* Trời sáng */
+      }
+
+      /* Phụ đề chạy theo phim */
+      .story-caption {
+        position: absolute;
+        bottom: 5vh; /* Ép xích xuống dưới cùng (cũ là 12vh) */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px; /* Bóp nhỏ chiều ngang (cũ là 800px) */
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        padding: 20px 30px; /* Bóp nhỏ viền trong */
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        text-align: center;
+        z-index: 900;
+        opacity: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+      body.dark .story-caption {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: rgba(96, 165, 250, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .story-caption h2 {
+        margin: 0 0 8px 0;
+        font-size: 1.6rem;
+        color: var(--primary);
+        font-weight: 800;
+      } /* Thu nhỏ Text */
+      .story-caption p {
+        margin: 0;
+        font-size: 1rem;
+        color: #334155;
+        line-height: 1.5;
+      } /* Thu nhỏ Text */
+      body.dark .story-caption p {
+        color: #cbd5e1;
+      }
+
+      /* --- LAYER 1: CẢNH BAN NGÀY (TRƯỞNG THÀNH HƠN) --- */
+      .scene-day {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .sun {
+        position: absolute;
+        top: 15%;
+        right: 20%;
+        width: 120px;
+        height: 120px;
+        background: #ffd700;
+        border-radius: 50%;
+        box-shadow:
+          0 0 100px #ffd700,
+          0 0 40px #ffa500 inset;
+      }
+
+      /* Đồi núi dạng Low-Poly Tech (Trưởng thành, ko trẻ con) */
+      .mountains-bg {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50vh;
+        background: linear-gradient(
+          to top,
+          rgba(58, 120, 255, 0.4),
+          transparent
+        );
+        clip-path: polygon(
+          0 100%,
+          0 60%,
+          25% 30%,
+          50% 70%,
+          75% 20%,
+          100% 50%,
+          100% 100%
+        );
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(2px);
+      }
+      .mountains {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 35vh;
+        background: linear-gradient(
+          to top,
+          rgba(30, 58, 138, 0.6),
+          rgba(58, 120, 255, 0.2)
+        );
+        clip-path: polygon(
+          0 100%,
+          0 30%,
+          30% 10%,
+          60% 50%,
+          85% 15%,
+          100% 45%,
+          100% 100%
+        );
+        backdrop-filter: blur(8px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* --- LAYER 2: BẦU TRỜI ĐÊM (CHÈN ĐẰNG SAU NÚI) --- */
+      .scene-night {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 5; /* Z-index thấp để nằm sau núi */
+        background: linear-gradient(to bottom, #020617, #0f172a);
+        opacity: 0; /* Ẩn lúc đầu */
+      }
+      /* Bầu trời nhiều sao hơn */
+      .stars {
+        width: 2px;
+        height: 2px;
+        background: transparent;
+        box-shadow:
+          10vw 20vh #fff,
+          20vw 80vh #fff,
+          30vw 10vh #fff,
+          40vw 60vh #fff,
+          50vw 30vh #fff,
+          60vw 90vh #fff,
+          70vw 40vh #fff,
+          80vw 10vh #fff,
+          90vw 70vh #fff,
+          15vw 50vh #e2e8f0,
+          25vw 20vh #e2e8f0,
+          35vw 90vh #e2e8f0,
+          45vw 10vh #e2e8f0,
+          55vw 70vh #e2e8f0,
+          65vw 30vh #e2e8f0,
+          75vw 80vh #e2e8f0,
+          85vw 50vh #e2e8f0,
+          95vw 20vh #e2e8f0,
+          5vw 15vh #93c5fd,
+          25vw 65vh #93c5fd,
+          45vw 35vh #93c5fd,
+          75vw 15vh #93c5fd,
+          85vw 85vh #93c5fd;
+        animation: twinkle 4s infinite alternate;
+      }
+      @keyframes twinkle {
+        0% {
+          opacity: 0.3;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* --- LAYER 3: HỆ VECTOR TRUNG TÂM (SVG GỐC CỦA ÔNG) --- */
+      .scene-vector {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0; /* Ẩn triệt để chống hiện line trước khi cuộn */
+        pointer-events: none;
+      }
+      .vector-system {
+        width: 500px;
+        height: 500px;
+        position: relative;
+        /* Canh giữa hoàn hảo */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateY(
+          -5vh
+        ); /* Nâng lên một xíu để không bị hộp thoại che */
+      }
+
+      /* SVG Logo vẽ nét */
+      .svg-drawing {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 25;
+        overflow: visible;
+        transform: rotate(30deg);
+      }
+
+      /* Style cho nét vẽ Vector */
+      .anim-line {
+        stroke: var(--primary-light);
+        stroke-width: 0.8; /* Cỡ nét vừa phải */
+        fill: none;
+        stroke-dasharray: 400; /* Chiều dài nét cắt */
+        stroke-dashoffset: 400; /* Giấu nét đi */
+        filter: drop-shadow(0 0 5px var(--primary));
+      }
+
+      .anim-core {
+        stroke: var(--primary);
+        fill: none;
+        opacity: 0; /* Giấu Core */
+        transform-origin: 50px 50px; /* Tâm của viewBox 100 100 */
+        transform: scale(0);
+      }
+
+      .anim-dot {
+        fill: #0f172a;
+        stroke: var(--primary-light);
+        stroke-width: 0.5;
+        opacity: 0;
+        filter: drop-shadow(0 0 8px var(--primary-light));
+      }
+
+      /* --- LAYER 4: LOGO CHÍNH THỨC HIỆN RA KHỚP PIXEL --- */
+      .scene-logo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 30;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        transform: translateY(-5vh); /* Khớp với translateY của vector-system */
+      }
+      .final-logo {
+        /* Kích thước này phải scale sao cho vừa khít với viewBox="0 0 100 100" được phóng ra 500px */
+        /* Do viewBox là 100, hiển thị trên div 500px => Tỷ lệ là 5x */
+        width: 500px;
+        opacity: 0;
+        filter: drop-shadow(0 0 40px rgba(58, 120, 255, 0.6));
+      }
+
+      /* =================== TEAM CYBER CARDS (GỌN - SANG) =================== */
+      .team-section {
+        padding: 80px 0 150px;
+        background-color: var(--bg-body);
+        position: relative;
+        z-index: 50;
+      }
+      .section-title {
+        text-align: center;
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 80px;
+        letter-spacing: -1px;
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        justify-content: center;
+      }
+
+      /* Thẻ từ tính (Không lật 3D nữa mà dùng Hover Cyber) */
+      .team-card {
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+        position: relative;
+        border-radius: 24px;
+        background: var(--bg-body);
+        padding: 2px;
+        z-index: 1;
+        transition:
+          transform 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      .team-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+          transparent,
+          transparent,
+          transparent,
+          var(--primary),
+          var(--accent),
+          transparent
+        );
+        animation: spin 4s linear infinite;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+      }
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .team-card-inner {
+        background: var(--bg-card);
+        border-radius: 22px;
+        padding: 40px 30px;
+        height: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid var(--border);
+        transition:
+          border-color 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      .team-card:hover {
+        transform: translateY(-15px);
+      }
+      .team-card:hover::before {
+        opacity: 1;
+      }
+      .team-card:hover .team-card-inner {
+        border-color: transparent;
+        box-shadow: 0 15px 30px var(--primary-glow);
+      }
+
+      .avatar {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        margin-bottom: 25px;
+        padding: 5px;
+        background: var(--bg-body);
+        border: 2px dashed var(--border);
+        position: relative;
+        transition: all 0.5s ease;
+      }
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .team-card:hover .avatar {
+        transform: scale(1.1) rotate(5deg);
+        border-style: solid;
+        border-color: var(--primary);
+        box-shadow: 0 10px 20px var(--primary-glow);
+      }
+
+      .name {
+        font-size: 1.45rem;
+        font-weight: 800;
+        margin: 0 0 5px;
+        color: var(--text-main);
+      }
+      .role {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+      }
+      .desc {
+        font-size: 1rem;
+        color: var(--text-sub);
+        line-height: 1.6;
+        margin-bottom: 25px;
+        flex-grow: 1;
+      }
+
+      .socials {
+        display: flex;
+        gap: 12px;
+      }
+      .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--bg-body);
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: 0.3s;
+        border: 1px solid var(--border);
+      }
+      .social-btn:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+        transform: translateY(-3px);
+      }
+
+      /* Animation Reveal cho cuộn trang thông thường (Phần Team) */
+      .reveal {
+        opacity: 0;
+        transform: translateY(60px);
+        transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .delay-1 {
+        transition-delay: 0.1s;
+      }
+      .delay-2 {
+        transition-delay: 0.2s;
+      }
+      .delay-3 {
+        transition-delay: 0.3s;
+      }
+
+      footer {
+        text-align: center;
+        padding: 30px;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border);
+        color: var(--text-sub);
+      }
+    </style>
+  </head>
+  <body class="dark no-transition">
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <header id="topbar">
+      <div class="header-flex">
+        <div class="logo">
+          <a href="index.html" class="brand"> Vectoria </a>
+        </div>
+        <div class="settings-container safe-zone">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt giao diện">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span>Chế độ tối</span>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <hr
+              style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0;
+                opacity: 0.5;
+                display: block !important;
+              "
+            />
+            <a
+              href="contact.html"
+              class="setting-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span><i class="fa-solid fa-envelope"></i> Liên hệ</span>
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--text-sub)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div id="cinematic-trigger">
+        <div id="cinematic-wrapper">
+          <div class="story-caption" id="storyCaption">
+            <h2 id="st-title">Vùng Đất Lý Tưởng (-ia)</h2>
+            <p id="st-desc">
+              Mọi thứ bắt đầu từ mong muốn tạo ra một thế giới toán học, nơi sự
+              sống và tri thức đâm chồi từ những ma trận khô khan.
+            </p>
+          </div>
+
+          <div class="scene-night">
+            <div class="stars"></div>
+          </div>
+
+          <div class="scene-day">
+            <div class="sun"></div>
+            <div class="mountains-bg"></div>
+            <div class="mountains"></div>
+          </div>
+
+          <div class="scene-vector">
+            <div class="vector-system">
+              <svg viewBox="0 0 100 100" class="svg-drawing">
+                <circle
+                  class="anim-core"
+                  cx="50"
+                  cy="50"
+                  r="12"
+                  stroke-width="1.5"
+                />
+                <circle
+                  class="anim-core"
+                  cx="50"
+                  cy="50"
+                  r="3"
+                  fill="var(--primary)"
+                />
+                <polygon
+                  class="anim-line"
+                  points="50,11 83.5,30 83.5,70 50,89 16.5,70 16.5,30"
+                />
+                <polygon
+                  class="anim-line"
+                  points="50,1 93,25.5 93,74.5 50,99 7,74.5 7,25.5"
+                />
+
+                <line
+                  class="anim-line"
+                  x1="66.75"
+                  y1="20.5"
+                  x2="71.5"
+                  y2="13.25"
+                />
+                <line class="anim-line" x1="83.5" y1="50" x2="93" y2="50" />
+                <line
+                  class="anim-line"
+                  x1="66.75"
+                  y1="79.5"
+                  x2="71.5"
+                  y2="86.75"
+                />
+                <line
+                  class="anim-line"
+                  x1="33.25"
+                  y1="79.5"
+                  x2="28.5"
+                  y2="86.75"
+                />
+                <line class="anim-line" x1="16.5" y1="50" x2="7" y2="50" />
+                <line
+                  class="anim-line"
+                  x1="33.25"
+                  y1="20.5"
+                  x2="28.5"
+                  y2="13.25"
+                />
+
+                <circle class="anim-dot" cx="71.5" cy="13.25" r="2.5" />
+                <circle class="anim-dot" cx="93" cy="50" r="2.5" />
+                <circle class="anim-dot" cx="71.5" cy="86.75" r="2.5" />
+                <circle class="anim-dot" cx="28.5" cy="86.75" r="2.5" />
+                <circle class="anim-dot" cx="7" cy="50" r="2.5" />
+                <circle class="anim-dot" cx="28.5" cy="13.25" r="2.5" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="scene-logo">
+            <img
+              src="assets/images/logoMoi.png"
+              alt="Vectoria Logo"
+              class="final-logo"
+            />
+          </div>
+        </div>
+      </div>
+
+      <section class="team-section container">
+        <h2 class="section-title reveal">Đội Ngũ "Kỹ Sư Không Gian"</h2>
+
+        <div class="team-grid">
+          <div class="team-card reveal delay-1">
+            <div class="team-card-inner">
+              <div class="avatar">
+                <img src="assets/images/khoa2.jpg" alt="Avatar" />
+              </div>
+              <h3 class="name">Nguyễn Văn A</h3>
+              <div class="role">System Architect</div>
+              <p class="desc">
+                Người phác thảo bản vẽ không gian đa chiều, thiết kế kiến trúc
+                hệ thống và gánh vác deadline.
+              </p>
+              <div class="socials">
+                <a href="#" class="social-btn"
+                  ><i class="fa-brands fa-github"></i
+                ></a>
+                <a href="#" class="social-btn"
+                  ><i class="fa-solid fa-envelope"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="team-card reveal delay-2">
+            <div class="team-card-inner">
+              <div class="avatar">
+                <img src="assets/images/khoa.jpg" alt="Avatar" />
+              </div>
+              <h3 class="name">Trần Thị B</h3>
+              <div class="role">UI/UX Sorcerer</div>
+              <p class="desc">
+                "Phù thủy" thị giác, thổi hồn màu Neon và Poly-Glass để Vectoria
+                luôn mang đậm chất Tech.
+              </p>
+              <div class="socials">
+                <a href="#" class="social-btn"
+                  ><i class="fa-brands fa-github"></i
+                ></a>
+                <a href="#" class="social-btn"
+                  ><i class="fa-solid fa-envelope"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="team-card reveal delay-3">
+            <div class="team-card-inner">
+              <div class="avatar">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&backgroundColor=c0aede"
+                  alt="Avatar"
+                />
+              </div>
+              <h3 class="name">Lê Hoàng C</h3>
+              <div class="role">Math Translator</div>
+              <p class="desc">
+                Người phiên dịch ngôn ngữ của "người ngoài hành tinh" (Toán học)
+                sang ngôn ngữ trực quan loài người.
+              </p>
+              <div class="socials">
+                <a href="#" class="social-btn"
+                  ><i class="fa-brands fa-github"></i
+                ></a>
+                <a href="#" class="social-btn"
+                  ><i class="fa-solid fa-envelope"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="team-card reveal delay-1">
+            <div class="team-card-inner">
+              <div class="avatar">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jocelyn&backgroundColor=d1d4f9"
+                  alt="Avatar"
+                />
+              </div>
+              <h3 class="name">Phạm Tiến D</h3>
+              <div class="role">Motion Wizard</div>
+              <p class="desc">
+                Chuyên gia xử lý chuyển động, nhào nặn code GSAP để hiệu ứng
+                cuộn mượt mà chuẩn điện ảnh.
+              </p>
+              <div class="socials">
+                <a href="#" class="social-btn"
+                  ><i class="fa-brands fa-github"></i
+                ></a>
+                <a href="#" class="social-btn"
+                  ><i class="fa-solid fa-envelope"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="team-card reveal delay-2">
+            <div class="team-card-inner">
+              <div class="avatar">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Oreo&backgroundColor=ffdfbf"
+                  alt="Avatar"
+                />
+              </div>
+              <h3 class="name">Vũ Ngọc E</h3>
+              <div class="role">Quality Guardian</div>
+              <p class="desc">
+                Người soi từng công thức MathJax, bới lông tìm vết để hệ thống
+                không một bug nào lọt qua.
+              </p>
+              <div class="socials">
+                <a href="#" class="social-btn"
+                  ><i class="fa-brands fa-github"></i
+                ></a>
+                <a href="#" class="social-btn"
+                  ><i class="fa-solid fa-envelope"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2026 Vũ trụ Vectoria. Xây dựng bằng đam mê toán học và mã nguồn.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // === 1. XỬ LÝ THEME TOGGLE ===
+        const btnSettings = document.getElementById("btnSettings");
+        const settingsDropdown = document.getElementById("settingsDropdown");
+        const themeToggle = document.getElementById("themeToggle");
+        const transitionIcons = document.querySelector(
+          ".theme-transition-icons",
+        );
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+
+        if (typeof ThemeManager !== "undefined" && themeToggle) {
+          themeToggle.checked = ThemeManager.isDarkMode();
+        }
+
+        if (btnSettings && settingsDropdown) {
+          btnSettings.addEventListener("click", (e) => {
+            e.stopPropagation();
+            settingsDropdown.classList.toggle("show");
+          });
+          document.addEventListener("click", (e) => {
+            if (
+              !settingsDropdown.contains(e.target) &&
+              e.target !== btnSettings
+            ) {
+              settingsDropdown.classList.remove("show");
+            }
+          });
+        }
+
+        if (themeToggle) {
+          themeToggle.addEventListener("change", () => {
+            const isDark =
+              typeof ThemeManager !== "undefined"
+                ? ThemeManager.toggle()
+                : themeToggle.checked;
+            themeToggle.checked = isDark;
+            if (typeof ThemeManager !== "undefined")
+              ThemeManager.applyTheme(isDark);
+
+            if (isDark) {
+              document.body.classList.add("dark");
+              document.documentElement.classList.add("dark");
+              document.getElementById(
+                "cinematic-wrapper",
+              ).style.backgroundColor = "#050b14";
+            } else {
+              document.body.classList.remove("dark");
+              document.documentElement.classList.remove("dark");
+              document.getElementById(
+                "cinematic-wrapper",
+              ).style.backgroundColor = "#7dd3fc";
+            }
+
+            // Hiệu ứng bay lên
+            if (transitionIcons) {
+              transitionIcons.classList.remove("animate-rise-fade");
+              void transitionIcons.offsetWidth;
+              if (isDark) {
+                sunIcon.style.display = "none";
+                moonIcon.style.display = "block";
+              } else {
+                sunIcon.style.display = "block";
+                moonIcon.style.display = "none";
+              }
+              transitionIcons.classList.add("animate-rise-fade");
+            }
+          });
+        }
+
+        // Đồng bộ màu khởi tạo cho wrapper cinematic
+        const initDark = document.body.classList.contains("dark");
+        document.getElementById("cinematic-wrapper").style.backgroundColor =
+          initDark ? "#050b14" : "#7dd3fc";
+
+        // === 2. ĐẠO DIỄN VŨ TRỤ (GSAP SCROLL ANIMATION) ===
+        gsap.registerPlugin(ScrollTrigger);
+
+        const stTitle = document.getElementById("st-title");
+        const stDesc = document.getElementById("st-desc");
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#cinematic-trigger",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1, // Cuộn xuống chạy tới, cuộn lên tua ngược lại
+            pin: "#cinematic-wrapper",
+          },
+        });
+
+        // Set trạng thái ban đầu cho Text và SVG
+        tl.set(".story-caption", { opacity: 1 }, 0).set(
+          ".scene-vector",
+          { opacity: 1 },
+          0,
+        ); // Cho phép svg hiển thị nhưng nét vẽ vẫn giấu
+
+        // GIAI ĐOẠN 1: Ban ngày lặn xuống, Đêm hiện lên (Nhưng Núi VẪN GIỮ LẠI mờ mờ)
+        tl.to(".sun", { y: 200, scale: 0.5, opacity: 0, duration: 2 }, 1)
+          .to(
+            "#cinematic-wrapper",
+            { backgroundColor: "#020617", duration: 2 },
+            1,
+          ) // Đổi nền trời thành đen
+          .to(".scene-night", { opacity: 1, duration: 2 }, 1) // Đánh sao lên
+          .to(
+            ".mountains, .mountains-bg",
+            { opacity: 0.3, filter: "brightness(0.5)", duration: 2 },
+            1,
+          ) // Tối núi đi chứ ko mất
+          .call(
+            () => {
+              stTitle.innerText = "Màn Đêm Tĩnh Lặng";
+              stDesc.innerText =
+                "Sự khô khan của những con số đẩy người học vào không gian tĩnh lặng, trừu tượng của toán học.";
+            },
+            [],
+            2,
+          );
+
+        // GIAI ĐOẠN 2: Xuất hiện Điểm kỳ dị (Ngôi sao trung tâm)
+        tl.to(
+          ".anim-core",
+          { opacity: 1, scale: 1, duration: 1.5, ease: "back.out(1.7)" },
+          4,
+        ).call(
+          () => {
+            stTitle.innerText = "Điểm Kỳ Dị (The Spark)";
+            stDesc.innerText =
+              "Từ khoảng không, một điểm sáng tư duy lóe lên. Chúng tôi quyết định dùng sức mạnh của công nghệ Web để bứt phá.";
+          },
+          [],
+          4,
+        );
+
+        // GIAI ĐOẠN 3: Vẽ Vector kết nối không gian (Vẽ đường thẳng lục giác)
+        tl.to(
+          ".anim-line",
+          { strokeDashoffset: 0, duration: 4, stagger: 0.2 },
+          6,
+        ).call(
+          () => {
+            stTitle.innerText = "Định Tuyến Không Gian";
+            stDesc.innerText =
+              "Những mũi tên mang sức mạnh kết nối mọi chiều kích. Vector ra đời, kéo lý thuyết hàn lâm về với thực tiễn trực quan.";
+          },
+          [],
+          6,
+        );
+
+        // GIAI ĐOẠN 4: Thắp sáng các điểm chòm sao
+        tl.to(
+          ".anim-dot",
+          { opacity: 1, scale: 1, duration: 1.5, stagger: 0.1 },
+          9,
+        ).call(
+          () => {
+            stTitle.innerText = "Cơ Sở & Bao Tuyến Tính";
+            stDesc.innerText =
+              "Các vector độc lập kết hợp lại, tạo thành một mạng lưới vững chắc, bao bọc và sinh ra một vùng không gian hoàn chỉnh.";
+          },
+          [],
+          9,
+        );
+
+        // GIAI ĐOẠN 5: Transition cực nét -> KHỚP VỚI LOGO .PNG
+        // Mờ mờ cái nét vẽ SVG đi
+        tl.to(".svg-drawing", { opacity: 0, duration: 2 }, 12)
+          // Bừng sáng Logo hình thật lên đúng vị trí đó
+          .to(".final-logo", { opacity: 1, duration: 2 }, 12)
+          .call(
+            () => {
+              stTitle.innerText = "Vương Quốc Vectoria";
+              stDesc.innerText =
+                "Sự giao thoa hoàn mỹ giữa Vector và Utopia. Chào mừng bạn đến với vương quốc lý tưởng của toán học.";
+            },
+            [],
+            12,
+          );
+
+        // Kết thúc phim: Cất phụ đề đi để xuống xem phần Team
+        tl.to(".story-caption", { opacity: 0, y: 50, duration: 1.5 }, 15);
+
+        // === 3. XỬ LÝ SCROLL ANIMATION (PHẦN TEAM) ===
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.15,
+        };
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            } else {
+              entry.target.classList.remove("active");
+            }
+          });
+        }, observerOptions);
+
+        document
+          .querySelectorAll(".reveal, .reveal-left, .reveal-right")
+          .forEach((el) => observer.observe(el));
+      });
+    </script>
+  </body>
+</html>

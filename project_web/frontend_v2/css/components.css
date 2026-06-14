@@ -1,0 +1,498 @@
+/* =================== CARDS =================== */
+#controls .card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =================== SECTION ACCENTS =================== */
+.section-create {
+  --acc: #3a78ff;
+}
+.section-list {
+  --acc: #8b5cf6;
+}
+.section-calc-new {
+  --acc: #22c55e;
+}
+.section-calc-info {
+  --acc: #f59e0b;
+}
+
+.section-create,
+.section-list,
+.section-calc-new,
+.section-calc-info {
+  padding-left: 16px;
+  border-left: 4px solid var(--acc);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--acc) 10%, transparent) 0%,
+      transparent 38%
+    ),
+    var(--card);
+}
+
+.section-create:hover,
+.section-list:hover,
+.section-calc-new:hover,
+.section-calc-info:hover {
+  box-shadow:
+    0 1px 0 0 color-mix(in oklab, var(--acc) 30%, transparent) inset,
+    var(--shadow-sm);
+}
+
+.section-calc-new details.calc summary:hover {
+  background: color-mix(in oklab, var(--acc) 10%, transparent);
+}
+
+.section-calc-info details.calc summary:hover {
+  background: color-mix(in oklab, var(--acc) 12%, transparent);
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* =================== FORM ELEMENTS =================== */
+input,
+select,
+button {
+  font: inherit;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+input,
+select {
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =================== BUTTON SYSTEM =================== */
+.btn {
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: var(--chip-bg);
+  color: var(--fg);
+}
+
+.btn:hover {
+  background: color-mix(in oklab, var(--chip-bg) 86%, var(--fg) 14%);
+  border-color: color-mix(in oklab, var(--border) 70%, var(--fg) 30%);
+}
+
+.btn:active {
+  transform: translateY(0.5px);
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: color-mix(in oklab, var(--accent) 80%, #000 0%);
+  box-shadow: 0 6px 18px rgba(58, 120, 255, 0.25);
+}
+
+.btn.primary:hover {
+  background: var(--accent-600);
+}
+.btn.primary:active {
+  background: var(--accent-700);
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: var(--border);
+}
+
+.btn.outline {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: color-mix(in oklab, var(--danger) 80%, #000 0%);
+}
+
+/* =================== MINI KEYPAD =================== */
+.mini-keys {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.mini-keys .kbtn {
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--chip-bg);
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    box-shadow var(--t-fast);
+}
+
+.mini-keys .kbtn:hover {
+  box-shadow: var(--shadow-sm);
+}
+.mini-keys .kbtn:active {
+  transform: translateY(0.5px);
+}
+
+/* =================== LAYOUT HELPERS =================== */
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.help {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.small {
+  font-size: 12px;
+}
+
+/* =================== PRE =================== */
+pre {
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px;
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  line-height: 1.25;
+  max-height: 220px;
+  overflow: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =================== VECTOR LIST =================== */
+#vectorList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.vec-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 10px 12px;
+  background: var(--card);
+  transition:
+    border-color var(--t-fast),
+    background var(--t-fast),
+    box-shadow var(--t-fast);
+  flex-shrink: 0;
+}
+
+.vec-item:hover {
+  box-shadow: var(--shadow-sm);
+  background: color-mix(in oklab, var(--card) 96%, transparent);
+}
+
+.vec-item .sw {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.vec-item .tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.vec-item .lbl {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  flex: 1 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vec-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.vec-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vec-header .tag {
+  flex: 0 0 auto;
+}
+.vec-header .lbl {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vec-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.vec-actions .btn {
+  padding: 6px 10px;
+}
+
+@media (max-width: 420px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+  .vec-actions .btn {
+    flex: 1 0 auto;
+  }
+}
+
+.vec-item.active {
+  background: color-mix(in oklab, var(--accent) 8%, var(--card) 92%);
+  border-color: color-mix(in oklab, var(--accent) 35%, var(--border) 65%);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--accent) 35%, transparent);
+}
+
+/* =================== CALC SECTIONS =================== */
+details.calc {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: 8px 10px 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+details.calc summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 8px 6px;
+  border-radius: var(--r-sm);
+  font-weight: 700;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background var(--t-fast);
+}
+
+details.calc summary:hover {
+  background: color-mix(in oklab, var(--accent) 6%, transparent);
+}
+
+details.calc summary::marker,
+details.calc summary::-webkit-details-marker {
+  display: none;
+}
+
+details.calc summary .chev {
+  margin-left: auto;
+  opacity: 0.6;
+  transition: transform var(--t-fast);
+}
+
+details.calc[open] summary .chev {
+  transform: rotate(180deg);
+}
+
+.extra-form {
+  display: none;
+}
+.extra-form.active {
+  display: block;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: var(--chip-bg);
+  border-radius: var(--r-sm);
+  padding: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =================== "Lời giải" giống nút thường (như "Tính cơ sở") =================== */
+.btn-solution {
+  /* giống hệt button base */
+  font: inherit;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+.btn-solution:hover {
+  /* nhẹ giống cảm giác nút thường */
+  background: color-mix(in oklab, var(--card) 92%, var(--fg) 8%);
+  border-color: color-mix(in oklab, var(--border) 70%, var(--fg) 30%);
+}
+
+.btn-solution:active {
+  transform: translateY(0.5px);
+}
+
+/* =================== Basis animation controls =================== */
+.basis-anim-controls {
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+  background: var(--card, rgba(0, 0, 0, 0.03));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.basis-anim-controls #basisSpeedVal {
+  color: var(--fg, #111);
+}
+.basis-anim-controls #basisSpeedHelp {
+  color: var(--muted, rgba(0, 0, 0, 0.7));
+}
+
+.btn.basis-anim-stop {
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.18));
+  background: var(--card, #fff);
+  color: var(--fg, #111);
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    transform 0.06s ease;
+}
+
+.btn.basis-anim-stop:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+.btn.basis-anim-stop:active {
+  transform: translateY(1px);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.btn.basis-anim-stop:focus {
+  outline: none;
+}
+.btn.basis-anim-stop:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25);
+}
+
+/* DARK THEME: đúng selector của bạn */
+body.dark .basis-anim-controls {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.dark .btn.basis-anim-stop {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.dark .btn.basis-anim-stop:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark .btn.basis-anim-stop:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Range slider */
+#basisAnimControls input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent, #0a84ff);
+}
+
+#basisAnimControls input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#basisAnimControls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--accent, #0a84ff);
+  border: 2px solid rgba(255, 255, 255, 0.65);
+  margin-top: -5px;
+}
+
+body.dark
+  #basisAnimControls
+  input[type="range"]::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+body.dark #basisAnimControls input[type="range"]::-webkit-slider-thumb {
+  border-color: rgba(0, 0, 0, 0.35);
+}

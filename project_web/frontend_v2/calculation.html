@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GRZR4Y6VFQ');
+</script>
+  <meta charset="utf-8" />
+  <title>Vectoria - Mô hình trực quan </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/solution_panel.css" />
+  <link rel="stylesheet" href="css/tour-guide.css">
+  <link rel="icon" href="./assets/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css" />
+  <script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+  <script src="js/utils/tour-guide.js"></script>
+  <script src="js/utils/theme-manager.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="//unpkg.com/mathlive"></script>
+
+  <style>
+    /* 1. Ẩn sạch sẽ các nút mặc định của MathLive */
+    math-field::part(menu-toggle),
+    math-field::part(virtual-keyboard-toggle) {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    /* 2. Tùy chỉnh ô nhập */
+    math-field {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 8px;
+      padding-right: 40px;
+      /* Chừa chỗ cho nút menu tự chế */
+      background: white;
+      width: 100%;
+      /* [QUAN TRỌNG] Đây là biến chuẩn của MathLive */
+      --highlight-color: #eee !important;
+      /* Màu nền bôi đen */
+      --caret-color: #000 !important;
+      /* Màu con trỏ nhấp nháy */
+
+      /* Phòng hờ các phiên bản khác */
+      --selection-background-color: #eee !important;
+      --selection-color: #000 !important;
+      touch-action: manipulation;
+    }
+
+    math-field::part(content) {
+      --highlight-color: #eee !important;
+    }
+
+    /* Ẩn gạch chân đỏ báo lỗi */
+    math-field::part(error) {
+      display: none;
+    }
+
+    math-field:focus-within {
+      border-color: #2196F3;
+      outline: none;
+    }
+
+    /* 3. Style cho Menu tự chế */
+    .custom-menu-btn {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+      color: #555;
+      padding: 5px 10px;
+      z-index: 10;
+    }
+
+    .custom-menu-btn:hover {
+      color: #2196F3;
+    }
+
+    .custom-menu-dropdown {
+      display: none;
+      /* Mặc định ẩn */
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      min-width: 200px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .menu-item {
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover {
+      background-color: #f5f9ff;
+      color: #2196F3;
+    }
+
+    .latex-preview {
+      font-family: 'Times New Roman', serif;
+      font-style: italic;
+      color: #888;
+    }
+
+    /* --- [CẤU HÌNH DARK MODE CHUẨN - KHỚP MỌI GIAO DIỆN] --- */
+
+    body.dark math-field {
+      /* 1. NỀN: Để trong suốt để ăn theo màu của thẻ cha (Card) */
+      background: transparent !important;
+
+      /* 2. VIỀN: Dùng màu trắng mờ (Opacity) thay vì màu xám cứng -> Hợp mọi nền */
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+
+      /* 3. CHỮ: Trắng ngà (đỡ chói mắt hơn trắng tinh) */
+      color: #ececec !important;
+
+      /* 4. CẤU HÌNH MATHLIVE */
+      --caret-color: #fff !important;
+      /* Màu bôi đen dùng kiểu trong suốt luôn cho sang */
+      --selection-background-color: rgba(255, 255, 255, 0.2) !important;
+      --selection-color: #fff !important;
+      --highlight-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Hiệu ứng khi bấm vào nhập (Focus) */
+    body.dark math-field:focus-within {
+      /* Viền sáng lên màu xanh chủ đạo */
+      border-color: #2196F3 !important;
+      box-shadow: 0 0 8px rgba(33, 150, 243, 0.3);
+    }
+
+    /* Fix phần nội dung bên trong cũng trong suốt */
+    body.dark math-field::part(content) {
+      background-color: transparent !important;
+      color: #ececec !important;
+    }
+
+    /* --- [MENU THẢ XUỐNG] --- */
+    /* Menu thì cần nền tối (gần đen) để nổi bật trên nền web */
+    body.dark .custom-menu-dropdown {
+      background: #1e1e1e;
+      /* Màu đen chuẩn VS Code, rất dễ phối */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark .menu-item {
+      color: #ccc;
+      /* Chữ xám nhạt */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      /* Hover sáng nhẹ */
+      color: #2196F3;
+    }
+
+    /* Nút 3 gạch */
+    body.dark .custom-menu-btn {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    body.dark .custom-menu-btn:hover {
+      color: #fff;
+    }
+
+    /* --- [SOLUTION PANEL - LIGHT MODE (PREMIUM)] --- */
+
+    /* 1. Khung chính (Nền trắng, bóng đổ xịn) */
+    .sol-panel {
+      background-color: #ffffff;
+      border: 1px solid #d1d5db;
+      /* Viền xám nhạt */
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      /* Bóng mờ sang trọng */
+      color: #1f2937;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      margin: auto;
+      position: relative;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    /* 2. Header (Nền xám nhạt để tách biệt) */
+    .sol-header {
+      background-color: #f3f4f6;
+      /* Gray-100 */
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px 10px 0 0;
+    }
+
+    /* Tiêu đề & Công thức Header */
+    .sol-h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Màu công thức toán ở tiêu đề (Xanh đậm) */
+    .sol-h1 .MathJax,
+    .sol-h1 mjx-container,
+    .sol-h1 .MathJax span,
+    .sol-h1 mjx-container path {
+      color: #2563eb !important;
+      /* Xanh dương đậm */
+      fill: #2563eb !important;
+      stroke: #2563eb !important;
+      font-size: 1.1em;
+    }
+
+    /* Badge (Nhãn Lời giải) - Xanh nổi bật */
+    .sol-badge {
+      background-color: #2563eb;
+      color: #ffffff;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+
+    /* Nút đóng */
+    .sol-close {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #6b7280;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .sol-close:hover {
+      background-color: #fee2e2;
+      color: #ef4444;
+      transform: rotate(90deg);
+    }
+
+    /* 3. Toolbar (Thanh tab) */
+    .sol-toolbar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sol-label {
+      font-weight: 600;
+      color: #4b5563;
+      font-size: 0.9rem;
+    }
+
+    /* Nút Tab thường */
+    .sol-tab {
+      padding: 8px 16px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #4b5563;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .sol-tab:hover {
+      background: #f3f4f6;
+      color: #111827;
+      border-color: #9ca3af;
+    }
+
+    /* Nút Tab đang chọn (Active) - Xanh nhạt */
+    .sol-tab.is-active {
+      background-color: #eff6ff;
+      /* Blue-50 */
+      color: #1d4ed8;
+      /* Blue-700 */
+      border-color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* 4. Nội dung bài giải */
+    .sol-body {
+      padding: 24px;
+      overflow-y: auto;
+      background-color: #fff;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #374151;
+    }
+
+    .sol-text {
+      margin-bottom: 12px;
+    }
+
+    /* Các bước (Bước 1, Bước 2...) */
+    .sol-bold {
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Khối Toán (Light Mode) - Nền xám nhẹ, viền xanh */
+    .sol-math-block {
+      background-color: #f9fafb;
+      /* Gray-50 */
+      border-left: 4px solid #3b82f6;
+      padding: 16px;
+      border-radius: 4px;
+      margin: 12px 0;
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-left-width: 4px;
+    }
+
+    /* Trạng thái mặc định (Ẩn) */
+    .sol-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999999;
+      /* Đẩy lên cao nhất */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      /* Ẩn hoàn toàn và không chặn chuột click bên dưới */
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transition: all 0.3s ease-out;
+      backdrop-filter: blur(2px);
+    }
+
+    /* Trạng thái MỞ (Hỗ trợ tất cả các kiểu class mà JS có thể gọi) */
+    .sol-overlay.is-visible,
+    .sol-overlay.active,
+    .sol-overlay.show,
+    .sol-overlay.open,
+    .sol-overlay[aria-hidden="false"] {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      /* Cho phép tương tác lại */
+    }
+
+    /* Hiệu ứng trượt lên */
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* ================================================================= */
+    /* [DARK MODE CHO BẢNG LỜI GIẢI (SOLUTION PANEL)] - CHUẨN CAO CẤP */
+    /* ================================================================= */
+
+    /* 1. Nền bảng chính */
+    body.dark .sol-panel {
+      background-color: #1e1e1e !important;
+      /* Màu xám than (chuẩn Editor) */
+      border: 1px solid #444 !important;
+      /* Viền tối */
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8) !important;
+      /* Bóng đổ sâu */
+      color: #e0e0e0 !important;
+      /* Chữ màu trắng ngà */
+    }
+
+    /* 2. Header (Tiêu đề) */
+    body.dark .sol-header {
+      background-color: #2d2d2d !important;
+      /* [QUAN TRỌNG] Nền header sáng hơn body để tách biệt */
+      border-bottom: 1px solid #444 !important;
+      padding: 15px 20px;
+      /* Căn chỉnh lại padding cho thoáng */
+    }
+
+    body.dark .sol-h1,
+    body.dark .sol-title span {
+      color: #ffffff !important;
+      /* Chữ trắng tinh */
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      /* Đổ bóng chữ nhẹ cho nổi */
+
+    }
+
+    /* Công thức Toán trong Header (R^n) */
+    body.dark .sol-header .MathJax,
+    body.dark .sol-header mjx-container {
+      color: #82b1ff !important;
+      /* Màu xanh dương sáng cho công thức toán ở tiêu đề */
+      font-size: 1.2em !important;
+    }
+
+    /* Fix màu vector SVG của MathJax trong header */
+    body.dark .sol-header mjx-container path {
+      stroke: #82b1ff !important;
+      fill: #82b1ff !important;
+    }
+
+    body.dark .sol-badge {
+      background-color: #2196F3 !important;
+      /* Nền xanh chủ đạo */
+      color: #ffffff !important;
+      /* Chữ trắng */
+      border: 1px solid #64b5f6 !important;
+      /* Viền sáng hơn tí */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      padding: 4px 10px;
+      border-radius: 12px;
+      /* Bo tròn */
+      font-weight: bold;
+    }
+
+    /* Nút đóng (X) */
+    body.dark .sol-close {
+      color: #aaa !important;
+      transition: all 0.2s;
+    }
+
+    body.dark .sol-close:hover {
+      color: #ffffff !important;
+      background-color: #d32f2f !important;
+      /* Hover vào đỏ rực */
+      border-radius: 50%;
+      transform: rotate(90deg);
+      /* Xoay nhẹ cho ngầu */
+    }
+
+    /* 3. Toolbar (Thanh chọn cách giải) */
+    body.dark .sol-toolbar {
+      background-color: #252526 !important;
+      /* Tối hơn nền chính 1 chút */
+      border-bottom: 1px solid #333 !important;
+    }
+
+    body.dark .sol-label {
+      color: #bbb !important;
+    }
+
+    /* Nút Tab (Cách 1, Cách 2) */
+    body.dark .sol-tab {
+      background: transparent !important;
+      color: #888 !important;
+      border: 1px solid #444 !important;
+    }
+
+    body.dark .sol-tab:hover {
+      background: #333 !important;
+      color: #fff !important;
+    }
+
+    /* Tab đang chọn (Active) */
+    body.dark .sol-tab.is-active {
+      background: #1565c0 !important;
+      /* Xanh chủ đạo */
+      color: #fff !important;
+      border-color: #42a5f5 !important;
+      box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+    }
+
+    /* Body Dark - [ĐÃ FIX MÀU CHỮ DANH SÁCH] */
+    body.dark .sol-body {
+      background-color: #1e1e1e !important;
+      color: #d4d4d4 !important;
+    }
+
+    /* Ép màu chữ sáng cho toàn bộ nội dung, bao gồm cả danh sách (li) */
+    body.dark .sol-text,
+    body.dark .sol-body ul,
+    body.dark .sol-body li,
+    body.dark .sol-body p,
+    body.dark .sol-body span {
+      color: #e0e0e0 !important;
+    }
+
+    body.dark .sol-bold {
+      color: #64b5f6 !important;
+      font-weight: 700;
+      margin-top: 15px;
+      display: block;
+    }
+
+    /* Khối chứa công thức toán (Math Block) */
+    body.dark .sol-math-block {
+      background-color: #2b2b2b !important;
+      /* Nền khối toán tối hơn xíu */
+      border-left: 4px solid #2196F3 !important;
+      /* Viền trái xanh */
+      padding: 12px !important;
+      margin: 10px 0 !important;
+      border-radius: 4px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 5. [QUAN TRỌNG] Xử lý màu công thức MathJax */
+    /* Ép toàn bộ công thức toán chuyển sang màu trắng/xám sáng */
+    /* Màu MathJax trong nội dung bài giải */
+    body.dark .sol-body mjx-container,
+    body.dark .sol-body .MathJax {
+      color: #e0e0e0 !important;
+    }
+
+    body.dark .sol-body mjx-container path {
+      stroke: #e0e0e0 !important;
+      fill: #e0e0e0 !important;
+      /* Fix lỗi ký hiệu bị đen */
+    }
+
+    /* 1. Thanh cuộn dọc chính (Body) */
+    body.dark .sol-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    body.dark .sol-body::-webkit-scrollbar-track {
+      background: #1e1e1e;
+    }
+
+    body.dark .sol-body::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+    }
+
+    body.dark .sol-body::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    /* 2. [MỚI] Thanh cuộn ngang trong khối toán (Math Block) */
+    body.dark .sol-math-block::-webkit-scrollbar {
+      height: 10px;
+      /* Chiều cao cho thanh cuộn ngang */
+    }
+
+    body.dark .sol-math-block::-webkit-scrollbar-track {
+      background: #252526;
+      /* Màu trùng với nền khối toán cho đẹp */
+      border-radius: 4px;
+    }
+
+    body.dark .sol-math-block::-webkit-scrollbar-thumb {
+      background: #666;
+      /* Màu xám sáng hơn tí để dễ nhìn */
+      border-radius: 4px;
+      border: 2px solid #252526;
+      /* Tạo viền giả cho đẹp */
+    }
+
+    body.dark .sol-math-block::-webkit-scrollbar-thumb:hover {
+      background: #999;
+      /* Hover sáng hơn nữa */
+    }
+
+    .sol-body ul,
+    .sol-body ol {
+      list-style: none !important;
+      /* Bỏ dấu chấm tròn/số */
+      padding-left: 0 !important;
+      /* Bỏ thụt lề trái */
+      margin: 0 !important;
+      /* Bỏ khoảng cách thừa */
+    }
+
+    .sol-body li {
+      display: block !important;
+      /* Hiển thị như dòng div bình thường */
+      margin-bottom: 10px !important;
+      /* Xuống dòng và cách ra một chút */
+      padding: 0 !important;
+    }
+
+    /* 2. Ép màu chữ Dark Mode (Khắc phục triệt để lỗi chữ đen) */
+    body.dark .sol-body ul,
+    body.dark .sol-body li {
+      color: #e0e0e0 !important;
+      /* Trắng xám */
+    }
+
+    /* ================================================================= */
+    /* [STYLE CHO DÒNG KẾT LUẬN] - (THAY THẾ DANH SÁCH LI/UL) */
+    /* ================================================================= */
+
+    .sol-bullet {
+      display: flex;
+      /* Dùng flex để canh thẳng hàng */
+      margin-bottom: 8px;
+      /* Cách dòng dưới một chút */
+      line-height: 1.5;
+      /* Giãn dòng dễ đọc */
+      align-items: baseline;
+      /* Canh theo chân chữ */
+      gap: 8px;
+      /* Khoảng cách giữa dấu gạch và chữ */
+    }
+
+    /* Tạo dấu gạch đầu dòng giả (nếu muốn), hoặc xóa đoạn này nếu muốn trơn */
+    .sol-bullet::before {
+      content: "•";
+      /* Dấu chấm tròn nhỏ */
+      color: #2196F3;
+      /* Màu xanh tạo điểm nhấn */
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    /* --- [QUAN TRỌNG] ÉP MÀU CHỮ CHO DARK MODE --- */
+    body.dark .sol-bullet {
+      color: #e0e0e0 !important;
+      /* Bắt buộc màu trắng xám */
+    }
+
+    /* Màu dấu chấm trong dark mode */
+    body.dark .sol-bullet::before {
+      color: #64b5f6;
+      /* Xanh sáng hơn chút cho nổi trên nền đen */
+    }
+
+    .calc-result-box {
+      background-color: #e8f5e9;
+      /* Nền xanh nhạt (Light Mode) */
+      border-left: 5px solid #4caf50;
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-top: 12px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .calc-result-label {
+      font-weight: 700;
+      color: #2e7d32;
+      /* Chữ xanh đậm (Light Mode) */
+      text-transform: uppercase;
+      font-size: 0.85em;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mathfield hiển thị kết quả */
+    .calc-result-math {
+      background: transparent;
+      border: none;
+      width: 100%;
+      font-size: 1.5em;
+      /* Chữ to */
+      color: #1b5e20;
+      /* Số màu xanh rất đậm (Light Mode) */
+      padding: 4px 0;
+      pointer-events: none;
+      box-shadow: none;
+      --caret-color: transparent;
+      /* Ẩn con trỏ nhấp nháy */
+    }
+
+    /* --- [CẤU HÌNH DARK MODE] --- */
+    body.dark .calc-result-box {
+      background-color: #1b3320;
+      /* Nền xanh rêu tối (Dark Mode) */
+      border-left-color: #66bb6a;
+      /* Viền sáng hơn chút */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark .calc-result-label {
+      color: #a5d6a7;
+      /* Label màu xanh phấn sáng */
+    }
+
+    body.dark .calc-result-math {
+      color: #e8f5e9 !important;
+      /* Số màu trắng xanh (cho nổi trên nền tối) */
+      --highlight-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Fix lỗi Mathfield trong dark mode bị mờ */
+    body.dark .calc-result-math::part(content) {
+      color: #e8f5e9 !important;
+    }
+
+    /* 1. Ép màu chữ văn bản thường trong vùng kết quả sang màu sáng */
+    body.dark #result_basis,
+    body.dark #result_basis div,
+    body.dark #result_basis span {
+      color: #e2e8f0 !important;
+      /* Trắng xám dễ đọc */
+    }
+
+    /* 2. Xử lý MathJax (công thức dim(V), R^n...) */
+    /* Ép SVG của MathJax tô màu trắng trong dark mode */
+    body.dark mjx-container,
+    body.dark mjx-container path {
+      fill: #e2e8f0 !important;
+      stroke: #e2e8f0 !important;
+      color: #e2e8f0 !important;
+    }
+
+    /* 3. Giữ màu xanh nổi bật cho các con số kết quả (số 1, số chiều...) */
+    body.dark b,
+    body.dark strong,
+    body.dark .highlight-value {
+      color: #60a5fa !important;
+      /* Xanh dương sáng (Blue-400) để nổi trên nền đen */
+    }
+    /* ================= TỐI ƯU MOBILE + NÚT MŨI TÊN ================= */
+    
+    /* Mặc định trên Desktop: Ẩn nút mũi tên đi */
+    #btnTogglePanel { 
+      display: none !important; 
+    }
+
+    /* Style chung cho cả 2 nút nổi (Bỏ right: 15px ở đây đi để chỉnh riêng) */
+    .view-tool-btn {
+      position: absolute !important;
+      z-index: 10 !important;
+      width: 45px !important;
+      height: 45px !important;
+      border-radius: 50% !important;
+      border: 1px solid var(--border) !important;
+      background: var(--card, #fff) !important;
+      color: var(--fg, #333) !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      font-size: 1.2rem !important;
+    }
+
+    /* Khi ở Mobile (< 768px) */
+    @media (max-width: 768px) {
+      
+      /* Hiện nút mũi tên lên */
+      #btnTogglePanel { 
+        display: flex !important; 
+      }
+
+      /* --- CHIA 2 NÚT ĐỐI XỨNG NGANG Ở ĐÁY ĐỒ THỊ --- */
+      #btnTogglePanel { 
+        left: 15px !important;  /* Nút mũi tên nằm BÊN TRÁI */
+        bottom: 15px !important; 
+      }
+      #btnResetView { 
+        right: 15px !important; /* Nút Crosshair nằm BÊN PHẢI */
+        bottom: 15px !important; 
+      }
+
+      /* --- CHIA BỐ CỤC THEO GRID (ĐỘNG) --- */
+      #app {
+        display: grid !important;
+        /* ÉP CHẾT 45% tỷ lệ thực của khối cha, cấm xài vh để khỏi bị thanh địa chỉ lừa */
+        --panel-height: 45%; 
+        grid-template-rows: 1fr var(--panel-height) !important; 
+        
+        /* [VŨ KHÍ MỚI]: Dùng dvh (Dynamic Viewport Height) để luôn vừa khít màn hình dù thanh URL có ẩn hay hiện */
+        height: calc(100dvh - var(--topbar-h, 50px)) !important;
+        min-height: calc(100dvh - var(--topbar-h, 50px)) !important; 
+        
+        overflow: hidden !important;
+        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      /* Vùng Đồ Thị (Nằm Trên) */
+      #viewerWrap {
+        grid-row: 1 !important; 
+        height: 100% !important; 
+        position: relative !important;
+        border-bottom: 2px solid var(--border) !important;
+      }
+
+      /* Vùng Điều Khiển (Nằm Dưới) */
+      #controls {
+        grid-row: 2 !important;
+        height: 100% !important;
+        max-height: none !important;
+        overflow-y: auto !important; 
+        display: block !important; 
+        background: var(--bg) !important;
+        padding: 0 !important; 
+      }
+      
+      .sidebar-tabs {
+         position: sticky; 
+         top: 0;
+         z-index: 100;
+      }
+
+      .tab-content { 
+         padding: 10px 12px 50px 12px !important; 
+         height: auto !important; 
+      }
+
+      /* Xử lý Header: Dấu bớt 2 icon khi bị chật */
+      .topbar-left a.topbar-icon[title="Thư viện kiến thức"],
+      .topbar-left a.topbar-icon[title="Tài liệu tham khảo"] { display: none !important; }
+      .brand { font-size: 1.2rem !important; margin-left: -5px; }
+      .mobile-only-hr-book, .mobile-only-link-book,
+      .mobile-only-hr-file, .mobile-only-link-file { display: flex !important; }
+    }
+    /* ================= BÀN PHÍM VECTORIA (TONE XANH) & FIX CUỘN ================= */
+    
+    #mathKeypad {
+      position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      width: 100% !important; 
+      background: #f0f4f9; /* Nền xanh xám cực nhạt */
+      border-top: 1px solid #dbeafe;
+      box-shadow: 0 -4px 20px rgba(59, 130, 246, 0.15); /* Bóng đổ tone xanh */
+      z-index: 2147483647; transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex; flex-direction: column;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    #mathKeypad.open { transform: translateY(0); }
+
+    /* Header của bàn phím */
+    .keypad-header {
+      width: 100%; height: 32px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 15px; background: #e0f2fe; border-bottom: 1px solid #bfdbfe;
+    }
+    .keypad-title { font-size: 0.8em; color: #1e40af; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;}
+    #keypadClose { background: transparent; border: none; font-size: 15px; font-weight: bold; color: #1d4ed8; cursor: pointer; padding: 5px; }
+    
+    .keypad-page { display: none; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 8px; }
+    .keypad-page.active { display: grid; }
+
+    /* Nút bấm (Bo tròn đẹp hơn, bóng nhẹ) */
+    .k-btn {
+      height: 42px; border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; color: #1e293b;
+      font-size: 1.15rem; font-weight: 600; font-family: "JetBrains Mono", sans-serif;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.1s ease;
+    }
+    .k-btn:active { background: #eff6ff; border-color: #bfdbfe; transform: scale(0.95); box-shadow: 0 0 2px rgba(0,0,0,0.1); }
+    
+    /* Nút Công thức (Màu xanh dương nhạt) */
+    .k-btn.op { background: #e0f2fe; color: #1d4ed8; border-color: #bae6fd; font-size: 1.1rem; }
+    /* Nút Lật mặt (Màu xanh đậm hơn chút) */
+    .k-btn.switch-btn { background: #bfdbfe; color: #1e40af; font-weight: 800; font-size: 1.05rem; border-color: #93c5fd; }
+    /* Nút OK */
+    .k-btn.action { background: var(--accent, #3b82f6); color: #fff; font-weight: 800; border-color: transparent;}
+    .k-btn.action:active { background: #2563eb; }
+    
+    .k-btn.math-font { font-family: "Times New Roman", Times, serif; font-style: italic; font-weight: 600; font-size: 1.25rem;}
+
+    /* DARK MODE TONE NAVY/SLATE CỰC NGẦU */
+    body.dark #mathKeypad { background: #0f172a; border-color: #1e293b; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+    body.dark .keypad-header { background: #1e293b; border-color: #334155; }
+    body.dark .keypad-title, body.dark #keypadClose { color: #93c5fd; }
+    body.dark .k-btn { background: #1e293b; color: #f8fafc; border-color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+    body.dark .k-btn:active { background: #334155; border-color: #475569; }
+    body.dark .k-btn.op { background: #1e3a8a; color: #bfdbfe; border-color: #1e40af; }
+    body.dark .k-btn.switch-btn { background: #3b82f6; color: #ffffff; border-color: #2563eb; }
+
+    /* Tự động biến Logo thành màu trắng khi bật Dark Mode */
+    body.dark #mathKeypad img {
+      filter: brightness(0) invert(1);
+      opacity: 1 !important;
+    }
+    /* Tạo khoảng đệm đáy an toàn */
+    body.has-keypad #controls { padding-bottom: 70vh !important; }
+
+    @media (max-width: 768px) {
+      .custom-menu-btn, .vec-menu-btn { display: none !important; }
+      math-field { padding-right: 10px !important; }
+    }
+
+
+    .fake-cursor {
+      position: fixed;
+      pointer-events: none; /* Không cho con chuột ảo cản trở click */
+      z-index: 999999;
+      transition: all 0.1s linear; /* Giúp chuột chạy mượt hơn */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cursor-label {
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .axis-controls-panel {
+      position: absolute; 
+      top: 55px; /* Nằm ngay dưới nút Mode: 3D */
+      right: 15px; 
+      z-index: 100;
+      display: flex; flex-direction: column; gap: 5px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px; border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(8px);
+      align-items: center;
+    }
+    body.dark .axis-controls-panel { background: rgba(30, 30, 35, 0.8); border-color: rgba(255,255,255,0.1); }
+
+    .axis-controls-title {
+      font-size: 9px; font-weight: 800; color: #777;
+      text-align: center; margin-bottom: 2px;
+      text-transform: uppercase; cursor: help; user-select: none;
+    }
+    body.dark .axis-controls-title { color: #aaa; }
+
+    .axis-btn {
+      width: 26px; height: 26px; /* Nhỏ gọn để không chiếm diện tích */
+      border-radius: 6px; border: none;
+      font-weight: 800; font-size: 11px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #eee; color: #555;
+    }
+    body.dark .axis-btn { background: #333; color: #ccc; }
+    
+    .axis-btn:hover { transform: translateX(-2px); box-shadow: -2px 2px 5px rgba(0,0,0,0.1); }
+    .axis-btn.active { color: white !important; }
+    
+    .axis-btn[data-axis="x"].active { background: #ef5350; box-shadow: 0 0 8px rgba(239, 83, 80, 0.5); }
+    .axis-btn[data-axis="y"].active { background: #66bb6a; box-shadow: 0 0 8px rgba(102, 187, 106, 0.5); }
+    .axis-btn[data-axis="z"].active { background: #42a5f5; box-shadow: 0 0 8px rgba(66, 165, 245, 0.5); }
+  </style>
+</head>
+
+<body>
+  <div class="theme-transition-icons">
+    <i class="fa-solid fa-sun" id="sunIcon"></i>
+    <i class="fa-solid fa-moon" id="moonIcon"></i>
+  </div>
+  <div id="topbar">
+    <div class="topbar-left">
+      <div id="hamburger"><span></span><span></span><span></span></div>
+      <a href="index.html" class="topbar-icon" title="Về trang chủ">
+        <i class="fa-solid fa-house"></i>
+      </a>
+      <a href="user-dashboard.html" class="topbar-icon" title="Dashboard Cá nhân">
+        <i class="fa-solid fa-chart-line"></i>
+      </a>
+      <a href="knowledge_info.html" class="topbar-icon" title="Thư viện kiến thức">
+        <i class="fa-solid fa-book-open"></i>
+      </a>
+      <a href="tltk.html" class="topbar-icon" title="Tài liệu tham khảo">
+        <i class="fa-solid fa-file-lines"></i>
+      </a>
+    </div>
+
+    <div class="brand">Vectoria</div>
+
+    <div class="topbar-right">
+      <div class="settings-container">
+        <button id="btnSettings" class="icon-btn" title="Cài đặt">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="setting-item">
+            <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 8px 0; opacity: 0.5;">
+
+          <div class="setting-item">
+            <span><i class="fa-solid fa-film"></i> Hiệu ứng (phép tính)</span>
+            <label class="switch">
+              <input type="checkbox" id="animToggle" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          
+          <hr class="mobile-only-hr-book" style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5; display: none;">
+          <a href="knowledge_info.html" class="setting-item link-item mobile-only-link-book" style="text-decoration: none; cursor: pointer; display: none;">
+            <span><i class="fa-solid fa-book-open"></i> Thư viện kiến thức</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i>
+          </a>
+          
+          <hr class="mobile-only-hr-file" style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5; display: none;">
+          <a href="tltk.html" class="setting-item link-item mobile-only-link-file" style="text-decoration: none; cursor: pointer; display: none;">
+            <span><i class="fa-solid fa-file-lines"></i> Tài liệu tham khảo</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i>
+          </a>
+
+          <hr style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5;">
+
+          <a
+              href="hdsd.html"
+              class="setting-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span
+                ><i class="fa-solid fa-book-open-reader"></i> Hướng dẫn sử
+                dụng</span
+              >
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+            <hr style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5;">
+          <a href="contact.html" class="setting-item link-item" style="text-decoration: none; cursor: pointer;">
+            <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mathKeypad">
+    <div class="keypad-header">
+      <span class="keypad-title">MathBoard</span>
+      <button id="keypadClose">Xong</button>
+    </div>
+
+    <div id="keypad-page-1" class="keypad-page active">
+      <button class="k-btn op" data-val="[">[</button>
+      <button class="k-btn op" data-val="]">]</button>
+      <button class="k-btn op" data-val=",">,</button>
+      <button class="k-btn op" data-val="-">−</button>
+      <button class="k-btn op" data-cmd="delete"><i class="fa-solid fa-delete-left"></i></button>
+
+      <button class="k-btn" data-val="7">7</button>
+      <button class="k-btn" data-val="8">8</button>
+      <button class="k-btn" data-val="9">9</button>
+      <button class="k-btn" data-val="0">0</button>
+      <button class="k-btn switch-btn math-font" data-cmd="page2">f(x)</button>
+
+      <button class="k-btn" data-val="4">4</button>
+      <button class="k-btn" data-val="5">5</button>
+      <button class="k-btn" data-val="6">6</button>
+      <button class="k-btn op" data-cmd="left"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="k-btn op" data-cmd="right"><i class="fa-solid fa-arrow-right"></i></button>
+
+      <button class="k-btn" data-val="1">1</button>
+      <button class="k-btn" data-val="2">2</button>
+      <button class="k-btn" data-val="3">3</button>
+      <div style="grid-column: span 2; display: flex; align-items: center; justify-content: center; pointer-events: none; user-select: none;">
+        <img src="./assets/images/logoChu.png" alt="Vectoria" style="max-height: 28px; max-width: 100%; object-fit: contain; opacity: 0.9;">
+      </div>
+    </div>
+
+    <div id="keypad-page-2" class="keypad-page">
+      <button class="k-btn op" data-val="[">[</button>
+      <button class="k-btn op" data-val="]">]</button>
+      <button class="k-btn op" data-val=",">,</button>
+      <button class="k-btn op" data-val="-">−</button>
+      <button class="k-btn op" data-cmd="delete"><i class="fa-solid fa-delete-left"></i></button>
+
+      <button class="k-btn op math-font" data-val="\sin(#0)">sin</button>
+      <button class="k-btn op math-font" data-val="\cos(#0)">cos</button>
+      <button class="k-btn op math-font" data-val="\tan(#0)">tan</button>
+      <button class="k-btn op math-font" data-val="\cot(#0)">cot</button>
+      <button class="k-btn switch-btn" style="font-family: sans-serif;" data-cmd="page1">123</button>
+
+      <button class="k-btn op math-font" data-val="\log_{#?}(#0)">log<sub>a</sub></button>
+      <button class="k-btn op math-font" data-val="\ln(#0)">ln</button>
+      <button class="k-btn op math-font" data-val="e">e</button>
+      <button class="k-btn op" data-cmd="left"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="k-btn op" data-cmd="right"><i class="fa-solid fa-arrow-right"></i></button>
+
+      <button class="k-btn op math-font" data-val="\sqrt{#0}">√x</button>
+      <button class="k-btn op math-font" data-val="\sqrt[#?]{#0}">ⁿ√x</button>
+      <button class="k-btn op math-font" data-val="\pi">π</button>
+      <div style="grid-column: span 2; display: flex; align-items: center; justify-content: center; pointer-events: none; user-select: none;">
+        <img src="./assets/images/logoChu.png" alt="Vectoria" style="max-height: 28px; max-width: 100%; object-fit: contain; opacity: 0.9;">
+      </div>
+    </div>
+  </div>
+  <div id="overlay"></div>
+
+  <div id="app">
+    
+    <div id="controls">
+      <div class="card section-calc-info glow">
+        <details class="calc" id="calcBoxExtra" open>
+          <summary>KHÔNG GIAN VECTOR <span class="chev">▾</span></summary>
+          <div style="margin-top:6px">
+            <div>
+              <label>Chọn bài toán:</label>
+              <select id="opExtraSelect">
+                <option value="linear_independence">Độc lập tuyến tính</option>
+                <option value="rank">Hạng của hệ vector</option>
+                <option value="basis">Cơ sở và số chiều</option>
+                <option value="coordinates">Tọa độ vector theo cơ sở</option>
+              </select>
+            </div>
+          </div>
+          <div id="extraForms" style="margin-top:8px">
+            <div id="form-linear_independence" class="extra-form"><label class="small"><b>Kiểm tra ĐLTT</b></label>
+              <div id="indepChecklist" class="checklist"></div>
+              <div class="row" style="margin-top:6px; display: flex; gap: 5px;">
+                <button id="btnIndep" style="flex: 1;">Kiểm tra</button>
+                <button id="btnInteract" style="flex: 1; display: none;" class="btn-secondary"
+                  title="Điều chỉnh vector trực quan">
+                  <i class="fa-solid fa-hand-pointer"></i> Tương tác
+                </button>
+              </div>
+              <pre id="result_indep">—</pre>
+            </div>
+            <div id="form-rank" class="extra-form"><label class="small"><b>Hạng của hệ vector</b></label>
+              <div id="rankChecklist" class="checklist"></div>
+              <div class="row" style="margin-top:6px"><button id="btnRank">Tính hạng</button></div>
+              <pre id="result_rank">—</pre>
+            </div>
+            <div id="form-basis" class="extra-form"><label class="small"><b>Cơ sở & Số chiều</b></label>
+              <div id="basisChecklist" class="checklist"></div>
+              <div class="row" style="margin-top:6px; gap:8px;"><button id="btnBasis">Tính cơ sở</button><button
+                  id="btnOpenSolution" class="btn-solution" type="button">Lời giải</button></div>
+              <div id="result_basis" style="width:100%">—</div>
+            </div>
+            <div id="form-coordinates" class="extra-form">
+              <label class="small"><b>Tọa độ theo cơ sở</b></label>
+              <select id="vCoordSelect"></select>
+
+              <div style="margin-top:8px">
+                <label>Chọn cơ sở:</label>
+                <div id="basisCoordChecklist" class="checklist"></div>
+              </div>
+
+              <div class="row" style="margin-top:6px; display: flex; gap: 5px;">
+                <button id="btnCoord" style="flex: 1;">Xuất tọa độ</button>
+                <button id="btnCoordSolution" class="btn-solution" type="button" style="flex: 1;">Lời giải</button>
+              </div>
+
+              <pre id="result_coord">—</pre>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="card section-calc-new glow">
+        <details class="calc" id="calcBox" open>
+          <summary>PHÉP TÍNH <span class="chev">▾</span></summary>
+          <div style="margin-top:6px">
+            <div>
+              <label>Chọn phép tính:</label>
+              <select id="opSelect">
+                <option value="add">Cộng 2 vector</option>
+                <option value="scale">Kéo dãn</option>
+                <option value="projection">Hình chiếu</option>
+                <option value="normalize">Chuẩn hoá vector</option>
+                <option value="dot">Tích vô hướng của 2 vector</option>
+                <option value="cross">Tích có hướng của 2 vector</option>
+                <option value="vector_norm">Độ dài vector</option>
+                <option value="angle_between">Góc giữa 2 vector</option>
+              </select>
+            </div>
+            <div id="scalarBox" style="display:none">
+              <label>Hệ số k</label>
+              <input id="scalarInp" type="text" inputmode="decimal" value="2" placeholder="Nhập k..." />
+            </div>
+          </div>
+          <div class="grid2" style="margin-top:8px">
+            <div>
+              <label>Vector 1 (v1)</label>
+              <select id="v1Select"></select>
+            </div>
+            <div id="v2Box">
+              <label>Vector 2 (v2)</label>
+              <select id="v2Select"></select>
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button id="btnCompute" class="btn primary">Thực hiện</button>
+
+            <div id="calcSteps" class="help">Kết quả phép tính sẽ hiển thị ở đây.</div>
+        </details>
+      </div>
+
+      <div class="card section-create glow" id="card-create">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label style="margin: 0;"><b>KHỞI TẠO VECTOR</b></label>
+          <i class="fa-solid fa-circle-question" id="btn-tour-khoitao" title="Hướng dẫn chức năng"
+            style="cursor: pointer; color: #2196F3; font-size: 1.1em;"></i>
+        </div>
+
+
+        <div style="position: relative; width: 100%;">
+
+          <math-field id="vectorInput" math-virtual-keyboard-policy="manual" smart-fence="false" smart-mode="false">
+            [1, 2]
+          </math-field>
+
+          <button id="myMenuBtn" class="custom-menu-btn" title="Phép toán nâng cao">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
+          <div id="myCustomMenu" class="custom-menu-dropdown">
+
+            <div class="menu-item" onclick="insertLatex('\\sqrt{#0}')">
+              <span>Căn bậc 2</span> <span class="latex-preview">√x</span>
+            </div>
+            <div class="menu-item" onclick="insertLatex('\\sqrt[#?]{#0}')">
+              <span>Căn bậc n</span> <span class="latex-preview">ⁿ√x</span>
+            </div>
+
+            <hr style="margin: 5px 0; border-top: 1px solid #eee;">
+
+            <div class="menu-item" onclick="insertLatex('\\sin(#0)')">
+              <span>Sin</span> <span class="latex-preview">sin</span>
+            </div>
+            <div class="menu-item" onclick="insertLatex('\\cos(#0)')">
+              <span>Cos</span> <span class="latex-preview">cos</span>
+            </div>
+            <div class="menu-item" onclick="insertLatex('\\tan(#0)')">
+              <span>Tan</span> <span class="latex-preview">tan</span>
+            </div>
+            <div class="menu-item" onclick="insertLatex('\\cot(#0)')">
+              <span>Cot</span> <span class="latex-preview">cot</span>
+            </div>
+
+            <hr style="margin: 5px 0; border-top: 1px solid #eee;">
+
+            <div class="menu-item" onclick="insertLatex('\\log_{#?}(#0)')">
+              <span>Logarit cơ số a</span> <span class="latex-preview">logₐ</span>
+            </div>
+            <div class="menu-item" onclick="insertLatex('\\ln(#0)')">
+              <span>Logarit tự nhiên</span> <span class="latex-preview">ln</span>
+            </div>
+
+            <hr style="margin: 5px 0; border-top: 1px solid #eee;">
+
+            <div class="menu-item" onclick="insertLatex('\\pi')">
+              <span>Số Pi</span> <span class="latex-preview">π</span>
+            </div>
+            <div class="menu-item" onclick="insertLatex('e')">
+              <span>Số e</span> <span class="latex-preview">e</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:8px">
+          <button id="btnDraw" class="btn primary">Thêm vector</button>
+          <button id="btnAuto">Tự động chuyển chiều không gian: BẬT</button>
+          <button id="btnClearAll">Xóa hết vector</button>
+        </div>
+      </div>
+
+      <div class="card section-list glow">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <label>Danh sách vector</label>
+        </div>
+        <input type="text" id="mainVecSearch" placeholder="🔍 Tìm vector theo tọa độ" class="vec-search-inp"
+          style="margin-bottom: 8px;">
+        <ul id="vectorList"></ul>
+      </div>
+    </div>
+
+    <div id="viewerWrap">
+      <div id="modeBadge" class="pill">Mode: 2D</div>
+      <div id="axisControls" class="axis-controls-panel" style="display: none;">
+          <div class="axis-controls-title" title="Khóa 1 trục khi kéo chuột"><i class="fa-solid fa-lock"></i> Khóa</div>
+          <button class="axis-btn" data-axis="x">X</button>
+          <button class="axis-btn" data-axis="y">Y</button>
+          <button class="axis-btn" data-axis="z">Z</button>
+      </div>
+      <div id="viewer">
+        <canvas id="canvas2d"></canvas>
+        <div id="threeLayer" tabindex="0" aria-label="3D viewer"></div>
+      </div>
+      
+      <button id="btnTogglePanel" class="view-tool-btn" title="Thu gọn/Mở rộng bảng điều khiển">
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+
+      <button id="btnResetView" class="view-tool-btn" title="Quay về gốc tọa độ">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" />
+          <circle cx="12" cy="12" r="2" fill="currentColor" />
+          <line x1="12" y1="2" x2="12" y2="7" stroke="currentColor" stroke-width="2" />
+          <line x1="12" y1="17" x2="12" y2="22" stroke="currentColor" stroke-width="2" />
+          <line x1="2" y1="12" x2="7" y2="12" stroke="currentColor" stroke-width="2" />
+          <line x1="17" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="solutionOverlay" class="sol-overlay" aria-hidden="true">
+    <div class="sol-panel" role="dialog">
+      <div class="sol-header">
+        <div class="sol-title">
+          <div class="sol-badge">Lời giải</div>
+          <div id="solTitle" class="sol-h1"><span id="solTitleText">Cơ sở &amp; số chiều</span> <span
+              id="solTitleMath">\( \mathbb{R}^n \)</span></div>
+        </div>
+        <button id="btnCloseSolution" class="sol-close">✕</button>
+      </div>
+      <div class="sol-toolbar">
+        <div class="sol-method">
+          <span class="sol-label">Cách giải:</span>
+          <button id="solMethodMat" class="sol-tab is-active">Cách 1: Ma trận</button>
+          <button id="solMethodEq" class="sol-tab">Cách 2: Hệ phương trình</button>
+        </div>
+
+      </div>
+      <div id="solutionBody" class="sol-body">
+        <div class="sol-empty">Chưa có lời giải.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils/math.js"></script>
+  <script src="js/utils/parse.js"></script>
+  <script src="js/app/api/endpoints.js"></script>
+  <script src="js/app/state.js"></script>
+  <script src="js/app/api/client.js"></script>
+  <script src="js/app/ui/steps_renderer.js"></script>
+  <script src="js/app/ui/sidebar.js"></script>
+  <script src="js/app/ui/solution_panel.js"></script>
+
+  <script src="js/app/ui/tasks_generator/coord_generator.js"></script>
+  <script src="js/app/logic/tasks_controller/coord_controller.js"></script>
+
+  <script src="js/app/ui/tasks_generator/basis_generator.js"></script>
+  <script src="js/app/logic/tasks_controller/basis_controller.js"></script>
+
+  <script src="js/app/playback/animator.js"></script>
+  <script src="js/app/logic/vector_controller.js"></script>
+  <script src="js/app/logic/gauss_steps.js"></script>
+  <script src="js/viewers/viewer2D.js"></script>
+
+  <script>
+    (function () {
+      var version = new Date().getTime();
+      function loadScript(url) {
+        var script = document.createElement("script");
+        script.src = url + "?v=" + version;
+        script.async = false;
+        document.body.appendChild(script);
+      }
+      loadScript("js/viewers/viewer3D.js");
+    })();
+  </script>
+
+  <script src="js/app/playback/operation_animation.js"></script>
+  <script src="./js/app/playback/basis_animation.js"></script>
+  <script src="js/app/bootstrap.js"></script>
+
+
+
+
+
+  <script>
+    // 1. Auto-initialize theme (theme-manager.js handles this)
+    (() => {
+      // ThemeManager auto-initializes, but ensure class is applied early
+      const savedTheme = localStorage.getItem('vec_theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark');
+      }
+    })();
+
+    // 2. HANDLE THEME TOGGLE (When page loads)
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggleInput = document.getElementById('themeToggle');
+
+      if (toggleInput) {
+        // Set initial state
+        toggleInput.checked = ThemeManager.isDarkMode();
+
+        // Handle toggle click
+        toggleInput.addEventListener('change', function () {
+          const isDark = ThemeManager.toggle();
+          // Ensure visual update on current page
+          ThemeManager.applyTheme(isDark);
+          // Keep checkbox in sync
+          toggleInput.checked = isDark;
+        });
+
+        // Listen for theme changes from other tabs/pages
+        window.addEventListener('storage', (e) => {
+          if (e.key === ThemeManager.STORAGE_KEY) {
+            const isDark = ThemeManager.isDarkMode();
+            toggleInput.checked = isDark;
+            // Apply theme on this page too when other tabs change
+            ThemeManager.applyTheme(isDark);
+          }
+        });
+      }
+    });
+  </script>
+
+  <script>
+    window.addEventListener('load', function () {
+      // Thêm hiệu ứng hiện từ từ cho mượt
+      document.body.style.transition = 'opacity 0.3s ease-in-out';
+      // Bật đèn!
+      requestAnimationFrame(function () {
+        document.body.style.opacity = '1';
+      });
+    });
+  </script>
+
+  <script>
+    // Hàm chèn LaTeX vào ô MathLive (Cực kỳ đơn giản)
+    window.insertLatex = function (latex) {
+      const mf = document.getElementById('vectorInput');
+      if (mf) {
+        // Lệnh chuẩn của MathLive để chèn
+        mf.executeCommand(['insert', latex]);
+        // Quan trọng: Focus lại vào ô nhập để gõ tiếp luôn
+        mf.focus();
+      }
+      // Chọn xong thì ẩn menu đi
+      document.getElementById('myCustomMenu').style.display = 'none';
+    };
+
+    // Xử lý sự kiện Bật/Tắt menu
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('myMenuBtn');
+      const menu = document.getElementById('myCustomMenu');
+
+      if (btn && menu) {
+        // 1. Bấm nút thì hiện/ẩn
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation(); // Không cho sự kiện lan ra ngoài
+          // 1. Tìm tất cả menu con trong danh sách và đóng lại
+          document.querySelectorAll('.vec-dropdown').forEach(d => d.classList.remove('show'));
+          // 2. Reset z-index của các dòng
+          document.querySelectorAll('.vec-item').forEach(it => it.classList.remove('active-z'));
+          // 3. [QUAN TRỌNG] Reset padding của khung danh sách về 0 (để nó co lại)
+          const list = document.getElementById("vectorList");
+          if (list) list.style.paddingBottom = "0px";
+          const isHidden = menu.style.display === 'none' || menu.style.display === '';
+          menu.style.display = isHidden ? 'block' : 'none';
+        });
+
+        // 2. Bấm ra ngoài thì tắt menu
+        document.addEventListener('click', (e) => {
+          if (!menu.contains(e.target) && e.target !== btn) {
+            menu.style.display = 'none';
+          }
+        });
+      }
+    });
+  </script>
+  <script>
+    // ================= LOGIC BÀN PHÍM VIBE WEB (HỖ TRỢ CẢ MATH-FIELD VÀ THANH TÌM KIẾM) =================
+    window.addEventListener('DOMContentLoaded', () => {
+      // Tước đoạt hoàn toàn quyền sinh sát của bàn phím MathLive
+      if (window.mathVirtualKeyboard) {
+          window.mathVirtualKeyboard.policy = "manual";
+          // Ghi đè hàm show() thành cục gạch, hễ nó định mở là ép đứng im
+          window.mathVirtualKeyboard.show = () => {}; 
+          // Cho chắc cú, hàm hide() cũng ép nó câm nín luôn
+          window.mathVirtualKeyboard.hide(); 
+      }
+
+      const keypad = document.getElementById('mathKeypad');
+      const btnClose = document.getElementById('keypadClose');
+      const page1 = document.getElementById('keypad-page-1');
+      const page2 = document.getElementById('keypad-page-2');
+      const controlsArea = document.getElementById('controls');
+      
+      // Biến dùng chung cho cả math-field và input thường
+      let activeInput = null; 
+
+      // Cục đệm tàng hình dưới đáy
+      const spacer = document.createElement('div');
+      spacer.style.transition = "height 0.3s";
+      spacer.style.height = "0px";
+      controlsArea.appendChild(spacer);
+
+      // [QUAN TRỌNG]: Tắt bàn phím hệ thống của điện thoại cho tất cả thanh tìm kiếm
+      document.querySelectorAll('.vec-search-inp, input[type="text"]').forEach(inp => {
+          inp.setAttribute('inputmode', 'none'); 
+      });
+
+      // 1. CHẠM VÀO Ô NHẬP HOẶC TÌM KIẾM (CHỐNG LỌT LƯỚI BÀN PHÍM MATHLIVE)
+      let touchStartY = 0;
+      let isScrolling = false;
+
+      // Bước 1: Vừa chạm vào là dập tắt ngay bàn phím MathLive (cấm nó ngọ nguậy)
+      document.addEventListener('touchstart', (e) => {
+          // Bất kể chạm để vuốt hay gõ, thấy math-field là đè đầu cưỡi cổ bàn phím của nó xuống
+          if (e.target.closest('math-field') && window.mathVirtualKeyboard) {
+              window.mathVirtualKeyboard.hide();
+          }
+
+          if (e.touches && e.touches.length > 0) {
+              touchStartY = e.touches[0].clientY;
+          }
+          isScrolling = false;
+      }, { passive: true, capture: true }); // Dùng capture: true để mình ra tay trước MathLive
+
+      // Bước 2: Theo dõi trượt tay
+      document.addEventListener('touchmove', (e) => {
+          // Nếu đang vuốt trên math-field, tiếp tục ép ẩn bàn phím của nó
+          if (e.target.closest('math-field') && window.mathVirtualKeyboard) {
+              window.mathVirtualKeyboard.hide();
+          }
+
+          if (e.touches && e.touches.length > 0) {
+              if (Math.abs(e.touches[0].clientY - touchStartY) > 10) {
+                  isScrolling = true; 
+              }
+          }
+      }, { passive: true, capture: true });
+
+      // Bước 3: Chỉ mở bàn phím TỰ CHẾ của mình khi nhấn xong (không vuốt)
+      document.addEventListener('touchend', (e) => {
+        if (isScrolling) return; // Đang cuộn thì nghỉ, không mở gì hết
+
+        const targetEl = e.target.closest('math-field, input[type="text"], input[type="search"]'); 
+        if (targetEl) {
+          // Dập thêm phát nữa cho chắc cối
+          if (window.mathVirtualKeyboard) window.mathVirtualKeyboard.hide();
+          
+          if (window.innerWidth <= 768) {
+            activeInput = targetEl;
+            
+            if (e.cancelable) e.preventDefault(); 
+            activeInput.focus();
+
+            keypad.classList.add('open');
+            document.body.classList.add('has-keypad'); 
+            spacer.style.height = "500px"; 
+
+            setTimeout(() => {
+               const tabs = document.querySelector('.sidebar-tabs');
+               if (controlsArea && tabs) {
+                   const rect = targetEl.getBoundingClientRect();
+                   const tabsRect = tabs.getBoundingClientRect();
+                   const distanceToScroll = rect.top - tabsRect.bottom - 15;
+                   controlsArea.scrollBy({ top: distanceToScroll, behavior: 'smooth' });
+               }
+            }, 300); 
+          }
+        }
+      }, { passive: false });
+
+      // Nút Xong (Đóng bàn phím)
+      if (btnClose) {
+        btnClose.addEventListener('click', () => {
+          keypad.classList.remove('open');
+          document.body.classList.remove('has-keypad');
+          spacer.style.height = "0px";
+          if (activeInput) {
+            activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+            activeInput = null;
+          }
+        });
+      }
+
+      // Xử lý Gõ phím & Lật mặt
+      document.querySelectorAll('.k-btn').forEach(btn => {
+        btn.addEventListener('pointerdown', (e) => {
+          e.preventDefault(); 
+          const cmd = btn.getAttribute('data-cmd');
+
+          if (cmd === 'page1') { page2.classList.remove('active'); page1.classList.add('active'); return; }
+          if (cmd === 'page2') { page1.classList.remove('active'); page2.classList.add('active'); return; }
+
+          if (!activeInput) return;
+          const val = btn.getAttribute('data-val');
+
+          // Phân loại: Ô đang gõ là MathLive hay Input bình thường?
+          const isMathField = activeInput.tagName.toLowerCase() === 'math-field';
+
+          // Nút OK
+          if (cmd === 'enter') {
+            keypad.classList.remove('open');
+            document.body.classList.remove('has-keypad');
+            spacer.style.height = "0px";
+            activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+            activeInput = null;
+            return;
+          }
+
+          if (isMathField) {
+              // ---------- XỬ LÝ DÀNH CHO MATH-FIELD ----------
+              if (val) activeInput.executeCommand(['insert', val]);
+              else if (cmd === 'delete') activeInput.executeCommand('deleteBackward');
+              else if (cmd === 'left') activeInput.executeCommand('moveToPreviousChar');
+              else if (cmd === 'right') activeInput.executeCommand('moveToNextChar');
+          } else {
+              // ---------- XỬ LÝ DÀNH CHO INPUT (TÌM KIẾM) ----------
+              let text = activeInput.value;
+              let start = activeInput.selectionStart || text.length;
+              let end = activeInput.selectionEnd || text.length;
+
+              if (val) {
+                  // Lọc bỏ các mã LaTeX thừa thãi để nhập chữ sạch sẽ (Ví dụ \sqrt{#0} -> thành chữ rỗng hoặc tự custom)
+                  // Vì đây là thanh tìm kiếm vector, người ta thường gõ [ 1 , 2 ] nên lấy nguyên val là đủ
+                  let plainVal = val.replace(/\\/g, '').replace(/{#0}/g, '').replace(/\[#\?\]/g, '').replace(/\(#0\)/g, '');
+                  if (val === '\\pi') plainVal = 'pi';
+                  
+                  activeInput.value = text.substring(0, start) + plainVal + text.substring(end);
+                  activeInput.setSelectionRange(start + plainVal.length, start + plainVal.length);
+              } 
+              else if (cmd === 'delete') {
+                  if (start === end && start > 0) { // Xóa 1 ký tự
+                      activeInput.value = text.substring(0, start - 1) + text.substring(end);
+                      activeInput.setSelectionRange(start - 1, start - 1);
+                  } else if (start !== end) { // Xóa 1 khối bôi đen
+                      activeInput.value = text.substring(0, start) + text.substring(end);
+                      activeInput.setSelectionRange(start, start);
+                  }
+              }
+              else if (cmd === 'left') {
+                  activeInput.setSelectionRange(Math.max(0, start - 1), Math.max(0, start - 1));
+              }
+              else if (cmd === 'right') {
+                  activeInput.setSelectionRange(Math.min(text.length, start + 1), Math.min(text.length, start + 1));
+              }
+          }
+          
+          // Bắt buộc Dispatch Event 'input' để thanh tìm kiếm Lọc List ngay lúc gõ
+          activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+          activeInput.focus(); 
+        });
+      });
+    });
+  </script>
+  <script src="js/app/tour_calculation.js"></script>
+  <script>
+    // --- LOGIC NÚT THU/PHÓNG PANEL TRÊN MOBILE (BẤT TỬ VỚI BÀN PHÍM & LÙI TRANG) ---
+    document.addEventListener("DOMContentLoaded", () => {
+      const btnToggle = document.getElementById("btnTogglePanel");
+      const appContainer = document.getElementById("app");
+      // Dùng biến toàn cục window để không bị mất khi lùi trang
+      window.isPanelCollapsed = false;
+
+      // Hàm ép chiều cao chuẩn
+      function enforcePanelHeight() {
+          if (appContainer && window.innerWidth <= 768) {
+              if (!window.isPanelCollapsed) {
+                  appContainer.style.setProperty("--panel-height", "45vh");
+                  // Ép trình duyệt vẽ lại khung
+                  void appContainer.offsetHeight; 
+              }
+          }
+      }
+
+      // Ép ngay lần đầu load
+      enforcePanelHeight();
+
+      if (btnToggle && appContainer) {
+        btnToggle.addEventListener("click", () => {
+          window.isPanelCollapsed = !window.isPanelCollapsed;
+          
+          if (window.isPanelCollapsed) {
+            // THU GỌN: Đóng bàn phím (nếu có)
+            if (window.mathVirtualKeyboard) window.mathVirtualKeyboard.hide();
+            const keypad = document.getElementById('mathKeypad');
+            if(keypad) keypad.classList.remove('open');
+            document.body.classList.remove('has-keypad');
+
+            appContainer.style.setProperty("--panel-height", "0px"); 
+            btnToggle.innerHTML = '<i class="fa-solid fa-chevron-up"></i>'; 
+          } else {
+            // MỞ RỘNG:
+            appContainer.style.setProperty("--panel-height", "45vh");
+            btnToggle.innerHTML = '<i class="fa-solid fa-chevron-down"></i>'; 
+          }
+
+          setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+          }, 450); 
+        });
+      }
+
+      // [QUAN TRỌNG NHẤT]: Cứu cánh khi bấm nút Back/Forward quay lại trang
+      window.addEventListener('pageshow', (event) => {
+          if (event.persisted) { // Nếu load từ bộ nhớ đệm Bfcache
+              enforcePanelHeight();
+              
+              // Reset icon nút bấm
+              if (btnToggle) {
+                  btnToggle.innerHTML = window.isPanelCollapsed 
+                      ? '<i class="fa-solid fa-chevron-up"></i>' 
+                      : '<i class="fa-solid fa-chevron-down"></i>';
+              }
+              
+              // Cập nhật giao diện 3D
+              setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+          }
+      });
+    });
+  </script>
+  <script>
+    // --- [MỚI THÊM]: LOGIC KHÔI PHỤC ĐỒ THỊ TỪ DASHBOARD ---
+    window.addEventListener('load', () => {
+        // Đợi 1 chút xíu (500ms) để Three.js và các file JS của sếp load xong xuôi
+        setTimeout(() => {
+            const restoreDataStr = localStorage.getItem('vectoria_restore_data');
+            
+            if (restoreDataStr && window.App && window.App.vectorList) {
+                try {
+                    const restoreData = JSON.parse(restoreDataStr);
+                    
+                    if (restoreData.is_restoring && restoreData.matrix) {
+                        console.log(">> Đang khôi phục ma trận:", restoreData.matrix);
+                        
+                        // 1. Dọn dẹp sạch sẽ màn hình cũ (Giống như sếp bấm nút Xóa hết)
+                        if(typeof App.clearAllVectors === 'function') {
+                            App.clearAllVectors();
+                        } else {
+                            App.vectorList.length = 0;
+                        }
+
+                        // 2. Chạy vòng lặp, nhét từng dòng của ma trận vào màn hình
+                        restoreData.matrix.forEach(vecCoords => {
+                            // Tạo màu ngẫu nhiên giống logic của sếp
+                            const hue = App._pickUniqueHue ? App._pickUniqueHue() : Math.random() * 360;
+                            
+                            // Tạo Object Vector
+                            const newItem = App._attachVectorItem(vecCoords, hue);
+                            
+                            // Phục dựng lại chuỗi Latex cho đẹp
+                            const cleanArray = vecCoords.map((val) => Number(val).toString());
+                            newItem.latex = `[${cleanArray.join(", ")}]`;
+                            
+                            // Nhét vào danh sách
+                            App.vectorList.push(newItem);
+                        });
+
+                        // 3. Ra lệnh vẽ lại toàn bộ
+                        if (App.renderVectorList) App.renderVectorList();
+                        if (App.refreshCalcVectorOptions) App.refreshCalcVectorOptions();
+                        
+                        // Check xem là 2D hay 3D để bật Mode cho đúng
+                        const is3D = restoreData.matrix.some(v => v.length >= 3);
+                        App.mode = is3D ? "3D" : "2D";
+                        const mb = document.getElementById("modeBadge");
+                        if (mb) mb.textContent = `Mode: ${App.mode}`;
+
+                        // Ra lệnh vẽ đồ thị
+                        if (App.redrawAll) App.redrawAll({ frame: true });
+                        if (App.mode === "3D" && window.Vec3D) Vec3D.hardRefresh3D(true);
+                        
+                        
+
+                        // 4. Xé bỏ thư mời
+                        localStorage.removeItem('vectoria_restore_data');
+                    }
+                } catch (e) {
+                    console.error("Lỗi đọc dữ liệu khôi phục:", e);
+                    localStorage.removeItem('vectoria_restore_data');
+                }
+            }
+        }, 500); // Chờ 500ms cho an toàn
+    });
+  </script>
+  
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="js/utils/live-collab.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+/* =================== GIAO DIỆN FOOTER CHUYÊN NGHIỆP =================== */
+.vectoria-footer {
+  background-color: #f8fafc;
+  border-top: 1px solid var(--border);
+  padding: 40px 0 15px 0;
+  margin-top: 60px; /* Đẩy footer cách xa nội dung grid một chút cho thoáng */
+  font-family: "Inter", sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+}
+
+body.dark .vectoria-footer {
+  background-color: #0b1120;
+  border-top-color: #1e293b;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 2 cột */
+  gap: 40px;
+}
+
+.brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.partner-logo {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.partner-logo img {
+  height: 45px;
+  width: auto;
+  transition: filter 0.3s ease;
+}
+
+.brand-col p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-sub);
+  margin: 0;
+  padding-right: 40px;
+}
+
+.footer-col h4 {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-sub);
+  font-size: 0.95rem;
+}
+
+.footer-col ul li i {
+  color: var(--primary);
+  width: 16px;
+  text-align: center;
+}
+
+.footer-col ul li a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.footer-col ul li a:hover {
+  color: var(--primary);
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  color: var(--text-sub);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .brand-col p {
+    padding-right: 0;
+  }
+}
+body.dark #textLogo {
+  filter: invert(1); /* Đảo màu khi body có class 'dark' */
+}

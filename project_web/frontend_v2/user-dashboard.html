@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Cá Nhân - Vectoria</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="js/app/auth.js"></script>
+
+    <style>
+      :root {
+        --bg: #121212;
+        --card: #1e1e1e;
+        --border: #333;
+        --fg: #f5f5f5;
+        --muted: #aaa;
+        --primary: #2196f3;
+        --primary-hover: #1976d2;
+        --danger: #f44336;
+        --success: #4caf50;
+        --warning: #ff9800;
+        --topbar-h: 60px;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: var(--bg);
+        color: var(--fg);
+        overflow: hidden;
+      }
+
+      /* ==================== TOPBAR ĐÀNG HOÀNG ==================== */
+      .topbar {
+        height: var(--topbar-h);
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 25px;
+        z-index: 100;
+      }
+      .topbar .logo {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--fg);
+        border: 1px solid var(--border);
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .btn-outline:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+      }
+
+      /* ==================== BỐ CỤC CHÍNH ==================== */
+      .dash-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      /* ==================== SIDEBAR & PROFILE ==================== */
+      .dash-sidebar {
+        width: 280px;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 25px 15px;
+      }
+
+      .user-profile {
+        text-align: center;
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+      }
+      .user-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(33, 150, 243, 0.1);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        border: 2px solid var(--primary);
+        margin: 0 auto 12px;
+      }
+
+      .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .nav-item {
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--fg);
+      }
+      .nav-item.active {
+        background: rgba(33, 150, 243, 0.15);
+        color: var(--primary);
+        border-left: 4px solid var(--primary);
+      }
+
+      /* ==================== MAIN CONTENT & TABS ==================== */
+      .dash-main {
+        flex: 1;
+        padding: 40px 50px;
+        overflow-y: auto;
+      }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .dash-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      /* Nút bấm chung */
+      .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: var(--primary-hover);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+      }
+      .btn-secondary:hover {
+        background: rgba(33, 150, 243, 0.1);
+      }
+      .btn-danger {
+        background: transparent;
+        color: var(--danger);
+        border: 1px solid var(--danger);
+      }
+      .btn-danger:hover {
+        background: var(--danger);
+        color: white;
+      }
+
+      /* Bảng Lịch sử */
+      .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      .history-table th {
+        color: var(--muted);
+        padding: 12px;
+        border-bottom: 2px solid var(--border);
+      }
+      .history-table td {
+        padding: 15px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .history-table tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* Banner Khuyến khích Đăng nhập */
+      .promo-banner {
+        background: rgba(33, 150, 243, 0.1);
+        border: 1px dashed var(--primary);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        color: var(--fg);
+        margin-bottom: 20px;
+      }
+
+      /* ==================== CUSTOM MODAL SYSTEM ==================== */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        width: 90%;
+        max-width: 400px;
+        padding: 25px;
+        transform: translateY(-30px) scale(0.95);
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      }
+      .modal-overlay.active .modal-box {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--fg);
+      }
+      .modal-body {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      .modal-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+      .modal-input {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--fg);
+        padding: 12px 15px;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+      }
+      .modal-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+      }
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      /* ==================== TOPBAR NAV & THEME TOGGLE ==================== */
+      .topbar-nav { display: flex; gap: 20px; align-items: center; }
+      .topbar-link { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+      .topbar-link:hover { color: var(--primary); }
+      
+      /* Animation Sun / Moon v2 */
+      .theme-toggle-btn { background: transparent; border: 1px solid var(--border); color: var(--fg); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s; position: relative; overflow: hidden; }
+      .theme-toggle-btn:hover { background: var(--card); border-color: var(--primary); color: var(--primary); }
+      .theme-toggle-btn i { position: absolute; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+      
+      /* Mặc định (Sáng) -> Hiện Sun, Giấu Moon xuống đáy */
+      .theme-toggle-btn .fa-sun { transform: translateY(0) rotate(0); opacity: 1; }
+      .theme-toggle-btn .fa-moon { transform: translateY(30px) rotate(90deg); opacity: 0; }
+      
+      /* Khi Dark Mode -> Kéo Sun lên nóc, Kéo Moon lên giữa */
+      body.dark .theme-toggle-btn .fa-sun { transform: translateY(-30px) rotate(-90deg); opacity: 0; }
+      body.dark .theme-toggle-btn .fa-moon { transform: translateY(0) rotate(0); opacity: 1; }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="logo">
+        <i class="fa-solid fa-layer-group"></i> Vectoria Workspace
+      </div>
+      
+      <div class="topbar-nav">
+        <a href="index.html" class="topbar-link"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <a href="calculation.html" class="topbar-link"><i class="fa-solid fa-calculator"></i> Tính toán</a>
+        <a href="knowledge_info.html" class="topbar-link"><i class="fa-solid fa-book-open"></i> Kiến thức</a>
+        
+        <div style="width: 1px; height: 20px; background: var(--border); margin: 0 5px;"></div>
+        
+        <button id="btnThemeToggle" class="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
+          <i class="fa-solid fa-sun"></i>
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="dash-container">
+      <aside class="dash-sidebar">
+        <div id="authProfileArea" class="user-profile"></div>
+
+        <nav class="nav-menu">
+          <div class="nav-item active" onclick="switchTab('history')">
+            <i class="fa-solid fa-clock-rotate-left w-5"></i> Lịch sử Tính toán
+          </div>
+          <div class="nav-item" onclick="switchTab('progress')">
+            <i class="fa-solid fa-chart-pie w-5"></i> Tiến độ & Đánh giá
+          </div>
+          <div class="nav-item" onclick="switchTab('collab')">
+            <i class="fa-solid fa-users w-5"></i> Nhóm Cộng tác
+          </div>
+        </nav>
+      </aside>
+
+      <main class="dash-main">
+        <div id="tab-history" class="tab-content active">
+          <div style="margin-bottom: 25px">
+            <h1 style="margin: 0 0 5px">Lịch sử Tính toán</h1>
+            <p style="color: var(--muted); margin: 0">
+              Xem lại các ma trận và đồ thị bạn đã thao tác.
+            </p>
+          </div>
+
+          <div class="dash-card">
+            <div class="card-title">Dữ liệu gần đây</div>
+
+            <div id="historyPromo" class="promo-banner" style="display: none">
+              <i
+                class="fa-solid fa-cloud-arrow-up"
+                style="
+                  color: var(--primary);
+                  font-size: 20px;
+                  margin-bottom: 10px;
+                "
+              ></i>
+              <p style="margin: 0 0 10px">
+                Bạn đang sử dụng phiên bản Khách. Đăng nhập để tự động lưu mọi
+                bài toán lên Cloud!
+              </p>
+              <button
+                class="btn btn-primary"
+                style="padding: 6px 15px; font-size: 13px"
+                onclick="window.location.href = 'login.html'"
+              >
+                Đăng nhập ngay
+              </button>
+            </div>
+
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Thời gian</th>
+                  <th>Dạng Toán</th>
+                  <th>Dữ liệu</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-progress" class="tab-content">
+          <div style="margin-bottom: 25px">
+            <h1 style="margin: 0 0 5px">Tiến độ Học tập</h1>
+            <p style="color: var(--muted); margin: 0">
+              Hệ thống bài tập chuyên đề Đại số tuyến tính.
+            </p>
+          </div>
+
+          <div class="dash-card">
+            <div class="card-title">Ngân hàng Quiz</div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 8px;
+                margin-bottom: 10px;
+              "
+            >
+              <div>
+                <strong style="font-size: 16px"
+                  >Chuyên đề 1: Độc lập Tuyến tính</strong
+                >
+                <div
+                  style="font-size: 13px; color: var(--muted); margin-top: 5px"
+                >
+                  10 câu hỏi • 15 phút
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="startQuiz('quiz_1')">
+                Bắt đầu thi
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-collab" class="tab-content">
+          <div style="margin-bottom: 25px">
+            <h1 style="margin: 0 0 5px">Không gian Nhóm (Live Collab)</h1>
+            <p style="color: var(--muted); margin: 0">
+              Cùng giải Toán với bạn bè theo thời gian thực.
+            </p>
+          </div>
+
+          <div
+            class="dash-card"
+            style="
+              text-align: center;
+              padding: 60px 20px;
+              border: 2px dashed var(--border);
+            "
+          >
+            <div
+              style="
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: rgba(33, 150, 243, 0.1);
+                color: var(--primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 30px;
+                margin: 0 auto 20px;
+              "
+            >
+              <i class="fa-solid fa-satellite-dish"></i>
+            </div>
+            <h2 style="margin: 0 0 10px">Kết nối ngay với bạn bè</h2>
+            <p style="color: var(--muted); margin-bottom: 30px">
+              Tạo phòng riêng của bạn hoặc tham gia vào phòng có sẵn thông qua
+              Mã phòng.
+            </p>
+
+            <div style="display: flex; gap: 15px; justify-content: center">
+              <button class="btn btn-primary" onclick="handleCreateRoom()">
+                <i class="fa-solid fa-plus"></i> Tạo Phòng Mới
+              </button>
+
+              <button class="btn btn-secondary" onclick="joinRoom()">
+                <i class="fa-solid fa-door-open"></i> Nhập Mã Phòng
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="customModal" class="modal-overlay">
+        <div class="modal-box">
+          <div class="modal-title" id="modalTitle">Thông báo</div>
+          <div class="modal-body" id="modalMessage">Nội dung</div>
+
+          <div
+            class="modal-inputs"
+            id="modalInputs"
+            style="display: none"
+          ></div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="modalBtnCancel">Hủy</button>
+            <button class="btn btn-primary" id="modalBtnConfirm">
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================
+      // 1. ENGINE CỦA CUSTOM MODAL (Tạm biệt alert)
+      // ==========================================
+      window.Modal = {
+        show: function (options) {
+          const overlay = document.getElementById("customModal");
+          document.getElementById("modalTitle").innerHTML =
+            options.title || '<i class="fa-solid fa-bell"></i> Thông báo';
+          document.getElementById("modalMessage").innerHTML =
+            options.message || "";
+
+          // Nếu là dạng nhập mã phòng thì mở form
+          const inputsContainer = document.getElementById("modalInputs");
+          if (options.type === "join_room") {
+            inputsContainer.style.display = "flex";
+            inputsContainer.innerHTML = `
+                    <div>
+                        <label style="font-size: 12px; color: var(--muted); margin-bottom: 5px; display: block;">Mã phòng 6 ký tự (*)</label>
+                        <input type="text" id="modalInputRoom" class="modal-input" placeholder="VD: W5BGPU" style="text-transform: uppercase;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: var(--muted); margin-bottom: 5px; display: block;">Mật khẩu phòng (Nếu có)</label>
+                        <input type="password" id="modalInputPass" class="modal-input" placeholder="••••••••">
+                    </div>
+                `;
+          } else {
+            inputsContainer.style.display = "none";
+            inputsContainer.innerHTML = "";
+          }
+
+          const btnCancel = document.getElementById("modalBtnCancel");
+          const btnConfirm = document.getElementById("modalBtnConfirm");
+
+          btnCancel.style.display = options.hideCancel ? "none" : "block";
+          btnConfirm.innerText = options.confirmText || "Xác nhận";
+          btnConfirm.className = `btn ${options.confirmClass || "btn-primary"}`;
+
+          btnCancel.onclick = () => {
+            overlay.classList.remove("active");
+            if (options.onCancel) options.onCancel();
+          };
+          btnConfirm.onclick = () => {
+            if (options.type === "join_room") {
+              const room = document
+                .getElementById("modalInputRoom")
+                .value.trim();
+              const pass = document
+                .getElementById("modalInputPass")
+                .value.trim();
+              if (!room) {
+                document.getElementById("modalInputRoom").style.borderColor =
+                  "var(--danger)";
+                return;
+              }
+              overlay.classList.remove("active");
+              if (options.onConfirm) options.onConfirm({ room, pass });
+            } else {
+              overlay.classList.remove("active");
+              if (options.onConfirm) options.onConfirm();
+            }
+          };
+
+          overlay.classList.add("active");
+          if (options.type === "join_room") {
+            setTimeout(
+              () => document.getElementById("modalInputRoom").focus(),
+              100,
+            );
+          }
+        },
+      };
+
+      // ==========================================
+      // 2. CHUYỂN TAB VÀ QUẢN LÝ GIAO DIỆN CƠ BẢN
+      // ==========================================
+      function switchTab(tabId) {
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((item) => item.classList.remove("active"));
+        event.currentTarget.classList.add("active");
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((tab) => tab.classList.remove("active"));
+        document.getElementById("tab-" + tabId).classList.add("active");
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthUI();
+        // LOGIC BẬT/TẮT SÁNG TỐI Ở DASHBOARD
+        const btnTheme = document.getElementById('btnThemeToggle');
+        if (localStorage.getItem('vec_theme') === 'dark') {
+            document.body.classList.add('dark');
+        }
+        
+        btnTheme.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('vec_theme', isDark ? 'dark' : 'light');
+        });
+      });
+
+      function updateAuthUI() {
+        const profileArea = document.getElementById("authProfileArea");
+        const historyPromo = document.getElementById("historyPromo");
+        const isLoggedIn = window.AuthGuard && window.AuthGuard.isLoggedIn();
+
+        if (isLoggedIn) {
+          const userName = localStorage.getItem("user_name") || "Người dùng";
+          const initial = userName.charAt(0).toUpperCase();
+
+          profileArea.innerHTML = `
+                <div class="user-avatar">${initial}</div>
+                <h3 style="margin: 0; font-size: 18px">${userName}</h3>
+                <span style="color: var(--success); font-size: 12px; margin-top: 5px;"><i class="fa-solid fa-circle-check"></i> Đã kết nối Cloud</span>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="handleLogout()">Đăng xuất</button>
+                </div>
+            `;
+          if (historyPromo) historyPromo.style.display = "none";
+          fetchHistory(userName);
+        } else {
+          profileArea.innerHTML = `
+                <div class="user-avatar" style="background: var(--card); color: var(--muted); border-color: var(--border);">
+                    <i class="fa-solid fa-user-secret"></i>
+                </div>
+                <h3 style="margin: 0; font-size: 18px; color: var(--muted);">Khách vô danh</h3>
+                <span style="color: var(--warning); font-size: 12px; margin-top: 5px;"><i class="fa-solid fa-triangle-exclamation"></i> Chưa lưu dữ liệu</span>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; width: 100%; justify-content: center;" onclick="window.location.href='login.html'">Đăng nhập</button>
+                </div>
+            `;
+          if (historyPromo) historyPromo.style.display = "block";
+          document.getElementById("history-tbody").innerHTML =
+            `<tr><td colspan="4" style="text-align: center; color: var(--muted); padding: 30px;">Danh sách trống.</td></tr>`;
+        }
+      }
+
+      function handleLogout() {
+        // Xài Modal thay vì confirm()
+        window.Modal.show({
+          title: '<i class="fa-solid fa-power-off"></i> Đăng xuất',
+          message: "Bạn có chắc chắn muốn đăng xuất khỏi thiết bị này?",
+          confirmText: "Đăng xuất",
+          confirmClass: "btn-danger",
+          onConfirm: () => {
+            localStorage.removeItem("user_token");
+            localStorage.removeItem("user_name");
+            localStorage.removeItem("user_email");
+            window.location.reload();
+          },
+        });
+      }
+
+      // ==========================================
+      // 3. LOGIC NÚT BẤM (CẢ TẠO VÀ VÀO PHÒNG ĐỀU PHẢI AUTH)
+      // ==========================================
+
+      function handleCreateRoom() {
+        if (!window.AuthGuard) return;
+        window.AuthGuard.requireAuth(() => {
+          const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+          window.location.href = `calculation.html?room=${code}`;
+        });
+      }
+
+      function joinRoom() {
+        if (!window.AuthGuard) return;
+        // ÉP ĐĂNG NHẬP TRƯỚC KHI CHO NHẬP MÃ PHÒNG
+        window.AuthGuard.requireAuth(() => {
+          // Xài Modal thay vì prompt()
+          window.Modal.show({
+            title: '<i class="fa-solid fa-door-open"></i> Tham gia phòng',
+            message:
+              "Nhập Mã phòng và Mật khẩu (nếu có) để kết nối với bạn bè.",
+            type: "join_room",
+            confirmText: "Vào phòng",
+            onConfirm: (data) => {
+              let url = `calculation.html?room=${data.room.toUpperCase()}`;
+              if (data.pass) {
+                url += `&pwd=${encodeURIComponent(data.pass)}`;
+              }
+              window.location.href = url;
+            },
+          });
+        });
+      }
+
+      function startQuiz(quizId) {
+        if (!window.AuthGuard) return;
+        window.AuthGuard.requireAuth(() => {
+          // Xài Modal thay vì alert()
+          window.Modal.show({
+            title: '<i class="fa-solid fa-hourglass-start"></i> Chuẩn bị thi',
+            message: `Đang chuẩn bị đề thi "${quizId}" cho tài khoản <b>${localStorage.getItem("user_name")}</b>.<br>Tính năng này sắp ra mắt!`,
+            hideCancel: true,
+            confirmText: "Đóng",
+          });
+        });
+      }
+
+      async function fetchHistory(userName) {
+        console.log("Đang kéo lịch sử cho:", userName);
+      }
+    </script>
+  </body>
+</html>

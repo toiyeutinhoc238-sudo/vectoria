@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-GRZR4Y6VFQ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kho Tàng Kiến Thức - Vectoria Knowledge</title>
+
+    <link rel="stylesheet" href="css/knowledge.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      /* =================== NÚT GẠT (THEME TOGGLE) =================== */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--text-sub);
+        opacity: 0.5;
+        transition: 0.3s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--primary, #3a78ff);
+        opacity: 1;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+
+      /* =================== HIỆU ỨNG MẶT TRĂNG/MẶT TRỜI (BẢN CHỐNG ĐÈ CSS) =================== */
+      div.theme-transition-icons {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+        pointer-events: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        opacity: 0;
+        /* Giữ nguyên 0, JS sẽ bật lên 1 khi chạy animation */
+        visibility: visible !important;
+      }
+
+      div.theme-transition-icons i {
+        font-size: 8rem !important;
+        position: absolute !important;
+        margin: 0 !important;
+      }
+
+      div.theme-transition-icons #sunIcon {
+        color: #f59e0b !important;
+      }
+
+      div.theme-transition-icons #moonIcon {
+        color: #f8fafc !important;
+      }
+
+      div.theme-transition-icons.animate-rise-fade {
+        animation: vectoriaRiseFade 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)
+          forwards !important;
+      }
+
+      @keyframes vectoriaRiseFade {
+        0% {
+          opacity: 0;
+          transform: translateY(150px) scale(0.5);
+        }
+
+        40% {
+          opacity: 1;
+          transform: translateY(0px) scale(1.2);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translateY(-100px) scale(0.8);
+        }
+      }
+
+      /* =================== HIỆU ỨNG LẬT THẺ & FOCUS MODE =================== */
+      #falling-heading-container {
+        text-align: center;
+        overflow: visible;
+        max-height: 0;
+        opacity: 0;
+        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        margin-bottom: 0;
+        width: 100%;
+      }
+
+      #falling-heading-container.show {
+        max-height: 100px;
+        opacity: 1;
+        margin-bottom: 75px;
+      }
+
+      #falling-heading {
+        display: inline-block;
+        background: var(--bg-card, #fff);
+        color: var(--primary, #3a78ff);
+        padding: 12px 40px;
+        border-radius: 50px;
+        font-size: 1.6rem;
+        font-weight: 800;
+        box-shadow: 0 10px 25px rgba(58, 120, 255, 0.15);
+        border: 2px solid var(--primary, #3a78ff);
+        transform: translateY(-40px);
+        transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        margin-top: -50px;
+      }
+
+      #falling-heading-container.show #falling-heading {
+        transform: translateY(0);
+      }
+
+      body.dark #falling-heading {
+        background: var(--bg-card, #1e293b);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Đồ nghề học tập */
+      .study-decor {
+        position: fixed;
+        font-size: 5rem;
+        color: var(--primary, #3a78ff);
+        opacity: 0;
+        z-index: 999;
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        pointer-events: none;
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+      }
+
+      body.dark .study-decor {
+        color: #60a5fa;
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+      }
+
+      .decor-1 {
+        top: 20%;
+        left: -150px;
+        transform: rotate(-60deg);
+      }
+
+      .decor-2 {
+        top: 60%;
+        right: -150px;
+        transform: rotate(60deg);
+        font-size: 6rem;
+      }
+
+      .decor-3 {
+        bottom: -150px;
+        left: 15%;
+        transform: rotate(30deg);
+      }
+
+      .decor-4 {
+        bottom: -150px;
+        right: 15%;
+        transform: rotate(-30deg);
+        font-size: 4rem;
+      }
+
+      .show-decor .decor-1 {
+        left: 40px;
+        transform: rotate(-15deg);
+        opacity: 0.1;
+      }
+
+      .show-decor .decor-2 {
+        right: 40px;
+        transform: rotate(15deg);
+        opacity: 0.1;
+      }
+
+      .show-decor .decor-3 {
+        bottom: 40px;
+        transform: rotate(10deg);
+        opacity: 0.1;
+      }
+
+      .show-decor .decor-4 {
+        bottom: 60px;
+        right: 20%;
+        transform: rotate(-10deg);
+        opacity: 0.1;
+      }
+
+      .distraction-element {
+        transition:
+          opacity 0.4s,
+          transform 0.4s,
+          max-height 0.4s,
+          margin 0.4s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .distraction-element.hidden-mode {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-20px);
+        max-height: 0;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #focus-tip {
+        text-align: center;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.5s ease;
+      }
+
+      #focus-tip.show {
+        max-height: 100px;
+        opacity: 1;
+        margin-top: 30px;
+      }
+
+      .tip-content {
+        display: inline-block;
+        padding: 15px 30px;
+        background: var(--bg-card);
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        color: var(--text-sub);
+        font-size: 1.05rem;
+      }
+
+      .tip-content i {
+        color: #f59e0b;
+        margin-right: 8px;
+        font-size: 1.2rem;
+      }
+
+      .flip-card {
+        background-color: transparent;
+        perspective: 1000px;
+        width: 100%;
+        height: 100%;
+        min-height: 240px;
+        display: block;
+      }
+
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+
+      .flip-card:nth-child(1) .flip-card-inner {
+        transition-delay: 0s;
+      }
+
+      .flip-card:nth-child(2) .flip-card-inner {
+        transition-delay: 0.08s;
+      }
+
+      .flip-card:nth-child(3) .flip-card-inner {
+        transition-delay: 0.16s;
+      }
+
+      .flip-card:nth-child(4) .flip-card-inner {
+        transition-delay: 0.08s;
+      }
+
+      .flip-card:nth-child(5) .flip-card-inner {
+        transition-delay: 0.16s;
+      }
+
+      .flip-card:nth-child(6) .flip-card-inner {
+        transition-delay: 0.24s;
+      }
+
+      .flip-card.is-flipped .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .flip-card-front,
+      .flip-card-back {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .flip-card-front {
+        position: relative !important;
+        z-index: 2;
+      }
+
+      .flip-card-back {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        transform: rotateY(180deg);
+        background: linear-gradient(
+          135deg,
+          rgba(58, 120, 255, 0.05),
+          rgba(37, 99, 235, 0.02)
+        ) !important;
+        border: 2px dashed var(--primary, #3a78ff) !important;
+        justify-content: center;
+      }
+
+      .flip-card.is-flipped .flip-card-back:hover {
+        transform: rotateY(180deg) translateY(-8px) !important;
+        box-shadow: 0 15px 35px rgba(58, 120, 255, 0.2);
+        border-color: var(--primary);
+        border-style: solid !important;
+      }
+
+      body.dark .flip-card-back {
+        background: linear-gradient(
+          135deg,
+          rgba(58, 120, 255, 0.1),
+          rgba(15, 23, 42, 0.8)
+        ) !important;
+        border-color: #60a5fa !important;
+      }
+
+      .flip-card-back h3 {
+        color: var(--primary, #3a78ff);
+      }
+
+      body.dark .flip-card-back h3 {
+        color: #60a5fa;
+      }
+
+      .cursor-pointer {
+        cursor: pointer;
+      }
+      /* =================== TỐI ƯU HEADER (PC CĂN GIỮA 1 DÒNG, MOBILE CĂN TRÁI 2 DÒNG) =================== */
+      .header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* [PC] Ép Logo nằm chính giữa tâm màn hình */
+        min-height: 60px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 20px;
+        position: relative; /* Trụ cột để neo cái bánh răng */
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        z-index: 1;
+      }
+
+      .logo-link {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        font-size: 1.8rem;
+      }
+
+      /* MẶC ĐỊNH MÁY TÍNH: Xếp ngang thành 1 dòng */
+      .logo-text-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .logo-title,
+      .logo-subtitle {
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+
+      /* Nút Setting trên PC: Thả trôi bám vào lề phải */
+      .header-settings {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        z-index: 10;
+      }
+
+      /* ---------------- RESPONSIVE CHO ĐIỆN THOẠI & TABLET ---------------- */
+
+      /* Màn hình Tablet */
+      @media (max-width: 768px) {
+        .logo-title,
+        .logo-subtitle {
+          font-size: 1.4rem;
+        }
+        .logo-icon {
+          font-size: 1.6rem;
+        }
+      }
+
+      /* ĐIỆN THOẠI (MOBILE): ÉP THÀNH 2 DÒNG XẾP CHỒNG VÀ DẠT SANG TRÁI */
+      @media (max-width: 500px) {
+        .header-flex {
+          padding: 0 15px;
+          min-height: 55px;
+          justify-content: space-between; /* [Mobile] Hủy căn giữa, dàn 2 đối tượng ra 2 mép Trái/Phải */
+        }
+
+        .header-settings {
+          position: static; /* [Mobile] Hủy thả trôi, trả bánh răng về làm một khối bình thường */
+          transform: none;
+          flex-shrink: 0;
+        }
+
+        .logo {
+          justify-content: flex-start; /* [Mobile] Ép logo sát lề trái */
+        }
+
+        .logo-link {
+          gap: 12px;
+        }
+
+        .logo-text-group {
+          flex-direction: column; /* Chuyển hàng ngang thành hàng dọc */
+          align-items: flex-start; /* Canh lề trái cho 2 dòng chữ */
+          justify-content: center;
+          gap: 0px;
+        }
+
+        .logo-icon {
+          font-size: 2.2rem;
+        }
+
+        .logo-title {
+          font-size: 1.4rem;
+          line-height: 1.1;
+          text-transform: uppercase;
+        }
+
+        .logo-subtitle {
+          font-size: 0.75rem;
+          line-height: 1.1;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          opacity: 0.8;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <i class="fa-solid fa-ruler-combined study-decor decor-1"></i>
+    <i class="fa-solid fa-calculator study-decor decor-2"></i>
+    <i class="fa-solid fa-compass-drafting study-decor decor-3"></i>
+    <i class="fa-solid fa-pen-ruler study-decor decor-4"></i>
+
+    <div class="theme-transition-icons">
+      <i class="fa-solid fa-sun" id="sunIcon"></i>
+      <i class="fa-solid fa-moon" id="moonIcon"></i>
+    </div>
+
+    <header class="main-header safe-zone">
+      <div class="container header-flex">
+        <div class="logo">
+          <a href="index.html" class="logo-link">
+            <i class="fa-solid fa-shapes logo-icon"></i>
+            <div class="logo-text-group">
+              <span class="logo-title">Vectoria</span>
+              <span class="logo-subtitle">Knowledge</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="settings-container header-settings">
+          <button id="btnSettings" class="icon-btn" title="Cài đặt giao diện">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="setting-item">
+              <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <a
+              href="hdsd.html"
+              class="setting-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span
+                ><i class="fa-solid fa-book-open-reader"></i> Hướng dẫn sử
+                dụng</span
+              >
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+
+            <a
+              href="contact.html"
+              class="setting-item link-item"
+              style="
+                text-decoration: none;
+                color: var(--text-main) !important;
+                display: flex !important;
+              "
+            >
+              <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+              <i
+                class="fa-solid fa-chevron-right"
+                style="font-size: 0.8em; color: var(--muted)"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero-banner distraction-element">
+      <div class="container">
+        <h1>Đại Số Tuyến Tính - Trực Quan Hóa Không Gian Vector</h1>
+        <p>
+          Hệ thống lý thuyết, video minh họa và công cụ tính toán hỗ trợ học tập
+        </p>
+      </div>
+    </section>
+
+    <main class="container main-content">
+      <h2 class="section-heading distraction-element" style="max-height: 50px">
+        Chủ đề học tập
+      </h2>
+
+      <div id="falling-heading-container">
+        <div id="falling-heading">Kiến thức chuẩn bị</div>
+      </div>
+
+      <div class="topic-grid" id="main-topic-grid">
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div
+              class="flip-card-front topic-card cursor-pointer"
+              onclick="triggerFlip(event)"
+              title="Nhấn để mở rộng Chủ đề"
+            >
+              <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+              <h3>Kiến thức chuẩn bị</h3>
+              <p>
+                Ôn tập kiến thức vector THPT, ma trận, định thức, hạng, ma trận
+                nghịch đảo và hệ phương trình tuyến tính.
+              </p>
+            </div>
+            <a
+              href="topics/sub_topic/vector_pho_thong.html"
+              class="flip-card-back topic-card"
+            >
+              <div class="icon-box">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </div>
+              <h3>Vector ở phổ thông</h3>
+              <p>
+                Nhắc lại các phép toán cộng, trừ, nhân vô hướng và ứng dụng hình
+                học cơ bản.
+              </p>
+            </a>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <a
+              href="topics/vector_space.html"
+              class="flip-card-front topic-card"
+            >
+              <div class="icon-box">
+                <i class="fa-solid fa-arrows-to-dot"></i>
+              </div>
+              <h3>Không gian vector</h3>
+              <p>Định nghĩa không gian vector và không gian vector con.</p>
+            </a>
+            <a
+              href="topics/sub_topic/matran_pheptoan.html"
+              class="flip-card-back topic-card"
+            >
+              <div class="icon-box">
+                <i class="fa-solid fa-table-cells"></i>
+              </div>
+              <h3>Ma trận và các Phép toán</h3>
+              <p>
+                Khái niệm, phân loại và cách thực hiện các phép tính trên ma
+                trận.
+              </p>
+            </a>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <a
+              href="topics/linear_independence.html"
+              class="flip-card-front topic-card"
+            >
+              <div class="icon-box">
+                <i class="fa-solid fa-code-branch"></i>
+              </div>
+              <h3>Độc lập - Phụ thuộc tuyến tính</h3>
+              <p>
+                Khái niệm tổ hợp tuyến tính và các phương pháp xét tính độc lập,
+                phụ thuộc.
+              </p>
+            </a>
+            <a
+              href="topics/sub_topic/dinh_thuc.html"
+              class="flip-card-back topic-card"
+            >
+              <div class="icon-box">
+                <i class="fa-solid fa-bars-staggered"></i>
+              </div>
+              <h3>Định thức</h3>
+              <p>
+                Các tính chất đặc trưng và phương pháp tính định thức cấp n.
+              </p>
+            </a>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <a href="topics/rank_span.html" class="flip-card-front topic-card">
+              <div class="icon-box">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <h3>Hạng của hệ vector và hệ sinh</h3>
+              <p>
+                Định nghĩa hạng của hệ vector, bao tuyến tính (span) và không
+                gian con sinh.
+              </p>
+            </a>
+            <a
+              href="topics/sub_topic/hang_matran.html"
+              class="flip-card-back topic-card"
+            >
+              <div class="icon-box"><i class="fa-solid fa-stairs"></i></div>
+              <h3>Hạng ma trận</h3>
+              <p>
+                Khái niệm hạng và kỹ thuật tìm hạng thông qua các phép biến đổi
+                sơ cấp.
+              </p>
+            </a>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <a
+              href="topics/basis_dimension.html"
+              class="flip-card-front topic-card"
+            >
+              <div class="icon-box">
+                <i class="fa-solid fa-table-cells-large"></i>
+              </div>
+              <h3>Cơ sở và số chiều</h3>
+              <p>
+                Định nghĩa, vai trò của cơ sở, số chiều và các thuật toán tìm
+                kiếm tương ứng.
+              </p>
+            </a>
+            <a
+              href="topics/sub_topic/matran_nghich_dao.html"
+              class="flip-card-back topic-card"
+            >
+              <div class="icon-box"><i class="fa-solid fa-right-left"></i></div>
+              <h3>Ma trận nghịch đảo</h3>
+              <p>
+                Điều kiện khả nghịch và các thuật toán để tìm ma trận nghịch
+                đảo.
+              </p>
+            </a>
+          </div>
+        </div>
+
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <a
+              href="topics/coordinates.html"
+              class="flip-card-front topic-card"
+            >
+              <div class="icon-box"><i class="fa-solid fa-crosshairs"></i></div>
+              <h3>Tọa độ trong không gian vector</h3>
+              <p>
+                Cách biểu diễn tọa độ vector và sử dụng ma trận để chuyển đổi cơ
+                sở.
+              </p>
+            </a>
+            <a
+              href="topics/sub_topic/hpt_tuyentinh.html"
+              class="flip-card-back topic-card"
+            >
+              <div class="icon-box"><i class="fa-solid fa-equals"></i></div>
+              <h3>Hệ phương trình tuyến tính</h3>
+              <p>
+                Phân loại, giải và biện luận nghiệm bằng quy tắc Cramer và
+                phương pháp Gauss.
+              </p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="focus-tip">
+        <div class="tip-content">
+          <i class="fa-solid fa-lightbulb"></i> Hãy chọn một chủ đề phía trên để
+          ôn tập nhé!
+        </div>
+      </div>
+
+      <h2 class="section-heading distraction-element" style="max-height: 50px">
+        Tiện ích
+      </h2>
+      <div class="topic-grid distraction-element">
+        <a href="calculation.html" class="topic-card">
+          <div class="icon-box"><i class="fa-solid fa-calculator"></i></div>
+          <h3>Công cụ tính toán <br />trực quan hóa</h3>
+          <p>
+            Thực hành tính toán vector, tìm cơ sở, số chiều và tọa độ vector
+            ngay trên web.
+          </p>
+        </a>
+
+        <a href="tltk.html" class="topic-card">
+          <div class="icon-box"><i class="fa-solid fa-book-bookmark"></i></div>
+          <h3>Tài liệu <br />tham khảo</h3>
+          <p>
+            Tổng hợp các tài liệu phục vụ cho việc xây dựng các nội dung kiến
+            thức.
+          </p>
+        </a>
+      </div>
+    </main>
+
+    <footer class="vectoria-footer distraction-element">
+      <div class="footer-container">
+        <div class="brand-col">
+          <div
+            class="partner-logo"
+            style="display: flex; align-items: center; gap: 10px"
+          >
+            <img src="assets/images/logoMoi.png" alt="Logo Nhóm/Trường" />
+            <img
+              src="assets/images/logoChu.png"
+              id="textLogo"
+              alt="Logo Chữ Vectoria"
+              style="height: 35px; width: auto"
+            />
+          </div>
+          <p>
+            Vectoria — Vương quốc của những Vector — được kiến tạo để thay đổi
+            hoàn toàn cách chúng ta nhìn nhận về vector. Không còn là những khái
+            niệm khô khan, tại nơi đây, mỗi vector đều mang một hình hài, một
+            hướng đi và sinh khí riêng. Chúng tôi khao khát trao cho bạn một góc
+            nhìn thấu thị để toàn bộ vẻ đẹp trừu tượng của không gian vector
+            được thu trọn vào tầm mắt.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              <a href="mailto:support@vectoria.io.vn">support@vectoria.io.vn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="margin: 0">
+          © 2026 Vectoria. Học và trực quan hóa Không gian vector.
+        </p>
+      </div>
+    </footer>
+    <script src="js/utils/theme-manager.js"></script>
+    <script src="js/utils/theme-transition.js"></script>
+    <script>
+      // === CHỈ XỬ LÝ MENU BÁNH RĂNG (THEME ĐÃ ĐƯỢC THEME-TRANSITION.JS LO TOÀN BỘ) ===
+      document.addEventListener("DOMContentLoaded", () => {
+        const btnSettings = document.getElementById("btnSettings");
+        const dropdown = document.getElementById("settingsDropdown");
+
+        if (btnSettings && dropdown) {
+          btnSettings.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("show");
+          });
+          document.addEventListener("click", (e) => {
+            if (!dropdown.contains(e.target) && e.target !== btnSettings) {
+              dropdown.classList.remove("show");
+            }
+          });
+        }
+      });
+
+      // === LOGIC XỬ LÝ LẬT THẺ KTCB ===
+      let isGridFlipped = false;
+
+      function triggerFlip(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        isGridFlipped = true;
+
+        document.querySelectorAll(".flip-card").forEach((card) => {
+          card.classList.add("is-flipped");
+        });
+        document
+          .getElementById("falling-heading-container")
+          .classList.add("show");
+        document.body.classList.add("show-decor");
+        document.querySelectorAll(".distraction-element").forEach((el) => {
+          el.classList.add("hidden-mode");
+        });
+        document.getElementById("focus-tip").classList.add("show");
+      }
+
+      function revertFlip() {
+        isGridFlipped = false;
+
+        document.querySelectorAll(".flip-card").forEach((card) => {
+          card.classList.remove("is-flipped");
+        });
+        document
+          .getElementById("falling-heading-container")
+          .classList.remove("show");
+        document.body.classList.remove("show-decor");
+        document.getElementById("focus-tip").classList.remove("show");
+        setTimeout(() => {
+          document.querySelectorAll(".distraction-element").forEach((el) => {
+            el.classList.remove("hidden-mode");
+          });
+        }, 200);
+      }
+
+      document.addEventListener("click", (e) => {
+        if (!isGridFlipped) return;
+
+        const grid = document.getElementById("main-topic-grid");
+
+        if (
+          e.target.closest(".safe-zone") ||
+          e.target.closest("#btnSettings") ||
+          e.target.closest("#settingsDropdown")
+        ) {
+          return;
+        }
+
+        if (!grid.contains(e.target)) {
+          revertFlip();
+        }
+      });
+    </script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="js/utils/live-collab.js"></script>
+  </body>
+</html>

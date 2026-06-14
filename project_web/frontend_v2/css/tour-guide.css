@@ -1,0 +1,185 @@
+/* 1. KHUNG TỔNG THỂ (PREMIUM THEME) */
+.driverjs-premium-theme {
+  background-color: #ffffff !important;
+  border-radius: 16px !important;
+  padding: 25px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  max-width: 350px !important;
+}
+
+/* 2. TIÊU ĐỀ & NỘI DUNG */
+.driver-popover-title {
+  /* Ép font chuẩn, hỗ trợ 100% Tiếng Việt */
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-size: 1.3rem !important; /* Chỉnh nhỏ lại xíu cho thanh lịch */
+  font-weight: 700 !important; /* Dùng Bold 700 thay vì 800 để không bị gãy dấu */
+  color: #1a73e8 !important;
+  margin-bottom: 10px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.driver-popover-description {
+  /* Ép luôn font cho nội dung bên dưới */
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+  color: #3c4043 !important;
+}
+
+/* 3. THANH TIẾN TRÌNH (VÍ DỤ: 1/5) */
+.driver-popover-progress-text {
+  font-size: 0.85rem !important;
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+}
+
+/* 4. CÁC NÚT BẤM (BUTTONS) */
+.driver-popover-footer button {
+  text-shadow: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+/* Khi một phần tử được chọn, nó sẽ có viền sáng bóng */
+.driver-active-element {
+  transition: all 0.3s ease !important;
+  outline: 4px solid rgba(33, 150, 243, 0.4) !important;
+  outline-offset: 4px !important;
+  z-index: 9999999 !important;
+}
+
+/* --- [DARK MODE] LÀM NỔI BẬT ĐỐI TƯỢNG TRÊN NỀN ĐEN --- */
+body.dark .driverjs-premium-theme {
+  background-color: #202124 !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark .driver-popover-title {
+  color: #8ab4f8 !important;
+}
+body.dark .driver-popover-description {
+  color: #e8eaed !important;
+}
+
+/* Quan trọng: Tạo hiệu ứng Neon Glow cho đối tượng trong Dark Mode */
+body.dark .driver-active-element {
+  outline: 4px solid #8ab4f8 !important; /* Màu xanh neon nhạt */
+  box-shadow: 0 0 20px rgba(138, 180, 248, 0.6) !important; /* Tỏa hào quang */
+}
+
+/* Tút lại nút bấm cho xịn */
+.driver-popover-next-btn {
+  background-color: #1a73e8 !important;
+  border-radius: 20px !important; /* Bo tròn kiểu hiện đại */
+  padding: 8px 20px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.driver-popover-next-btn:hover {
+  background-color: #1976d2 !important;
+}
+
+/* Nút "Quay lại" & "Đóng" */
+.driver-popover-prev-btn,
+.driver-popover-close-btn {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.driver-popover-prev-btn:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* ============================================================
+   CHẾ ĐỘ TỐI (DARK MODE) - KHẮC PHỤC LỖI KHÔNG RÕ
+   ============================================================ */
+body.dark .driverjs-premium-theme {
+  background-color: #1e293b !important; /* Màu Navy sang trọng */
+  border-color: #334155 !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark .driver-popover-title {
+  color: #f8fafc !important; /* Trắng ngà */
+}
+
+body.dark .driver-popover-description {
+  color: #cbd5e1 !important; /* Xám nhạt dễ đọc */
+}
+
+body.dark .driver-popover-footer button {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+
+body.dark .driver-popover-next-btn {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+/* Màu các mũi tên trỏ vào phần tử trong Dark Mode */
+body.dark .driver-popover-arrow-side-top {
+  border-top-color: #1e293b !important;
+}
+body.dark .driver-popover-arrow-side-bottom {
+  border-bottom-color: #1e293b !important;
+}
+body.dark .driver-popover-arrow-side-left {
+  border-left-color: #1e293b !important;
+}
+body.dark .driver-popover-arrow-side-right {
+  border-right-color: #1e293b !important;
+}
+
+/* ============================================================
+   HIỆU ỨNG ĐÈN PIN (XUYÊN THẤU MẶT NẠ ĐEN) CHO ĐỒ THỊ
+   ============================================================ */
+#tour-graph-flashlight {
+  position: fixed;
+  border: 2px dashed #4ade80; /* Viền đứt nét màu xanh Neon */
+  border-radius: 12px;
+  box-shadow:
+    0 0 40px rgba(74, 222, 128, 0.4),
+    inset 0 0 30px rgba(74, 222, 128, 0.2);
+  z-index: 1000000; /* Nằm trên mặt nạ đen của Driver.js */
+  pointer-events: none; /* Không cản trở click chuột */
+
+  /* Phép thuật: Khử độ tối của mặt nạ đen */
+  backdrop-filter: brightness(2.5) contrast(1.2);
+  -webkit-backdrop-filter: brightness(2.5) contrast(1.2);
+  opacity: 0;
+
+  /* Hiệu ứng chuyển động mượt khi khung thay đổi kích thước/vị trí */
+  transition:
+    opacity 0.4s ease,
+    top 0.4s ease,
+    left 0.4s ease,
+    width 0.4s ease,
+    height 0.4s ease;
+}
+
+#tour-graph-flashlight.active {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  #tour-graph-flashlight {
+    /* Đẩy lên nửa trên màn hình (Khu vực Đồ thị) */
+    top: calc(50px + 22vh); /* 50px Topbar + một nửa chiều cao đồ thị 45vh */
+    left: 50%;
+    width: 90vw; /* Thu nhỏ vừa khung điện thoại */
+    height: 40vh;
+  }
+}
