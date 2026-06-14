@@ -446,30 +446,8 @@
 
           <div class="dash-card">
             <div class="card-title">Ngân hàng Quiz</div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 15px;
-                background: rgba(255, 255, 255, 0.03);
-                border-radius: 8px;
-                margin-bottom: 10px;
-              "
-            >
-              <div>
-                <strong style="font-size: 16px"
-                  >Chuyên đề 1: Độc lập Tuyến tính</strong
-                >
-                <div
-                  style="font-size: 13px; color: var(--muted); margin-top: 5px"
-                >
-                  10 câu hỏi • 15 phút
-                </div>
-              </div>
-              <button class="btn btn-primary" onclick="startQuiz('quiz_1')">
-                Bắt đầu thi
-              </button>
+            <div id="quizProgressContainer">
+              <!-- Rendered dynamically by renderQuizProgress() -->
             </div>
           </div>
         </div>
@@ -541,6 +519,29 @@
             <button class="btn btn-primary" id="modalBtnConfirm">
               Xác nhận
             </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE QUIZ OVERLAY -->
+      <div id="quizOverlay" class="modal-overlay" style="display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; pointer-events: none; transition: 0.25s ease;">
+        <div class="modal-box" style="max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto;">
+          <div class="modal-title" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 0px;">
+            <span id="quizTitle"><i class="fa-solid fa-graduation-cap"></i> Trắc nghiệm Không gian Vector</span>
+            <span id="quizProgress" style="font-size: 13px; color: var(--muted); font-weight: normal;">Câu hỏi 1/5</span>
+          </div>
+          <div class="modal-body" style="padding-top: 20px;">
+            <div id="quizQuestion" style="font-size: 15px; font-weight: 600; color: var(--fg); margin-bottom: 20px; line-height: 1.6;">Đang tải câu hỏi...</div>
+            <div id="quizOptions" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+              <!-- Options dynamic -->
+            </div>
+            <div id="quizFeedback" style="display: none; padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: left;">
+              <!-- Feedback correct/incorrect + explanation -->
+            </div>
+          </div>
+          <div class="modal-footer" style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 10px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button class="btn btn-secondary" id="quizBtnQuit" style="padding: 8px 16px;">Thoát</button>
+            <button class="btn btn-primary" id="quizBtnNext" disabled style="padding: 8px 16px;">Kiểm tra</button>
           </div>
         </div>
       </div>
@@ -635,6 +636,7 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         updateAuthUI();
+        renderQuizProgress();
         // LOGIC BẬT/TẮT SÁNG TỐI Ở DASHBOARD
         const btnTheme = document.getElementById('btnThemeToggle');
         if (localStorage.getItem('vec_theme') === 'dark') {
@@ -733,21 +735,374 @@
         });
       }
 
+      // ==========================================
+      // 4. API BASE VÀ CÁC THIẾT LẬP KẾT NỐI API
+      // ==========================================
+      const API_BASE = (location.hostname === "127.0.0.1" || location.hostname === "localhost") 
+                        ? "http://127.0.0.1:5000" : "https://vectoria-3fdh.onrender.com";
+
+      async function fetchHistory(userName) {
+        const tbody = document.getElementById("history-tbody");
+        if (!tbody) return;
+        
+        const email = localStorage.getItem("user_email") || "guest@vectoria.io.vn";
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--muted); padding: 30px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải lịch sử từ Cloud...</td></tr>`;
+        
+        try {
+          const res = await fetch(`${API_BASE}/api/get_history?email=${encodeURIComponent(email)}`);
+          if (!res.ok) throw new Error("Lỗi mạng");
+          const resData = await res.json();
+          
+          if (resData.status === "success" && resData.data && resData.data.length > 0) {
+            let html = "";
+            resData.data.forEach(item => {
+              // Chuẩn hóa chuỗi ma trận để hiển thị
+              const matrixStr = Array.isArray(item.matrix_data) 
+                ? item.matrix_data.map(row => `[${row.join(', ')}]`).join(', ')
+                : "Không có dữ liệu";
+              
+              // Tránh ký tự nháy kép gây lỗi onclick
+              const escapedMatrix = JSON.stringify(item.matrix_data).replace(/"/g, '&quot;');
+              
+              html += `
+                <tr id="history-row-${item.id}">
+                  <td style="font-size: 13px; color: var(--muted);">${item.created_at}</td>
+                  <td>
+                    <span class="sol-badge" style="background: rgba(33, 150, 243, 0.1); color: var(--primary); border: 1px solid rgba(33, 150, 243, 0.2); font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: 600;">
+                      ${item.math_type}
+                    </span>
+                  </td>
+                  <td style="font-family: monospace; font-size: 13px; color: var(--fg); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${matrixStr}">
+                    ${matrixStr}
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 8px;">
+                      <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; border-color: rgba(33,150,243,0.3);" onclick="restoreHistoryItem('${escapedMatrix}')">
+                        <i class="fa-solid fa-rotate-left"></i> Khôi phục
+                      </button>
+                      <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="deleteHistoryItem(${item.id})">
+                        <i class="fa-solid fa-trash-can"></i> Xóa
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            });
+            tbody.innerHTML = html;
+          } else {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--muted); padding: 30px;">Danh sách trống. Bấm "Tính toán" trong calculator để tự lưu lịch sử!</td></tr>`;
+          }
+        } catch (e) {
+          console.error(e);
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger); padding: 30px;"><i class="fa-solid fa-triangle-exclamation"></i> Không thể tải lịch sử. Vui lòng kiểm tra kết nối!</td></tr>`;
+        }
+      }
+
+      window.restoreHistoryItem = function (matrixDataJson) {
+        try {
+          const matrixData = JSON.parse(matrixDataJson);
+          localStorage.setItem('vectoria_restore_data', JSON.stringify({
+            is_restoring: true,
+            matrix: matrixData
+          }));
+          
+          window.Modal.show({
+            title: '<i class="fa-solid fa-rotate-left"></i> Khôi phục phiên làm việc',
+            message: 'Đang chuẩn bị khôi phục hệ vector này vào màn hình tính toán. Bạn có muốn chuyển hướng ngay?',
+            confirmText: 'Đồng ý',
+            onConfirm: () => {
+              window.location.href = 'calculation.html';
+            }
+          });
+        } catch (err) {
+          console.error("Lỗi restore:", err);
+        }
+      };
+
+      window.deleteHistoryItem = function (itemId) {
+        const email = localStorage.getItem("user_email") || "guest@vectoria.io.vn";
+        
+        window.Modal.show({
+          title: '<i class="fa-solid fa-trash-can"></i> Xóa lịch sử',
+          message: 'Bạn có chắc chắn muốn xóa phiên tính toán này khỏi Cloud? Hành động này không thể hoàn tác.',
+          confirmText: 'Xóa ngay',
+          confirmClass: 'btn-danger',
+          onConfirm: async () => {
+            try {
+              const res = await fetch(`${API_BASE}/api/delete_history`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: itemId, email: email })
+              });
+              const data = await res.json();
+              if (data.status === 'success') {
+                const row = document.getElementById(`history-row-${itemId}`);
+                if (row) row.remove();
+                
+                const tbody = document.getElementById("history-tbody");
+                if (tbody && tbody.children.length === 0) {
+                  tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--muted); padding: 30px;">Danh sách trống.</td></tr>`;
+                }
+              } else {
+                alert("Lỗi xóa: " + data.message);
+              }
+            } catch (err) {
+              console.error(err);
+              alert("Lỗi kết nối khi xóa lịch sử.");
+            }
+          }
+        });
+      };
+
+      // ==========================================
+      // 5. HỆ THỐNG QUIZ TRẮC NGHIỆM TƯƠNG TÁC
+      // ==========================================
+      const quizQuestions = [
+        {
+          q: "Cho hệ vector S = {(1, 2), (2, 4)} trong không gian R². Hệ vector này độc lập tuyến tính hay phụ thuộc tuyến tính?",
+          options: [
+            "Độc lập tuyến tính, vì hai vector không cùng phương.",
+            "Phụ thuộc tuyến tính, vì vector thứ hai gấp đôi vector thứ nhất (v₂ = 2v₁).",
+            "Là một cơ sở của không gian R².",
+            "Không sinh ra bất kỳ không gian con nào."
+          ],
+          answer: 1,
+          explanation: "Hai vector cùng phương vì v₂ = 2v₁. Do đó, hệ vector phụ thuộc tuyến tính."
+        },
+        {
+          q: "Số chiều (dimension) của không gian sinh bởi hệ vector S = {(1, 0, 0), (0, 1, 0), (1, 1, 0)} là bao nhiêu?",
+          options: [
+            "1",
+            "2, vì vector thứ ba là tổ hợp tuyến tính của hai vector đầu (v₃ = v₁ + v₂).",
+            "3, vì hệ có 3 vector trong không gian R³.",
+            "0, vì hệ không chứa vector không."
+          ],
+          answer: 1,
+          explanation: "Vector thứ ba v₃ = (1, 1, 0) chính là v₁ + v₂. Do đó hệ vector phụ thuộc tuyến tính, hạng của hệ bằng 2, nghĩa là số chiều của không gian sinh bởi hệ bằng 2."
+        },
+        {
+          q: "Điều kiện cần và đủ để một hệ vector {v₁, v₂, ..., v_m} độc lập tuyến tính là gì?",
+          options: [
+            "Hệ phương trình k₁v₁ + k₂v₂ + ... + k_mv_m = 0 chỉ có duy nhất nghiệm tầm thường k₁ = k₂ = ... = k_m = 0.",
+            "Số lượng vector m bằng với số chiều n của không gian Rⁿ.",
+            "Hệ không chứa vector không (vector 0).",
+            "Mỗi vector trong hệ đều bằng tổng các vector còn lại."
+          ],
+          answer: 0,
+          explanation: "Theo định nghĩa, hệ vector độc lập tuyến tính nếu và chỉ nếu tổ hợp tuyến tính k₁v₁ + k₂v₂ + ... + k_mv_m = 0 chỉ xảy ra khi tất cả các hệ số k_i đều bằng 0 (nghiệm tầm thường)."
+        },
+        {
+          q: "Trong không gian R³, hệ vector nào sau đây là hệ phụ thuộc tuyến tính?",
+          options: [
+            "S = {(1, 0, 0), (0, 1, 0), (0, 0, 1)}",
+            "S = {(1, 2, 3), (1, 0, 0)}",
+            "S = {(1, 1, 1), (2, 2, 2)}",
+            "S = {(2, 3, 4), (0, 1, 0), (0, 0, 1)}"
+          ],
+          answer: 2,
+          explanation: "Vector (2, 2, 2) gấp đôi vector (1, 1, 1), do đó chúng phụ thuộc tuyến tính."
+        },
+        {
+          q: "Cho không gian vector V có số chiều dim(V) = 3. Một hệ gồm 4 vector trong V luôn luôn:",
+          options: [
+            "Độc lập tuyến tính.",
+            "Phụ thuộc tuyến tính.",
+            "Tạo thành một cơ sở của V.",
+            "Chứa vector không."
+          ],
+          answer: 1,
+          explanation: "Trong không gian vector có số chiều bằng n, mọi hệ gồm nhiều hơn n vector đều phụ thuộc tuyến tính. Ở đây số chiều là 3, số vector là 4 > 3 nên hệ luôn phụ thuộc tuyến tính."
+        }
+      ];
+
+      let currentQuestionIdx = 0;
+      let selectedOptionIdx = null;
+      let quizScore = 0;
+      let quizState = "answering"; // "answering" | "reviewed"
+
       function startQuiz(quizId) {
         if (!window.AuthGuard) return;
         window.AuthGuard.requireAuth(() => {
-          // Xài Modal thay vì alert()
-          window.Modal.show({
-            title: '<i class="fa-solid fa-hourglass-start"></i> Chuẩn bị thi',
-            message: `Đang chuẩn bị đề thi "${quizId}" cho tài khoản <b>${localStorage.getItem("user_name")}</b>.<br>Tính năng này sắp ra mắt!`,
-            hideCancel: true,
-            confirmText: "Đóng",
-          });
+          currentQuestionIdx = 0;
+          quizScore = 0;
+          selectedOptionIdx = null;
+          quizState = "answering";
+          
+          const overlay = document.getElementById("quizOverlay");
+          overlay.style.opacity = "1";
+          overlay.style.pointerEvents = "auto";
+          overlay.classList.add("active");
+          
+          loadQuestion();
         });
       }
 
-      async function fetchHistory(userName) {
-        console.log("Đang kéo lịch sử cho:", userName);
+      function loadQuestion() {
+        const qData = quizQuestions[currentQuestionIdx];
+        document.getElementById("quizProgress").innerText = `Câu hỏi ${currentQuestionIdx + 1}/${quizQuestions.length}`;
+        document.getElementById("quizQuestion").innerText = qData.q;
+        
+        const optionsContainer = document.getElementById("quizOptions");
+        optionsContainer.innerHTML = "";
+        
+        qData.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.style.cssText = "width: 100%; text-align: left; padding: 12px 15px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--card); color: var(--fg); font-size: 14px; cursor: pointer; transition: 0.2s;";
+          btn.innerHTML = `<span style="font-weight:bold; margin-right: 8px;">${String.fromCharCode(65 + idx)}.</span> ${opt}`;
+          
+          btn.onclick = () => {
+            if (quizState !== "answering") return;
+            selectedOptionIdx = idx;
+            
+            Array.from(optionsContainer.children).forEach((child, cIdx) => {
+              child.style.borderColor = cIdx === idx ? "var(--primary)" : "var(--border)";
+              child.style.background = cIdx === idx ? "rgba(33, 150, 243, 0.1)" : "var(--card)";
+            });
+            
+            document.getElementById("quizBtnNext").disabled = false;
+          };
+          
+          optionsContainer.appendChild(btn);
+        });
+        
+        const feedback = document.getElementById("quizFeedback");
+        feedback.style.display = "none";
+        
+        const btnNext = document.getElementById("quizBtnNext");
+        btnNext.innerText = "Kiểm tra";
+        btnNext.disabled = true;
+        quizState = "answering";
+      }
+
+      function checkAnswer() {
+        const qData = quizQuestions[currentQuestionIdx];
+        const optionsContainer = document.getElementById("quizOptions");
+        const feedback = document.getElementById("quizFeedback");
+        
+        quizState = "reviewed";
+        
+        const isCorrect = selectedOptionIdx === qData.answer;
+        if (isCorrect) {
+          quizScore++;
+          feedback.style.background = "rgba(76, 175, 80, 0.1)";
+          feedback.style.borderLeft = "4px solid var(--success)";
+          feedback.style.color = "var(--success)";
+          feedback.innerHTML = `<strong>Chính xác!</strong> ${qData.explanation}`;
+        } else {
+          feedback.style.background = "rgba(244, 67, 54, 0.1)";
+          feedback.style.borderLeft = "4px solid var(--danger)";
+          feedback.style.color = "var(--danger)";
+          feedback.innerHTML = `<strong>Chưa chính xác!</strong> Đáp án đúng là <strong>${String.fromCharCode(65 + qData.answer)}</strong>.<br>${qData.explanation}`;
+        }
+        
+        Array.from(optionsContainer.children).forEach((child, idx) => {
+          if (idx === qData.answer) {
+            child.style.borderColor = "var(--success)";
+            child.style.background = "rgba(76, 175, 80, 0.15)";
+            child.style.color = "var(--success)";
+          } else if (idx === selectedOptionIdx) {
+            child.style.borderColor = "var(--danger)";
+            child.style.background = "rgba(244, 67, 54, 0.15)";
+            child.style.color = "var(--danger)";
+          } else {
+            child.style.opacity = "0.5";
+          }
+        });
+        
+        feedback.style.display = "block";
+        
+        const btnNext = document.getElementById("quizBtnNext");
+        if (currentQuestionIdx < quizQuestions.length - 1) {
+          btnNext.innerText = "Tiếp theo";
+        } else {
+          btnNext.innerText = "Xem kết quả";
+        }
+      }
+
+      document.getElementById("quizBtnNext").onclick = () => {
+        if (quizState === "answering") {
+          checkAnswer();
+        } else {
+          if (currentQuestionIdx < quizQuestions.length - 1) {
+            currentQuestionIdx++;
+            loadQuestion();
+          } else {
+            const overlay = document.getElementById("quizOverlay");
+            const progressPercent = Math.round((quizScore / quizQuestions.length) * 100);
+            
+            localStorage.setItem("quiz_progress_indep", progressPercent);
+            renderQuizProgress();
+            
+            window.Modal.show({
+              title: '<i class="fa-solid fa-square-poll-vertical"></i> Kết quả thi',
+              message: `Chúc mừng bạn đã hoàn thành bài thi trắc nghiệm!<br><br>Kết quả đạt được: <b>${quizScore}/${quizQuestions.length}</b> câu đúng (Đạt <b>${progressPercent}%</b>).`,
+              hideCancel: true,
+              confirmText: "Hoàn tất",
+              onConfirm: () => {
+                overlay.style.opacity = "0";
+                overlay.style.pointerEvents = "none";
+                overlay.classList.remove("active");
+              }
+            });
+          }
+        }
+      };
+
+      document.getElementById("quizBtnQuit").onclick = () => {
+        window.Modal.show({
+          title: '<i class="fa-solid fa-triangle-exclamation"></i> Thoát Quiz',
+          message: 'Bạn có muốn dừng bài thi trắc nghiệm này không? Kết quả hiện tại sẽ không được ghi nhận.',
+          confirmText: 'Thoát',
+          confirmClass: 'btn-danger',
+          onConfirm: () => {
+            const overlay = document.getElementById("quizOverlay");
+            overlay.style.opacity = "0";
+            overlay.style.pointerEvents = "none";
+            overlay.classList.remove("active");
+          }
+        });
+      };
+
+      function renderQuizProgress() {
+        const container = document.getElementById("quizProgressContainer");
+        if (!container) return;
+        
+        const progress = localStorage.getItem("quiz_progress_indep");
+        
+        if (progress !== null) {
+          container.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(33, 150, 243, 0.05); border: 1px solid rgba(33, 150, 243, 0.2); border-radius: 8px; margin-bottom: 10px;">
+              <div style="text-align: left;">
+                <strong style="font-size: 16px; color: var(--primary);"><i class="fa-solid fa-chart-line"></i> Chuyên đề 1: Độc lập Tuyến tính</strong>
+                <div style="font-size: 13px; color: var(--muted); margin-top: 5px;">
+                  Đã hoàn thành: <b>${progress}%</b> (Điểm cao nhất)
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 100px; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; position: relative;" title="Tiến độ học tập">
+                  <div style="width: ${progress}%; height: 100%; background: var(--primary); border-radius: 4px;"></div>
+                </div>
+                <button class="btn btn-secondary" onclick="startQuiz('quiz_1')" style="font-size:12px; padding:6px 12px;">
+                  Thi lại
+                </button>
+              </div>
+            </div>
+          `;
+        } else {
+          container.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px;">
+              <div style="text-align: left;">
+                <strong style="font-size: 16px;">Chuyên đề 1: Độc lập Tuyến tính</strong>
+                <div style="font-size: 13px; color: var(--muted); margin-top: 5px;">
+                  5 câu hỏi lý thuyết & bài tập thực hành • 10 phút
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="startQuiz('quiz_1')" style="font-size:13px;">
+                Bắt đầu thi
+              </button>
+            </div>
+          `;
+        }
       }
     </script>
   </body>

@@ -10,7 +10,6 @@
       dataLayer.push(arguments);
     }
     gtag("js", new Date());
-
     gtag("config", "G-GRZR4Y6VFQ");
   </script>
   <meta charset="UTF-8" />
@@ -22,55 +21,74 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
+  <!-- Styles & Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <script src="js/utils/theme-manager.js"></script>
 
   <style>
     :root {
-      --bg: #f8f9fc;
-      --fg: #121314;
       --primary: #3a78ff;
-      /* Xanh dương chủ đạo của Vectoria */
       --primary-hover: #2563eb;
-      /* Xanh đậm hơn lúc rê chuột vào */
-      --border: #e0e0e5;
+      --primary-glow: rgba(58, 120, 255, 0.15);
+      --bg: #f8fafc;
+      --fg: #0f172a;
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --border: rgba(58, 120, 255, 0.15);
+      --shadow: 0 10px 40px -10px rgba(58, 120, 255, 0.15);
+      --grid-color: rgba(58, 120, 255, 0.05);
+      --topbar-h: 70px;
+    }
+
+    body.dark {
+      --bg: #090e16;
+      --fg: #f8fafc;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+      --grid-color: rgba(255, 255, 255, 0.02);
     }
 
     body {
       margin: 0;
-      font-family:
-        system-ui,
-        -apple-system,
-        Segoe UI,
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
       color: var(--fg);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px), 
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 30px 30px;
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
-      font-size: 20px;
-      font-weight: bold;
+      padding: 0 40px;
+      height: var(--topbar-h);
       border-bottom: 1px solid var(--border);
-      background: white;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1000;
+      position: sticky;
+      top: 0;
     }
 
-    header img {
-      height: 60px;
-      /* chỉnh kích thước logo */
-      margin-right: 10px;
-      /* cách chữ một khoảng */
+    header .brand-logo-img {
+      height: 44px;
+      transition: filter 0.3s ease;
+    }
+    body.dark header .brand-logo-img {
+      filter: invert(1) hue-rotate(180deg);
     }
 
-    /* Nút Dashboard trên Trang chủ */
     .header-nav {
       display: flex;
       align-items: center;
@@ -79,45 +97,109 @@
 
     .btn-dash {
       padding: 8px 18px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 14px;
       font-weight: 600;
       background: rgba(58, 120, 255, 0.1);
       color: var(--primary);
       text-decoration: none;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       gap: 6px;
+      border: 1px solid transparent;
     }
 
     .btn-dash:hover {
       background: var(--primary);
       color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(58, 120, 255, 0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .theme-toggle-btn i {
+      position: absolute;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .theme-toggle-btn .fa-sun { transform: translateY(0) rotate(0); opacity: 1; }
+    .theme-toggle-btn .fa-moon { transform: translateY(30px) rotate(90deg); opacity: 0; }
+    
+    body.dark .theme-toggle-btn .fa-sun { transform: translateY(-30px) rotate(-90deg); opacity: 0; }
+    body.dark .theme-toggle-btn .fa-moon { transform: translateY(0) rotate(0); opacity: 1; }
 
     main {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
       padding: 40px 20px;
+      position: relative;
     }
 
     .content {
       max-width: 720px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 50px 40px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      text-align: center;
+      animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+      position: relative;
+    }
+
+    .content::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 6px;
+      background: linear-gradient(90deg, var(--primary), #60a5fa);
+      border-radius: 24px 24px 0 0;
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     .content h1 {
-      font-size: 36px;
-      margin-bottom: 16px;
+      font-size: 38px;
+      font-weight: 800;
+      margin: 0 0 16px 0;
+      background: linear-gradient(135deg, var(--primary), #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
     }
 
     .content p {
-      font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 32px;
+      font-size: 17px;
+      line-height: 1.7;
+      margin: 0 0 36px 0;
+      color: var(--fg);
+      opacity: 0.85;
     }
 
     .buttons {
@@ -128,73 +210,113 @@
     }
 
     .btn {
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 12px;
       border: none;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
-      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-primary {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: white;
+      box-shadow: 0 4px 15px var(--primary-glow);
     }
 
     .btn-primary:hover {
-      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--primary-glow);
     }
 
     .btn-outline {
       background: transparent;
-      border: 2px solid var(--primary);
+      border: 1.5px solid var(--primary);
       color: var(--primary);
     }
 
     .btn-outline:hover {
-      background: #eff6ff;
-      /* Nền xanh biển siêu nhạt */
-      color: var(--primary);
+      background: rgba(58, 120, 255, 0.06);
+      transform: translateY(-2px);
     }
 
     footer {
       text-align: center;
-      padding: 16px;
+      padding: 20px;
       font-size: 14px;
-      color: #666;
+      color: var(--fg);
+      opacity: 0.7;
       border-top: 1px solid var(--border);
-      background: white;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
     }
   </style>
 </head>
 
 <body>
   <header>
-    <img src="assets/images/logo+name.png" alt="Vectoria Logo" />
+    <a href="index.html">
+      <img src="assets/images/logo+name.png" alt="Vectoria Logo" class="brand-logo-img" />
+    </a>
     <div class="header-nav">
       <a href="user-dashboard.html" class="btn-dash">
         <i class="fa-solid fa-chart-line"></i> Dashboard
       </a>
+      
+      <button id="btnThemeToggle" class="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
+        <i class="fa-solid fa-sun"></i>
+        <i class="fa-solid fa-moon"></i>
+      </button>
     </div>
   </header>
 
   <main>
     <div class="content">
-      <h1>Khám phá Không gian Vector với Vectoria</h1>
+      <h1>Khám phá Không gian Vector</h1>
       <p>
         Vectoria là công cụ trực quan hóa vector 2D & 3D, giúp bạn dễ dàng
         thực hiện các phép tính vector, quan sát hình học, và học kiến thức về
         Không gian vector thông qua video và mô hình tương tác động.
       </p>
       <div class="buttons">
-        <a href="calculation.html" class="btn btn-primary">Bắt đầu tính toán</a>
-        <a href="knowledge_info.html" class="btn btn-outline">Tìm hiểu kiến thức</a>
+        <a href="calculation.html" class="btn btn-primary">
+          <i class="fa-solid fa-calculator"></i> Bắt đầu tính toán
+        </a>
+        <a href="knowledge_info.html" class="btn btn-outline">
+          <i class="fa-solid fa-book-open"></i> Tìm hiểu kiến thức
+        </a>
       </div>
     </div>
   </main>
 
   <footer>© 2026 Vectoria. Học và trực quan hóa Không gian vector.</footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // LOGIC THEME TOGGLE
+      const btnTheme = document.getElementById('btnThemeToggle');
+      if (btnTheme) {
+        btnTheme.addEventListener('click', () => {
+          const isDark = document.body.classList.contains('dark');
+          // ThemeManager.toggle() handles toggling and saving to localStorage
+          if (window.ThemeManager && typeof ThemeManager.toggle === "function") {
+            ThemeManager.toggle();
+          } else {
+            // Fallback
+            const nextDark = !isDark;
+            document.body.classList.toggle('dark', nextDark);
+            document.documentElement.classList.toggle('dark', nextDark);
+            localStorage.setItem('vec_theme', nextDark ? 'dark' : 'light');
+          }
+        });
+      }
+    });
+  </script>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="js/utils/live-collab.js"></script>
 </body>

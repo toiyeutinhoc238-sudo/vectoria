@@ -31,6 +31,7 @@
     bindClick("btnDraw", App.onAddVector);
     bindClick("btnAuto", App.toggleAuto);
     bindClick("btnClearAll", App.clearAllVectors);
+    bindClick("btnSaveCloud", App.saveToCloudUI);
     bindClick("themeBadge", App.toggleTheme);
     bindClick("modeBadge", App.toggleMode);
 

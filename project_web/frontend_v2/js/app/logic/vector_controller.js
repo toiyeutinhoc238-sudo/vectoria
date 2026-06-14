@@ -578,6 +578,51 @@
     App.redrawAll({ frame: true });
   };
 
+  // --- HÀM LƯU HỆ VECTOR LÊN CLOUD ---
+  App.saveToCloudUI = function () {
+    if (!window.AuthGuard) return;
+    
+    // Yêu cầu đăng nhập
+    window.AuthGuard.requireAuth(async () => {
+      if (!App.vectorList || App.vectorList.length === 0) {
+        App.showToast("Danh sách vector đang trống! Vui lòng thêm vector trước khi lưu.", "error");
+        return;
+      }
+
+      const email = localStorage.getItem("user_email") || "guest@vectoria.io.vn";
+      const vectors = App.vectorList.map(v => v.vec);
+      
+      const btnSave = document.getElementById("btnSaveCloud");
+      const originalHtml = btnSave ? btnSave.innerHTML : "";
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      }
+
+      try {
+        const data = await App.callAPI("save_history", {
+          email: email,
+          math_type: "Hệ Vector",
+          matrix_data: vectors
+        });
+        
+        if (data.status === "success" || data.message) {
+          App.showToast("Lưu hệ vector lên Cloud thành công!", "success");
+        } else {
+          throw new Error(data.error || "Không thể lưu");
+        }
+      } catch (err) {
+        console.error(err);
+        App.showToast("Lỗi khi lưu lịch sử: " + err.message, "error");
+      } finally {
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = originalHtml;
+        }
+      }
+    });
+  };
+
   /* =======================================================================
        PHẦN 2: LOGIC TÍNH TOÁN & KÍCH HOẠT ANIMATION
        ======================================================================= */

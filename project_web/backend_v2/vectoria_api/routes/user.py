@@ -292,3 +292,35 @@ def google_login():
     finally:
         if "conn" in locals():
             conn.close()
+
+
+# ==========================================
+# 6. API XÓA LỊCH SỬ TÍNH TOÁN
+# ==========================================
+@user_bp.route("/api/delete_history", methods=["POST"])
+def delete_history():
+    data = request.get_json()
+    item_id = data.get("id")
+    email = data.get("email")
+
+    if not item_id or not email:
+        return jsonify({"status": "error", "message": "Thiếu thông tin ID hoặc Email!"}), 400
+
+    try:
+        conn = psycopg2.connect(DB_URL)
+        c = conn.cursor()
+        
+        # Kiểm tra xem bản ghi đó có đúng là của user này không trước khi xóa
+        c.execute("SELECT id FROM calc_history WHERE id = %s AND user_email = %s", (item_id, email))
+        if not c.fetchone():
+            return jsonify({"status": "error", "message": "Không tìm thấy bản ghi hoặc bạn không có quyền xóa!"}), 403
+
+        c.execute("DELETE FROM calc_history WHERE id = %s AND user_email = %s", (item_id, email))
+        conn.commit()
+        return jsonify({"status": "success", "message": "Đã xóa lịch sử tính toán thành công!"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Lỗi DB: {str(e)}"}), 500
+    finally:
+        if "conn" in locals():
+            conn.close()
+
