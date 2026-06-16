@@ -22,9 +22,11 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
   <!-- Styles & Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <script src="js/utils/theme-manager.js"></script>
 
   <style>
@@ -58,8 +60,8 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px), 
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
       background-size: 30px 30px;
       transition: background 0.3s, color 0.3s;
@@ -85,6 +87,7 @@
       height: 44px;
       transition: filter 0.3s ease;
     }
+
     body.dark header .brand-logo-img {
       filter: invert(1) hue-rotate(180deg);
     }
@@ -133,20 +136,37 @@
       position: relative;
       overflow: hidden;
     }
+
     .theme-toggle-btn:hover {
       background: rgba(58, 120, 255, 0.1);
       border-color: var(--primary);
       color: var(--primary);
     }
+
     .theme-toggle-btn i {
       position: absolute;
       transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    .theme-toggle-btn .fa-sun { transform: translateY(0) rotate(0); opacity: 1; }
-    .theme-toggle-btn .fa-moon { transform: translateY(30px) rotate(90deg); opacity: 0; }
-    
-    body.dark .theme-toggle-btn .fa-sun { transform: translateY(-30px) rotate(-90deg); opacity: 0; }
-    body.dark .theme-toggle-btn .fa-moon { transform: translateY(0) rotate(0); opacity: 1; }
+
+    .theme-toggle-btn .fa-sun {
+      transform: translateY(0) rotate(0);
+      opacity: 1;
+    }
+
+    .theme-toggle-btn .fa-moon {
+      transform: translateY(30px) rotate(90deg);
+      opacity: 0;
+    }
+
+    body.dark .theme-toggle-btn .fa-sun {
+      transform: translateY(-30px) rotate(-90deg);
+      opacity: 0;
+    }
+
+    body.dark .theme-toggle-btn .fa-moon {
+      transform: translateY(0) rotate(0);
+      opacity: 1;
+    }
 
     main {
       flex: 1;
@@ -174,14 +194,24 @@
     .content::before {
       content: "";
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 6px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
       background: linear-gradient(90deg, var(--primary), #60a5fa);
       border-radius: 24px 24px 0 0;
     }
 
     @keyframes zoomIn {
-      from { opacity: 0; transform: scale(0.96) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
 
     .content h1 {
@@ -267,7 +297,7 @@
       <a href="user-dashboard.html" class="btn-dash">
         <i class="fa-solid fa-chart-line"></i> Dashboard
       </a>
-      
+
       <button id="btnThemeToggle" class="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
         <i class="fa-solid fa-sun"></i>
         <i class="fa-solid fa-moon"></i>

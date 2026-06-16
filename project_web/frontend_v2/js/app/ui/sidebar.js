@@ -746,119 +746,135 @@
       return;
     }
 
-    // 2. Tools (Search + Select All) - Giữ nguyên như cũ
+    // 2. Tools (Search + Select All)
     const tools = document.createElement("div");
     tools.className = "checklist-tools";
-    const searchInp = document.createElement("input");
-    searchInp.type = "text";
-    searchInp.className = "checklist-search";
-    searchInp.placeholder = "🔍 Tìm vector theo tọa độ";
+    
+    // Search Box hiện đại
+    const searchWrap = document.createElement("div");
+    searchWrap.className = "search-box-modern";
+    searchWrap.style.marginBottom = "12px";
+    searchWrap.innerHTML = `
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="vec-search-inp" placeholder="Tìm ID hoặc tọa độ..." style="border: none; background: transparent; box-shadow: none;">
+    `;
+    const searchInp = searchWrap.querySelector("input");
 
+    // Lọc 2D/3D
+    const filterDiv = document.createElement("div");
+    filterDiv.className = "vec-filters";
+    filterDiv.style.marginBottom = "12px";
+    filterDiv.innerHTML = `
+      <button class="filter-chip active" data-filter="all">Tất cả</button>
+      <button class="filter-chip" data-filter="2d">2D</button>
+      <button class="filter-chip" data-filter="3d">3D</button>
+    `;
+
+    // Chọn tất cả
     const actions = document.createElement("div");
-    actions.className = "checklist-actions";
-    const lbl = document.createElement("label");
-    lbl.textContent = "Chọn tất cả";
-    const cbAll = document.createElement("input");
-    cbAll.type = "checkbox";
+    actions.style.display = "flex";
+    actions.style.justifyContent = "space-between";
+    actions.style.alignItems = "center";
+    actions.style.padding = "0 8px";
+    actions.innerHTML = `
+        <span style="font-size: 0.95em; font-weight: 600; color: var(--text-main);">Chọn tất cả</span>
+        <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer; accent-color: #2196F3; margin: 0;">
+    `;
+    const cbAll = actions.querySelector("input");
 
-    // Logic Select All
-    const toggleAll = () => {
-      const inputs = listDiv.querySelectorAll(
-        '.checkitem:not([style*="display: none"]) input[type="checkbox"]',
-      );
-      const isChecked = cbAll.checked;
-      inputs.forEach((input) => (input.checked = isChecked));
-    };
-    cbAll.onchange = toggleAll;
-    lbl.onclick = (e) => {
-      e.preventDefault(); // Ngăn label tự kích hoạt input (tránh double)
-      cbAll.checked = !cbAll.checked;
-      toggleAll();
-    };
-
-    actions.appendChild(lbl);
-    actions.appendChild(cbAll);
-    tools.appendChild(searchInp);
+    tools.appendChild(searchWrap);
+    tools.appendChild(filterDiv);
     tools.appendChild(actions);
     container.appendChild(tools);
 
-    // 3. List
+    // --- 3. KHU VỰC DANH SÁCH (Dùng class vec-item để có viền/hover cực đẹp) ---
     const listDiv = document.createElement("div");
     listDiv.className = "checklist-scroll";
+    listDiv.style.maxHeight = "280px";
+    listDiv.style.overflowY = "auto";
+    listDiv.style.paddingRight = "4px";
 
     const items = [];
+
+    // Logic Select All
+    const toggleAll = () => {
+      const isChecked = cbAll.checked;
+      items.forEach(item => {
+          if (item.row.style.display !== "none") {
+              item.cb.checked = isChecked;
+              item.cb.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+      });
+    };
+    cbAll.addEventListener("change", toggleAll);
+
     App.vectorList.forEach((it) => {
+      const is3D = it.vec.length >= 3;
       const id = `chk_${name}_${it.id}`;
-
+      
       const row = document.createElement("div");
-      row.className = "checkitem";
+      row.className = "vec-item checkitem";
+      row.style.cursor = "pointer";
 
-      const left = document.createElement("div");
-      left.className = "checkitem-left";
+      row.innerHTML = `
+          <div class="sw" style="background: ${it.colorCss}"></div>
+          <div class="vec-main">
+              <div class="vec-header">
+                  <span class="tag">#${App.displayIndexOf(it)}</span>
+                  <div class="vec-input-wrapper" style="pointer-events:none; border-color: transparent !important; background: transparent !important;">
+                      <math-field class="vec-math-field" read-only="true" math-virtual-keyboard-policy="none" tabindex="-1" style="background: transparent; border: none; width: 100%;">
+                          ${it.latex || App.formatVectorShort(it.vec)}
+                      </math-field>
+                  </div>
+              </div>
+              <div class="vec-actions" style="opacity: 1; padding-left: 8px;">
+                  <input type="checkbox" id="${id}" value="${it.id}" style="width: 18px; height: 18px; cursor: pointer; accent-color: #2196F3; margin: 0; pointer-events: none;">
+              </div>
+          </div>
+      `;
 
-      const fullTooltip = `Vector #${App.displayIndexOf(it)}: [${it.vec.join(", ")}]`;
-      left.setAttribute("title", fullTooltip);
-      left.oncontextmenu = (e) => {
-        e.preventDefault(); // Chặn menu chuột phải mặc định của trình duyệt
-        e.stopPropagation(); // Không cho kích hoạt checkbox
+      const cb = row.querySelector("input[type='checkbox']");
 
-        // Hiện thông báo tọa độ
-        if (window.App && App.showToast) {
-          App.showToast(fullCoords);
-        } else {
-          alert(fullCoords);
-        }
-        return false;
-      };
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = `#${App.displayIndexOf(it)}`;
-
-      const mf = document.createElement("math-field");
-      mf.className = "checklist-math";
-      mf.value = it.latex || App.formatVectorShort(it.vec);
-      mf.setAttribute("read-only", "true");
-      mf.setAttribute("math-virtual-keyboard-policy", "manual");
-
-      left.appendChild(badge);
-      left.appendChild(mf);
-
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.id = id;
-      cb.value = it.id;
-
-      // [QUAN TRỌNG] Logic Click Dòng
       row.onclick = (e) => {
-        // Nếu click trực tiếp vào checkbox -> Kệ nó tự xử lý (để tránh đảo 2 lần)
         if (e.target === cb) return;
-
-        // Nếu click vào vùng khác -> Đảo trạng thái checkbox thủ công
         cb.checked = !cb.checked;
-
-        // Dispatch event để báo hiệu thay đổi (nếu có logic lắng nghe change)
         cb.dispatchEvent(new Event("change", { bubbles: true }));
       };
 
-      row.appendChild(left);
-      row.appendChild(cb);
       listDiv.appendChild(row);
 
       items.push({
         row: row,
-        text: mf.value.toLowerCase(),
-        idStr: badge.textContent.toLowerCase(),
+        cb: cb,
+        text: row.querySelector("math-field").value.toLowerCase(),
+        idStr: `#${App.displayIndexOf(it)}`,
+        dim: is3D ? "3d" : "2d"
       });
     });
 
     container.appendChild(listDiv);
 
-    // 5. Search Logic
-    searchInp.addEventListener("input", () => {
-      const term = searchInp.value.trim().toLowerCase();
+    // --- 4. LÕI LỌC DỮ LIỆU ---
+    let currentFilter = "all";
+    const applyFilters = () => {
+      const term = searchInp.value.trim().toLowerCase().replace(/\s+/g, "");
       items.forEach((item) => {
-        const match = item.text.includes(term) || item.idStr.includes(term);
-        item.row.style.display = match ? "flex" : "none";
+        const matchSearch = item.text.replace(/\s+/g, "").includes(term) || item.idStr.includes(term);
+        const matchDim = currentFilter === "all" || currentFilter === item.dim;
+        item.row.style.display = (matchSearch && matchDim) ? "flex" : "none";
+      });
+      cbAll.checked = false; // Bỏ tick select all khi lọc
+    };
+
+    searchInp.addEventListener("input", applyFilters);
+
+    const filterBtns = filterDiv.querySelectorAll('.filter-chip');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          currentFilter = e.target.dataset.filter;
+          applyFilters();
       });
     });
   }
