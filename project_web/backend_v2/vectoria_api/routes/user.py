@@ -42,9 +42,22 @@ def init_user_db():
             )
         """
         )
+
+        # Bảng Lịch sử chat với AI Chatbot
+        c.execute(
+            """
+            CREATE TABLE IF NOT EXISTS chat_history (
+                id SERIAL PRIMARY KEY,
+                user_email VARCHAR(255) NOT NULL,
+                sender VARCHAR(50) NOT NULL,       -- 'user' hoặc 'model'
+                message TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """
+        )
         conn.commit()
         conn.close()
-        print(">> [Database] Bảng Users & History đã sẵn sàng.")
+        print(">> [Database] Bảng Users, History & Chat đã sẵn sàng.")
     except Exception as e:
         print(f">> [Database Error - User DB] {e}")
 
@@ -318,6 +331,92 @@ def delete_history():
         c.execute("DELETE FROM calc_history WHERE id = %s AND user_email = %s", (item_id, email))
         conn.commit()
         return jsonify({"status": "success", "message": "Đã xóa lịch sử tính toán thành công!"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Lỗi DB: {str(e)}"}), 500
+    finally:
+        if "conn" in locals():
+            conn.close()
+
+
+# ==========================================
+# 7. API LƯU TIN NHẮN CHATBOT AI
+# ==========================================
+@user_bp.route("/api/save_chat_message", methods=["POST"])
+def save_chat_message():
+    data = request.get_json()
+    email = data.get("email")
+    sender = data.get("sender")    # 'user' hoặc 'model'
+    message = data.get("message")
+
+    if not email or not sender or not message:
+        return jsonify({"status": "error", "message": "Thiếu thông tin Email, Người gửi hoặc Tin nhắn!"}), 400
+
+    try:
+        conn = psycopg2.connect(DB_URL)
+        c = conn.cursor()
+        c.execute(
+            "INSERT INTO chat_history (user_email, sender, message) VALUES (%s, %s, %s)",
+            (email, sender, message),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Đã lưu tin nhắn chat thành công!"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Lỗi DB: {str(e)}"}), 500
+    finally:
+        if "conn" in locals():
+            conn.close()
+
+
+# ==========================================
+# 8. API LẤY LỊCH SỬ CHATBOT AI
+# ==========================================
+@user_bp.route("/api/get_chat_history", methods=["GET"])
+def get_chat_history():
+    email = request.args.get("email")
+    if not email:
+        return jsonify({"status": "error", "message": "Thiếu thông tin Email!"}), 400
+
+    try:
+        conn = psycopg2.connect(DB_URL)
+        c = conn.cursor()
+        c.execute(
+            "SELECT sender, message, created_at FROM chat_history WHERE user_email = %s ORDER BY created_at ASC",
+            (email,),
+        )
+        rows = c.fetchall()
+        
+        chat_list = []
+        for row in rows:
+            chat_list.append({
+                "sender": row[0],
+                "message": row[1],
+                "created_at": row[2].strftime("%d/%m/%Y %H:%M")
+            })
+            
+        return jsonify({"status": "success", "data": chat_list}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Lỗi DB: {str(e)}"}), 500
+    finally:
+        if "conn" in locals():
+            conn.close()
+
+
+# ==========================================
+# 9. API XÓA SẠCH LỊCH SỬ CHATBOT AI
+# ==========================================
+@user_bp.route("/api/clear_chat_history", methods=["POST"])
+def clear_chat_history():
+    data = request.get_json()
+    email = data.get("email")
+    if not email:
+        return jsonify({"status": "error", "message": "Thiếu thông tin Email!"}), 400
+
+    try:
+        conn = psycopg2.connect(DB_URL)
+        c = conn.cursor()
+        c.execute("DELETE FROM chat_history WHERE user_email = %s", (email,))
+        conn.commit()
+        return jsonify({"status": "success", "message": "Đã xóa sạch lịch sử chat thành công!"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": f"Lỗi DB: {str(e)}"}), 500
     finally:

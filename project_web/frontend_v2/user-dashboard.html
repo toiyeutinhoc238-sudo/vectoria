@@ -196,6 +196,11 @@
         align-items: center;
         gap: 8px;
       }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
       .btn-primary {
         background: var(--primary);
         color: white;
@@ -272,6 +277,9 @@
       .modal-overlay.active {
         opacity: 1;
         pointer-events: auto;
+      }
+      #customModal {
+        z-index: 20000 !important;
       }
 
       .modal-box {
@@ -1105,5 +1113,6 @@
         }
       }
     </script>
+    <script src="js/app/ui/chatbot.js"></script>
   </body>
 </html>
