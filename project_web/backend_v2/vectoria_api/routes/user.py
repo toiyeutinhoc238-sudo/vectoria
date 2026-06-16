@@ -460,7 +460,7 @@ def chat_gemini():
                 "message": "Chưa cấu hình Gemini API Key trên server. Vui lòng tạo file gemini_key.txt ở thư mục backend hoặc cấu hình biến môi trường GEMINI_API_KEY."
             }), 500
             
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
         
         payload = {
             "contents": contents
