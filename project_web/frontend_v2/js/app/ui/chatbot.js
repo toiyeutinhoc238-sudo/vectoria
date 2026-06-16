@@ -1,7 +1,7 @@
 (function () {
   // 1. CẤU HÌNH GLOBAL & API BASE
-  const API_BASE = (window.App && window.App.API_BASE) || 
-    ((location.hostname === "127.0.0.1" || location.hostname === "localhost") 
+  const API_BASE = (window.App && window.App.API_BASE) ||
+    ((location.hostname === "127.0.0.1" || location.hostname === "localhost" || location.protocol === "file:")
       ? "http://127.0.0.1:5000" : "https://vectoria-3fdh.onrender.com");
 
   const SYSTEM_INSTRUCTION = "Bạn là Trợ lý AI Vectoria, một chuyên gia thân thiện về Đại số tuyến tính, Không gian Vector, Ma trận và Hình học không gian 2D/3D. Bạn được tích hợp trong ứng dụng Vectoria (công cụ học tập trực quan hóa Vector). Hãy trả lời ngắn gọn, súc tích, dễ hiểu bằng tiếng Việt. Sử dụng Markdown để định dạng và sử dụng LaTeX (bọc bằng dấu $$ hoặc $) khi viết công thức toán học nếu cần.";
@@ -413,16 +413,16 @@
     let s = text;
     // Xử lý HTML escape
     s = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    
+
     // Xử lý Code block
     s = s.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-    
+
     // Xử lý Inline code
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    
+
     // Xử lý Bold text
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    
+
     // Xử lý xuống dòng thành <br>
     s = s.split("\n").map(line => {
       // Check list items
@@ -435,7 +435,7 @@
     // Bọc các thẻ <li> cạnh nhau bằng <ul>
     s = s.replace(/(<li>.*?<\/li>)/g, '<ul>$1</ul>');
     s = s.replace(/<\/ul><ul>/g, ''); // Gộp các <ul> liền kề
-    
+
     return s;
   }
 
@@ -450,7 +450,7 @@
 
     const row = document.createElement("div");
     row.className = `ai-msg-row ${sender}`;
-    
+
     const parsedText = parseMarkdown(text);
     const timeStr = timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -502,7 +502,7 @@
             parts: [{ text: item.message }],
             created_at: item.created_at
           }));
-          
+
           if (chatHistory.length > 0) {
             chatHistory.forEach(msg => {
               renderMessage(msg.role, msg.parts[0].text, msg.created_at);
@@ -570,14 +570,14 @@
 
   async function handleClearHistory() {
     const email = getUserEmail();
-    
+
     // Hiện modal confirm của Vectoria
     const confirmClear = () => {
       const chatBody = document.getElementById("chatbot-messages");
       if (chatBody) chatBody.innerHTML = "";
       chatHistory = [];
       showWelcomeMessage();
-      
+
       if (email) {
         fetch(`${API_BASE}/api/clear_chat_history`, {
           method: "POST",
@@ -615,7 +615,7 @@
       // Bắt đầu kích hoạt animation mở
       setTimeout(() => win.classList.add("show"), 10);
       document.getElementById("chatbot-notif").style.display = "none";
-      
+
       // Load lịch sử nếu rỗng hoặc khởi tạo
       const messages = document.getElementById("chatbot-messages");
       if (messages && messages.children.length === 0) {
@@ -654,7 +654,7 @@
     // 4. Chuẩn bị payload lịch sử gửi đến Gemini
     // Format: [{ role: 'user'|'model', parts: [{ text: '...' }] }]
     const apiHistory = [];
-    
+
     // Chỉ lấy tối đa 12 tin nhắn gần nhất làm ngữ cảnh để tránh tràn token
     const contextMessages = chatHistory.slice(-12);
     contextMessages.forEach(msg => {
@@ -690,7 +690,7 @@
 
       const resJson = await response.json();
       const result = resJson.data;
-      
+
       let replyText = "";
       if (result && result.candidates && result.candidates[0].content && result.candidates[0].content.parts) {
         replyText = result.candidates[0].content.parts[0].text;
