@@ -434,15 +434,18 @@ def get_gemini_key():
     if key:
         return key.strip()
     
-    # 2. Lấy từ file cấu hình local (đã cấu hình trong .gitignore để không bị push)
+    # 2. Lấy từ đường dẫn tuyệt đối relative với thư mục chứa user.py
     try:
-        possible_paths = ["gemini_key.txt", "../gemini_key.txt", "project_web/backend_v2/gemini_key.txt"]
-        for p in possible_paths:
-            if os.path.exists(p):
-                with open(p, "r", encoding="utf-8") as f:
-                    return f.read().strip()
-    except Exception:
-        pass
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # lùi 3 cấp: routes -> vectoria_api -> backend_v2
+        backend_dir = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
+        key_path = os.path.join(backend_dir, "gemini_key.txt")
+        
+        if os.path.exists(key_path):
+            with open(key_path, "r", encoding="utf-8") as f:
+                return f.read().strip()
+    except Exception as e:
+        print(f">> [Proxy Auth Error] Lỗi đọc file key: {e}")
     return None
 
 
