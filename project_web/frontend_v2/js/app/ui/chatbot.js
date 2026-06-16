@@ -9,6 +9,41 @@
   let chatHistory = [];
   let isWindowOpen = false;
 
+  // Helper to load MathJax if not present
+  function ensureMathJaxLoaded() {
+    if (window.MathJax) return;
+
+    // 1. Configure MathJax
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      startup: {
+        ready: () => {
+          MathJax.startup.defaultReady();
+          console.log("MathJax dynamically loaded and ready.");
+          // Render any already rendered chatbot messages containing math
+          const chatBody = document.getElementById("chatbot-messages");
+          if (chatBody) {
+            MathJax.typesetPromise([chatBody]).catch(err => console.log(err));
+          }
+        }
+      }
+    };
+
+    // 2. Inject script
+    const script = document.createElement("script");
+    script.id = "MathJax-script-dynamic";
+    script.async = true;
+    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    document.head.appendChild(script);
+  }
+
   // 2. INJECT CSS STYLES
   function injectChatbotStyles() {
     if (document.getElementById("vectoria-chatbot-styles")) return;
@@ -408,21 +443,40 @@
     });
   }
 
+
+
   // 4. PARSE MARKDOWN
   function parseMarkdown(text) {
     let s = text;
-    // Xử lý HTML escape
-    s = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    
+    // 1. Trích xuất Display Math ($$ ... $$)
+    const displayMath = [];
+    s = s.replace(/\$\$([\s\S]*?)\$\$/g, (match, p1) => {
+      const id = `__DISPLAY_MATH_${displayMath.length}__`;
+      displayMath.push(p1);
+      return id;
+    });
 
+    // 2. Trích xuất Inline Math ($ ... $)
+    const inlineMath = [];
+    s = s.replace(/\$([^$]+?)\$/g, (match, p1) => {
+      const id = `__INLINE_MATH_${inlineMath.length}__`;
+      inlineMath.push(p1);
+      return id;
+    });
+
+    // 3. Xử lý HTML escape
+    s = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    
     // Xử lý Code block
     s = s.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
+    
     // Xử lý Inline code
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-
+    
     // Xử lý Bold text
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-
+    
     // Xử lý xuống dòng thành <br>
     s = s.split("\n").map(line => {
       // Check list items
@@ -436,6 +490,16 @@
     s = s.replace(/(<li>.*?<\/li>)/g, '<ul>$1</ul>');
     s = s.replace(/<\/ul><ul>/g, ''); // Gộp các <ul> liền kề
 
+    // 4. Phục hồi Display Math (Dùng function để tránh ký tự đặc biệt $)
+    displayMath.forEach((mathText, index) => {
+      s = s.replace(new RegExp(`__DISPLAY_MATH_${index}__`, 'g'), () => `$$${mathText}$$`);
+    });
+
+    // 5. Phục hồi Inline Math (Dùng function để tránh ký tự đặc biệt $)
+    inlineMath.forEach((mathText, index) => {
+      s = s.replace(new RegExp(`__INLINE_MATH_${index}__`, 'g'), () => `$${mathText}$`);
+    });
+    
     return s;
   }
 
@@ -450,7 +514,7 @@
 
     const row = document.createElement("div");
     row.className = `ai-msg-row ${sender}`;
-
+    
     const parsedText = parseMarkdown(text);
     const timeStr = timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -461,6 +525,15 @@
 
     chatBody.appendChild(row);
     chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Trigger MathJax typeset to render LaTeX formulas dynamically
+    if (window.MathJax) {
+      if (typeof window.MathJax.typesetPromise === "function") {
+        window.MathJax.typesetPromise([row]).catch((err) => console.log("MathJax error:", err));
+      } else if (typeof window.MathJax.typeset === "function") {
+        window.MathJax.typeset([row]);
+      }
+    }
   }
 
   function showTypingIndicator() {
@@ -615,6 +688,9 @@
       // Bắt đầu kích hoạt animation mở
       setTimeout(() => win.classList.add("show"), 10);
       document.getElementById("chatbot-notif").style.display = "none";
+
+      // Đảm bảo MathJax được load để hiển thị LaTeX
+      ensureMathJaxLoaded();
 
       // Load lịch sử nếu rỗng hoặc khởi tạo
       const messages = document.getElementById("chatbot-messages");
