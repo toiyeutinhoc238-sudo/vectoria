@@ -1,0 +1,17 @@
+# Private Keys & Configuration
+gemini_key.txt
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+ENV/
+
+# OS files
+.DS_Store
+Thumbs.db

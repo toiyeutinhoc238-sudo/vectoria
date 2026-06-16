@@ -423,3 +423,74 @@ def clear_chat_history():
         if "conn" in locals():
             conn.close()
 
+
+# ==========================================
+# 10. API PROXY ĐỂ GỌI GEMINI AI BẢO MẬT
+# ==========================================
+def get_gemini_key():
+    import os
+    # 1. Lấy từ biến môi trường (Render / Vercel / Local)
+    key = os.environ.get("GEMINI_API_KEY")
+    if key:
+        return key.strip()
+    
+    # 2. Lấy từ file cấu hình local (đã cấu hình trong .gitignore để không bị push)
+    try:
+        possible_paths = ["gemini_key.txt", "../gemini_key.txt", "project_web/backend_v2/gemini_key.txt"]
+        for p in possible_paths:
+            if os.path.exists(p):
+                with open(p, "r", encoding="utf-8") as f:
+                    return f.read().strip()
+    except Exception:
+        pass
+    return None
+
+
+@user_bp.route("/api/chat_gemini", methods=["POST"])
+def chat_gemini():
+    try:
+        data = request.get_json() or {}
+        contents = data.get("contents")
+        system_instruction = data.get("systemInstruction")
+        
+        key = get_gemini_key()
+        if not key:
+            return jsonify({
+                "status": "error", 
+                "message": "Chưa cấu hình Gemini API Key trên server. Vui lòng tạo file gemini_key.txt ở thư mục backend hoặc cấu hình biến môi trường GEMINI_API_KEY."
+            }), 500
+            
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+        
+        payload = {
+            "contents": contents
+        }
+        if system_instruction:
+            payload["systemInstruction"] = system_instruction
+            
+        import requests
+        headers = {"Content-Type": "application/json"}
+        
+        # Gọi sang API Google Gemini
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        
+        if response.status_code != 200:
+            print(f">> [Gemini Proxy Error] Status: {response.status_code}, Body: {response.text}")
+            return jsonify({
+                "status": "error",
+                "message": f"Google Gemini API trả về lỗi: {response.status_code}",
+                "details": response.text
+            }), response.status_code
+            
+        return jsonify({
+            "status": "success",
+            "data": response.json()
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"Lỗi kết nối từ Backend tới Gemini: {str(e)}"
+        }), 500
+
+

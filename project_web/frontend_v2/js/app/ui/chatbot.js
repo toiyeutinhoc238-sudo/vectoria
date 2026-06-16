@@ -1,7 +1,5 @@
 (function () {
   // 1. CẤU HÌNH GLOBAL & API BASE
-  const GEMINI_API_KEY = "AQ.Ab8RN6KMsBbo2SuAYd39wwL_OvvRpc7QPcF33QPT2c2ube5U3Q";
-  const GEMINI_MODEL = "gemini-1.5-flash";
   const API_BASE = (window.App && window.App.API_BASE) || 
     ((location.hostname === "127.0.0.1" || location.hostname === "localhost") 
       ? "http://127.0.0.1:5000" : "https://vectoria-3fdh.onrender.com");
@@ -672,9 +670,9 @@
       parts: [{ text: message }]
     });
 
-    // 5. Gọi API Gemini
+    // 5. Gọi API Gemini Proxy ở Backend
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`${API_BASE}/api/chat_gemini`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -686,13 +684,15 @@
       });
 
       if (!response.ok) {
-        throw new Error(`Gemini API Error: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Backend Proxy Error: ${response.statusText}`);
       }
 
-      const result = await response.json();
+      const resJson = await response.json();
+      const result = resJson.data;
       
       let replyText = "";
-      if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts) {
+      if (result && result.candidates && result.candidates[0].content && result.candidates[0].content.parts) {
         replyText = result.candidates[0].content.parts[0].text;
       } else {
         replyText = "Hệ thống AI không phản hồi. Vui lòng thử lại sau.";
@@ -706,7 +706,7 @@
 
     } catch (err) {
       console.error(err);
-      const errorMsg = "Không thể kết nối tới Trợ lý AI. Vui lòng kiểm tra lại kết nối mạng của bạn!";
+      const errorMsg = err.message || "Không thể kết nối tới Trợ lý AI. Vui lòng kiểm tra lại kết nối mạng của bạn!";
       renderMessage("model", errorMsg);
       // Xóa typing
       const typing = document.getElementById("chatbot-typing");
