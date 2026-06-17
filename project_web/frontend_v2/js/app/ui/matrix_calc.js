@@ -11,6 +11,95 @@
 
   let activeSolutionSteps = [];
 
+  // Custom Input Modal logic thay thế cho prompt()
+  function showInputModal(title, label, defaultValue, minVal, maxVal, isInt) {
+    return new Promise((resolve) => {
+      const modal = document.getElementById("inputModal");
+      const titleEl = document.getElementById("inputModalTitle");
+      const labelEl = document.getElementById("inputModalLabel");
+      const inputEl = document.getElementById("inputModalValue");
+      const btnClose = document.getElementById("btnInputModalClose");
+      const btnCancel = document.getElementById("btnInputModalCancel");
+      const btnConfirm = document.getElementById("btnInputModalConfirm");
+
+      if (!modal || !inputEl) {
+        const val = prompt(`${title}\n${label}`);
+        resolve(val);
+        return;
+      }
+
+      titleEl.innerText = title;
+      labelEl.innerText = label;
+      inputEl.value = defaultValue;
+      if (minVal !== undefined) inputEl.setAttribute("min", minVal);
+      else inputEl.removeAttribute("min");
+      if (maxVal !== undefined) inputEl.setAttribute("max", maxVal);
+      else inputEl.removeAttribute("max");
+
+      modal.classList.add("is-visible");
+      
+      setTimeout(() => {
+        inputEl.focus();
+        inputEl.select();
+      }, 50);
+
+      function cleanup() {
+        modal.classList.remove("is-visible");
+        btnConfirm.removeEventListener("click", onConfirm);
+        btnCancel.removeEventListener("click", onCancel);
+        btnClose.removeEventListener("click", onCancel);
+        inputEl.removeEventListener("keydown", onKeyDown);
+      }
+
+      function onConfirm() {
+        const valStr = inputEl.value.trim();
+        if (valStr === "") {
+          alert("Vui lòng nhập giá trị.");
+          return;
+        }
+        const val = isInt ? parseInt(valStr) : parseFloat(valStr);
+        if (isNaN(val)) {
+          alert("Vui lòng nhập một số hợp lệ.");
+          return;
+        }
+        if (minVal !== undefined && val < minVal) {
+          alert(`Giá trị phải lớn hơn hoặc bằng ${minVal}.`);
+          return;
+        }
+        if (maxVal !== undefined && val > maxVal) {
+          alert(`Giá trị phải nhỏ hơn hoặc bằng ${maxVal}.`);
+          return;
+        }
+        cleanup();
+        resolve(valStr);
+      }
+
+      function onCancel() {
+        cleanup();
+        resolve(null);
+      }
+
+      function onKeyDown(e) {
+        if (e.key === "Enter") {
+          onConfirm();
+        } else if (e.key === "Escape") {
+          onCancel();
+        }
+      }
+
+      btnConfirm.addEventListener("click", onConfirm);
+      btnCancel.addEventListener("click", onCancel);
+      btnClose.addEventListener("click", onCancel);
+      inputEl.addEventListener("keydown", onKeyDown);
+      
+      modal.onclick = function (e) {
+        if (e.target === modal) {
+          onCancel();
+        }
+      };
+    });
+  }
+
   // Helper: Định dạng số đẹp
   function formatNumberPretty(val) {
     if (Math.abs(val) < 1e-9) return "0";
@@ -222,7 +311,7 @@
       showResult(latex, steps);
     } 
     else if (op === "scalar") {
-      const kStr = prompt("Nhập hằng số k:");
+      const kStr = await showInputModal("Nhập hằng số k", "Nhập hệ số thực k để thực hiện phép nhân ma trận (k · A):", "2");
       if (kStr === null) return;
       const k = parseFloat(kStr);
       if (isNaN(k)) {
@@ -249,7 +338,7 @@
         alert("Chỉ tính được lũy thừa cho ma trận vuông.");
         return;
       }
-      const kStr = prompt("Nhập số mũ lũy thừa k (nguyên dương >= 1):");
+      const kStr = await showInputModal("Nhập số mũ k", "Nhập số mũ nguyên dương k để tính lũy thừa (A^k, từ 1 đến 10):", "2", 1, 10, true);
       if (kStr === null) return;
       const k = parseInt(kStr);
       if (isNaN(k) || k < 1 || k > 10) {

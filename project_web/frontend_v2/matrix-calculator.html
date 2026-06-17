@@ -41,6 +41,21 @@
       overflow-y: auto !important;
     }
 
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      background-image:
+        linear-gradient(var(--grid-color, rgba(58, 120, 255, 0.04)) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color, rgba(58, 120, 255, 0.04)) 1px, transparent 1px);
+      background-size: 30px 30px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      --grid-color: rgba(255, 255, 255, 0.015);
+    }
+
     .matrix-container {
       display: flex;
       flex-wrap: wrap;
@@ -50,92 +65,156 @@
     }
 
     .matrix-card {
-      background: var(--card-bg);
+      background: color-mix(in oklab, var(--card) 88%, transparent);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 24px;
       width: 380px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform 0.3s;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
     }
 
     .matrix-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent);
     }
 
     .matrix-title {
       font-size: 1.25rem;
-      font-weight: 700;
+      font-weight: 800;
       margin-top: 0;
       margin-bottom: 15px;
-      color: var(--primary);
+      color: var(--fg);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .dim-controls-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
     }
 
     .dim-controls {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--chip-bg);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: var(--fg);
     }
 
     .dim-btn {
-      background: rgba(58, 120, 255, 0.1);
-      color: var(--primary);
-      border: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
+      background: var(--card);
+      color: var(--accent);
+      border: 1px solid var(--border);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 1.1rem;
+      font-weight: 800;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
     }
 
     .dim-btn:hover {
-      background: var(--primary);
+      background: var(--accent);
       color: white;
+      border-color: var(--accent);
+      transform: scale(1.1);
     }
 
-    body.dark .dim-btn {
-      background: rgba(255, 255, 255, 0.08);
-      color: #60a5fa;
+    .dim-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      min-width: 14px;
+      text-align: center;
+      font-weight: 700;
     }
 
-    body.dark .dim-btn:hover {
-      background: #60a5fa;
-      color: #0f172a;
+    /* Tạo khung ngoặc vuông [ ] toán học ôm ma trận */
+    .matrix-grid-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0;
+      padding: 0 16px;
+    }
+
+    .matrix-grid-wrapper::before,
+    .matrix-grid-wrapper::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      border: 2px solid var(--fg);
+      transition: border-color 0.3s;
+    }
+
+    .matrix-grid-wrapper::before {
+      left: 6px;
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+    }
+
+    .matrix-grid-wrapper::after {
+      right: 6px;
+      border-left: none;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .matrix-card:hover .matrix-grid-wrapper::before,
+    .matrix-card:hover .matrix-grid-wrapper::after {
+      border-color: var(--accent);
     }
 
     .matrix-grid {
       display: grid;
       gap: 8px;
-      margin: 20px 0;
+      margin: 8px 0;
       justify-content: center;
     }
 
     .matrix-cell {
-      width: 58px;
-      height: 42px;
+      width: 54px;
+      height: 38px;
       text-align: center;
       font-size: 1rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      background: transparent;
+      border-radius: 8px;
+      background: var(--card);
       color: var(--fg);
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .matrix-cell:hover {
+      border-color: color-mix(in oklab, var(--border) 60%, var(--accent));
     }
 
     .matrix-cell:focus {
-      border-color: var(--primary);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft), inset 0 1px 1px rgba(0, 0, 0, 0.03);
+      background: var(--card);
     }
 
     .matrix-actions {
@@ -146,27 +225,27 @@
     }
 
     .action-btn {
-      padding: 8px 4px;
+      padding: 9px 4px;
       font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 8px;
+      font-weight: 700;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      background: transparent;
+      background: var(--chip-bg);
       color: var(--fg);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .action-btn:hover {
-      background: rgba(58, 120, 255, 0.1);
-      color: var(--primary);
-      border-color: var(--primary);
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--accent-soft);
     }
 
-    body.dark .action-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #60a5fa;
-      border-color: #60a5fa;
+    .action-btn:active {
+      transform: translateY(0);
     }
 
     .binary-actions {
@@ -178,110 +257,181 @@
     }
 
     .btn-calc {
-      padding: 12px 24px;
+      padding: 12px 28px;
       font-weight: 700;
       font-size: 1rem;
-      border-radius: 10px;
-      border: none;
+      border-radius: 12px;
+      border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.2s;
-      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      background: linear-gradient(135deg, var(--accent), var(--accent-600));
       color: white;
-      box-shadow: 0 4px 15px var(--primary-glow);
+      box-shadow: 0 6px 20px rgba(58, 120, 255, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-calc:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px var(--primary-glow);
+      box-shadow: 0 10px 25px rgba(58, 120, 255, 0.35);
+      background: linear-gradient(135deg, var(--accent-600), var(--accent-700));
+    }
+
+    .btn-calc:active {
+      transform: translateY(0);
     }
 
     .result-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      max-width: 600px;
-      margin: 0 auto 50px auto;
-      box-shadow: var(--shadow);
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 700px;
+      margin: 0 auto 60px auto;
+      box-shadow: var(--shadow-lg);
       text-align: center;
       display: none;
-      /* Hiện ra khi có kết quả */
+      animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .result-output {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       margin: 15px 0;
       overflow-x: auto;
-      padding: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--chip-bg);
+      border: 1px dashed var(--border);
     }
 
     .btn-sol {
-      background: rgba(58, 120, 255, 0.1);
-      color: var(--primary);
-      border: 1px solid var(--primary);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 10px;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      margin-top: 15px;
+      box-shadow: 0 4px 12px var(--accent-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-sol:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    body.dark .btn-sol {
-      background: rgba(255, 255, 255, 0.08);
-      color: #60a5fa;
-      border-color: #60a5fa;
-    }
-
-    body.dark .btn-sol:hover {
-      background: #60a5fa;
-      color: #0f172a;
+      background: var(--accent-600);
+      border-color: var(--accent-600);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(58, 120, 255, 0.3);
     }
 
     .btn-clear-matrix {
       background: transparent;
-      border: none;
-      color: var(--primary);
+      border: 1px solid var(--border);
+      color: var(--muted);
       cursor: pointer;
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: opacity 0.2s;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn-clear-matrix:hover {
-      opacity: 0.8;
+      color: var(--danger);
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.05);
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <a href="index.html">
-      <img src="assets/images/logo+name.png" alt="Vectoria Logo" class="brand-logo-img" />
-    </a>
-    <div class="header-nav">
-      <a href="user-dashboard.html" class="btn-dash">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
+  <div class="theme-transition-icons">
+    <i class="fa-solid fa-sun" id="sunIcon"></i>
+    <i class="fa-solid fa-moon" id="moonIcon"></i>
+  </div>
+
+  <div id="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-icon" title="Về trang chủ">
+        <i class="fa-solid fa-house"></i>
       </a>
-
-      <button id="btnThemeToggle" class="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
-        <i class="fa-solid fa-sun"></i>
-        <i class="fa-solid fa-moon"></i>
-      </button>
+      <a href="user-dashboard.html" class="topbar-icon" title="Dashboard Cá nhân">
+        <i class="fa-solid fa-chart-line"></i>
+      </a>
+      <a href="matrix-calculator.html" class="topbar-icon" title="Máy tính Ma trận">
+        <i class="fa-solid fa-table-cells"></i>
+      </a>
+      <a href="knowledge_info.html" class="topbar-icon" title="Thư viện kiến thức">
+        <i class="fa-solid fa-book-open"></i>
+      </a>
+      <a href="tltk.html" class="topbar-icon" title="Tài liệu tham khảo">
+        <i class="fa-solid fa-file-lines"></i>
+      </a>
     </div>
-  </header>
 
-  <main style="display: block; padding: 40px 20px;">
-    <div style="text-align: center; max-width: 800px; margin: 0 auto 20px auto;">
+    <div class="brand">Vectoria</div>
+
+    <div class="topbar-right">
+      <div class="settings-container">
+        <button id="btnSettings" class="icon-btn" title="Cài đặt">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="setting-item">
+            <span><i class="fa-solid fa-moon"></i> Chế độ tối</span>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 8px 0; opacity: 0.5;">
+
+          <a href="hdsd.html" class="setting-item"
+            style="text-decoration: none; color: var(--fg) !important; display: flex !important;">
+            <span><i class="fa-solid fa-book-open-reader"></i> Hướng dẫn sử dụng</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; color: var(--muted)"></i>
+          </a>
+
+          <hr style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5;">
+
+          <a href="contact.html" class="setting-item link-item"
+            style="text-decoration: none; color: var(--fg) !important; cursor: pointer;">
+            <span><i class="fa-solid fa-envelope"></i> Liên hệ / Góp ý</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main style="display: block; padding: 90px 20px 40px 20px; min-height: calc(100vh - 56px); box-sizing: border-box;">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto 30px auto;">
       <h1
-        style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">
-        Máy Tính Ma Trận</h1>
-      <p style="opacity: 0.8; font-size: 1rem; line-height: 1.6; margin: 0;">
+        style="font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px;">
+        Máy Tính Ma Trận
+      </h1>
+      <p style="color: var(--muted); font-size: 1.05rem; line-height: 1.6; margin: 0;">
         Nhập dữ liệu cho ma trận, thực hiện các phép biến đổi định thức, nghịch đảo, hạng hoặc nhân hai ma trận, và xem
         lời giải chi tiết từng bước.
       </p>
@@ -293,21 +443,25 @@
       <div class="matrix-card" id="cardA">
         <div class="matrix-title">
           <span>Ma trận A</span>
-          <button class="btn-clear-matrix" id="btnClearA" title="Xóa ma trận"><i class="fa-solid fa-rotate-left"></i>
+          <button class="btn-clear-matrix" id="btnClearA" title="Reset ma trận"><i class="fa-solid fa-rotate-left"></i>
             Reset</button>
         </div>
-        <div class="dim-controls">
-          <span>Kích thước: </span>
-          <button class="dim-btn" onclick="adjustSize('A', 'row', -1)">-</button>
-          <span id="rowsA">3</span>
-          <button class="dim-btn" onclick="adjustSize('A', 'row', 1)">+</button>
-          <span> x </span>
-          <button class="dim-btn" onclick="adjustSize('A', 'col', -1)">-</button>
-          <span id="colsA">3</span>
-          <button class="dim-btn" onclick="adjustSize('A', 'col', 1)">+</button>
+        <div class="dim-controls-wrapper">
+          <div class="dim-controls">
+            <span>Kích thước: </span>
+            <button class="dim-btn" onclick="adjustSize('A', 'row', -1)">-</button>
+            <span id="rowsA" class="dim-val">3</span>
+            <button class="dim-btn" onclick="adjustSize('A', 'row', 1)">+</button>
+            <span> x </span>
+            <button class="dim-btn" onclick="adjustSize('A', 'col', -1)">-</button>
+            <span id="colsA" class="dim-val">3</span>
+            <button class="dim-btn" onclick="adjustSize('A', 'col', 1)">+</button>
+          </div>
         </div>
-        <div class="matrix-grid" id="gridA">
-          <!-- Inputs populated dynamically -->
+        <div class="matrix-grid-wrapper">
+          <div class="matrix-grid" id="gridA">
+            <!-- Inputs populated dynamically -->
+          </div>
         </div>
         <div class="matrix-actions">
           <button class="action-btn" onclick="calcSingle('A', 'determinant')">Det(A)</button>
@@ -323,21 +477,25 @@
       <div class="matrix-card" id="cardB">
         <div class="matrix-title">
           <span>Ma trận B</span>
-          <button class="btn-clear-matrix" id="btnClearB" title="Xóa ma trận"><i class="fa-solid fa-rotate-left"></i>
+          <button class="btn-clear-matrix" id="btnClearB" title="Reset ma trận"><i class="fa-solid fa-rotate-left"></i>
             Reset</button>
         </div>
-        <div class="dim-controls">
-          <span>Kích thước: </span>
-          <button class="dim-btn" onclick="adjustSize('B', 'row', -1)">-</button>
-          <span id="rowsB">3</span>
-          <button class="dim-btn" onclick="adjustSize('B', 'row', 1)">+</button>
-          <span> x </span>
-          <button class="dim-btn" onclick="adjustSize('B', 'col', -1)">-</button>
-          <span id="colsB">3</span>
-          <button class="dim-btn" onclick="adjustSize('B', 'col', 1)">+</button>
+        <div class="dim-controls-wrapper">
+          <div class="dim-controls">
+            <span>Kích thước: </span>
+            <button class="dim-btn" onclick="adjustSize('B', 'row', -1)">-</button>
+            <span id="rowsB" class="dim-val">3</span>
+            <button class="dim-btn" onclick="adjustSize('B', 'row', 1)">+</button>
+            <span> x </span>
+            <button class="dim-btn" onclick="adjustSize('B', 'col', -1)">-</button>
+            <span id="colsB" class="dim-val">3</span>
+            <button class="dim-btn" onclick="adjustSize('B', 'col', 1)">+</button>
+          </div>
         </div>
-        <div class="matrix-grid" id="gridB">
-          <!-- Inputs populated dynamically -->
+        <div class="matrix-grid-wrapper">
+          <div class="matrix-grid" id="gridB">
+            <!-- Inputs populated dynamically -->
+          </div>
         </div>
         <div class="matrix-actions">
           <button class="action-btn" onclick="calcSingle('B', 'determinant')">Det(B)</button>
@@ -359,7 +517,7 @@
 
     <!-- Result Display Card -->
     <div class="result-card" id="resultCard">
-      <h3 style="margin-top: 0; font-size: 1.25rem; font-weight: 700; color: var(--primary);">Kết quả phép tính</h3>
+      <h3 style="margin-top: 0; font-size: 1.25rem; font-weight: 700; color: var(--accent);">Kết quả phép tính</h3>
       <div class="result-output" id="resultOutput">
         <!-- Rendered LaTeX result -->
       </div>
@@ -385,20 +543,50 @@
     </div>
   </div>
 
+  <!-- Custom Input Modal (Dùng thay cho prompt) -->
+  <div class="sol-overlay" id="inputModal">
+    <div class="sol-panel"
+      style="width: min(420px, 92vw); height: auto; border-radius: 16px; margin: auto; max-height: 90vh;">
+      <div class="sol-header">
+        <div class="sol-h1">
+          <span class="sol-badge" style="background-color: var(--accent); border-color: var(--accent);">Nhập liệu</span>
+          <span id="inputModalTitle">Nhập giá trị</span>
+        </div>
+        <button class="sol-close" id="btnInputModalClose" title="Đóng">&times;</button>
+      </div>
+      <div class="sol-body" style="padding: 24px; background: var(--card); color: var(--fg);">
+        <p id="inputModalLabel"
+          style="margin-top: 0; font-weight: 600; font-size: 0.95rem; color: var(--fg); line-height: 1.5;"></p>
+        <input type="number" id="inputModalValue" class="matrix-cell"
+          style="width: 100%; height: 46px; text-align: left; padding: 0 12px; font-size: 1.1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--fg); outline: none; margin-top: 10px;"
+          placeholder="Ví dụ: 2" />
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button id="btnInputModalCancel" class="action-btn"
+            style="padding: 10px 20px; font-size: 0.95rem;">Hủy</button>
+          <button id="btnInputModalConfirm" class="btn primary"
+            style="padding: 10px 20px; font-size: 0.95rem; background: var(--accent); color: white; border-radius: 10px; font-weight: 700; border: none; cursor: pointer;">Xác
+            nhận</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils/theme-transition.js"></script>
   <script src="js/app/ui/matrix_calc.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // LOGIC THEME TOGGLE
-      const btnTheme = document.getElementById('btnThemeToggle');
-      if (btnTheme) {
-        btnTheme.addEventListener('click', () => {
-          if (window.ThemeManager && typeof ThemeManager.toggle === "function") {
-            ThemeManager.toggle();
-          } else {
-            const isDark = document.body.classList.contains('dark');
-            document.body.classList.toggle('dark', !isDark);
-            document.documentElement.classList.toggle('dark', !isDark);
-            localStorage.setItem('vec_theme', !isDark ? 'dark' : 'light');
+      // Toggle Cài đặt
+      const settingsBtn = document.getElementById("btnSettings");
+      const dropdown = document.getElementById("settingsDropdown");
+      if (settingsBtn && dropdown) {
+        settingsBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!dropdown.contains(e.target) && e.target !== settingsBtn) {
+            dropdown.classList.remove("show");
           }
         });
       }
