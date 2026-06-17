@@ -120,7 +120,8 @@ def api_determinant():
             det = det_sign * diag_prod
             steps.append("Ma trận đã ở dạng tam giác trên. Định thức bằng tích các phần tử chéo nhân với dấu hoán vị:")
             sign_str = "-" if det_sign < 0 else ""
-            steps.append(f"$$\\det(A) = {sign_str} ({' \\cdot '.join(diag_terms)}) = {format_number_pretty(det)}$$")
+            diag_terms_str = ' \\cdot '.join(diag_terms)
+            steps.append(f"$$\\det(A) = {sign_str} ({diag_terms_str}) = {format_number_pretty(det)}$$")
 
         return jsonify({"status": "success", "result": format_number_pretty(det), "steps": steps})
     except Exception as e:
@@ -346,7 +347,8 @@ def api_binary_op():
                         dot_sum += a_val * b_val
                         terms.append(f"{format_number_pretty(a_val)} \\cdot {format_number_pretty(b_val)}")
                     res_matrix[i, j] = dot_sum
-                    steps.append(f"$$C_{{{i+1},{j+1}}} = {' + '.join(terms)} = {format_number_pretty(dot_sum)}$$".replace("+ -", "- "))
+                    terms_str = ' + '.join(terms)
+                    steps.append(f"$$C_{{{i+1},{j+1}}} = {terms_str} = {format_number_pretty(dot_sum)}$$".replace("+ -", "- "))
                     
             steps.append(f"Kết quả cuối cùng:")
             steps.append(f"$$A \\cdot B = {format_matrix_latex(res_matrix)}$$")
