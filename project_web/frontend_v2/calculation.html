@@ -35,7 +35,7 @@
     window.MathJax = {
       tex: {
         inlineMath: [['\\(', '\\)'], ['$', '$']],
-        displayMath: [['\\[', '\\]']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true
       },
       options: {
@@ -875,12 +875,14 @@
          height: auto !important; 
       }
 
-      /* Xử lý Header: Dấu bớt 2 icon khi bị chật */
+      /* Xử lý Header: Dấu bớt 3 icon khi bị chật */
       .topbar-left a.topbar-icon[title="Thư viện kiến thức"],
-      .topbar-left a.topbar-icon[title="Tài liệu tham khảo"] { display: none !important; }
+      .topbar-left a.topbar-icon[title="Tài liệu tham khảo"],
+      .topbar-left a.topbar-icon[title="Máy tính Ma trận"] { display: none !important; }
       .brand { font-size: 1.2rem !important; margin-left: -5px; }
       .mobile-only-hr-book, .mobile-only-link-book,
-      .mobile-only-hr-file, .mobile-only-link-file { display: flex !important; }
+      .mobile-only-hr-file, .mobile-only-link-file,
+      .mobile-only-hr-matrix, .mobile-only-link-matrix { display: flex !important; }
     }
     /* ================= BÀN PHÍM VECTORIA (TONE XANH) & FIX CUỘN ================= */
     
@@ -1022,6 +1024,9 @@
       <a href="user-dashboard.html" class="topbar-icon" title="Dashboard Cá nhân">
         <i class="fa-solid fa-chart-line"></i>
       </a>
+      <a href="matrix-calculator.html" class="topbar-icon" title="Máy tính Ma trận">
+        <i class="fa-solid fa-table-cells"></i>
+      </a>
       <a href="knowledge_info.html" class="topbar-icon" title="Thư viện kiến thức">
         <i class="fa-solid fa-book-open"></i>
       </a>
@@ -1057,6 +1062,12 @@
             </label>
           </div>
           
+          <hr class="mobile-only-hr-matrix" style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5; display: none;">
+          <a href="matrix-calculator.html" class="setting-item link-item mobile-only-link-matrix" style="text-decoration: none; cursor: pointer; display: none;">
+            <span><i class="fa-solid fa-table-cells"></i> Máy tính Ma trận</span>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i>
+          </a>
+
           <hr class="mobile-only-hr-book" style="border: 0; border-top: 1px solid var(--border, #ddd); margin: 0; opacity: 0.5; display: none;">
           <a href="knowledge_info.html" class="setting-item link-item mobile-only-link-book" style="text-decoration: none; cursor: pointer; display: none;">
             <span><i class="fa-solid fa-book-open"></i> Thư viện kiến thức</span>

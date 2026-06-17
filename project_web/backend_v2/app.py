@@ -15,6 +15,7 @@ from vectoria_api.routes.contact import contact_bp
 
 # [BƯỚC 1] IMPORT MODULE USER VÀO ĐÂY
 from vectoria_api.routes.user import user_bp
+from vectoria_api.routes.matrix import matrix_bp
 
 # Tạo instance global cho SocketIO
 socketio = SocketIO()
@@ -41,6 +42,9 @@ def create_app():
     # [BƯỚC 2 QUAN TRỌNG NHẤT] GẮN API USER VÀO APP
     # Phải có dòng này thì Flask mới nhận diện được đường dẫn /api/get_history
     app.register_blueprint(user_bp)
+    
+    # Đăng ký Route Tính toán Ma trận mới
+    app.register_blueprint(matrix_bp)
     socketio.init_app(app, cors_allowed_origins="*")
     return app
 

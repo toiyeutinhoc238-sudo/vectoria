@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRZR4Y6VFQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-GRZR4Y6VFQ');
+  </script>
+  <meta charset="utf-8" />
+  <title>Vectoria - Máy Tính Ma Trận</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/solution_panel.css" />
+  <link rel="icon" href="./assets/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script src="js/utils/theme-manager.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    html,
+    body {
+      height: auto !important;
+      overflow-y: auto !important;
+    }
+
+    .matrix-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    .matrix-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 380px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.3s;
+    }
+
+    .matrix-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .matrix-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dim-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .dim-btn {
+      background: rgba(58, 120, 255, 0.1);
+      color: var(--primary);
+      border: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .dim-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    body.dark .dim-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #60a5fa;
+    }
+
+    body.dark .dim-btn:hover {
+      background: #60a5fa;
+      color: #0f172a;
+    }
+
+    .matrix-grid {
+      display: grid;
+      gap: 8px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+
+    .matrix-cell {
+      width: 58px;
+      height: 42px;
+      text-align: center;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--fg);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .matrix-cell:focus {
+      border-color: var(--primary);
+    }
+
+    .matrix-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .action-btn {
+      padding: 8px 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--fg);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(58, 120, 255, 0.1);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    body.dark .action-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #60a5fa;
+      border-color: #60a5fa;
+    }
+
+    .binary-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .btn-calc {
+      padding: 12px 24px;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: white;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .btn-calc:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--primary-glow);
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 600px;
+      margin: 0 auto 50px auto;
+      box-shadow: var(--shadow);
+      text-align: center;
+      display: none;
+      /* Hiện ra khi có kết quả */
+    }
+
+    .result-output {
+      font-size: 1.1rem;
+      margin: 15px 0;
+      overflow-x: auto;
+      padding: 10px;
+    }
+
+    .btn-sol {
+      background: rgba(58, 120, 255, 0.1);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn-sol:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    body.dark .btn-sol {
+      background: rgba(255, 255, 255, 0.08);
+      color: #60a5fa;
+      border-color: #60a5fa;
+    }
+
+    body.dark .btn-sol:hover {
+      background: #60a5fa;
+      color: #0f172a;
+    }
+
+    .btn-clear-matrix {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .btn-clear-matrix:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html">
+      <img src="assets/images/logo+name.png" alt="Vectoria Logo" class="brand-logo-img" />
+    </a>
+    <div class="header-nav">
+      <a href="user-dashboard.html" class="btn-dash">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+
+      <button id="btnThemeToggle" class="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
+        <i class="fa-solid fa-sun"></i>
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <main style="display: block; padding: 40px 20px;">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto 20px auto;">
+      <h1
+        style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">
+        Máy Tính Ma Trận</h1>
+      <p style="opacity: 0.8; font-size: 1rem; line-height: 1.6; margin: 0;">
+        Nhập dữ liệu cho ma trận, thực hiện các phép biến đổi định thức, nghịch đảo, hạng hoặc nhân hai ma trận, và xem
+        lời giải chi tiết từng bước.
+      </p>
+    </div>
+
+    <!-- Matrix A & Matrix B Container -->
+    <div class="matrix-container">
+      <!-- Matrix A -->
+      <div class="matrix-card" id="cardA">
+        <div class="matrix-title">
+          <span>Ma trận A</span>
+          <button class="btn-clear-matrix" id="btnClearA" title="Xóa ma trận"><i class="fa-solid fa-rotate-left"></i>
+            Reset</button>
+        </div>
+        <div class="dim-controls">
+          <span>Kích thước: </span>
+          <button class="dim-btn" onclick="adjustSize('A', 'row', -1)">-</button>
+          <span id="rowsA">3</span>
+          <button class="dim-btn" onclick="adjustSize('A', 'row', 1)">+</button>
+          <span> x </span>
+          <button class="dim-btn" onclick="adjustSize('A', 'col', -1)">-</button>
+          <span id="colsA">3</span>
+          <button class="dim-btn" onclick="adjustSize('A', 'col', 1)">+</button>
+        </div>
+        <div class="matrix-grid" id="gridA">
+          <!-- Inputs populated dynamically -->
+        </div>
+        <div class="matrix-actions">
+          <button class="action-btn" onclick="calcSingle('A', 'determinant')">Det(A)</button>
+          <button class="action-btn" onclick="calcSingle('A', 'inverse')">Inv(A)</button>
+          <button class="action-btn" onclick="calcSingle('A', 'rank')">Rank(A)</button>
+          <button class="action-btn" onclick="calcSingle('A', 'transpose')">Transpose</button>
+          <button class="action-btn" onclick="calcSingle('A', 'power')">A^k</button>
+          <button class="action-btn" onclick="calcSingle('A', 'scalar')">k · A</button>
+        </div>
+      </div>
+
+      <!-- Matrix B -->
+      <div class="matrix-card" id="cardB">
+        <div class="matrix-title">
+          <span>Ma trận B</span>
+          <button class="btn-clear-matrix" id="btnClearB" title="Xóa ma trận"><i class="fa-solid fa-rotate-left"></i>
+            Reset</button>
+        </div>
+        <div class="dim-controls">
+          <span>Kích thước: </span>
+          <button class="dim-btn" onclick="adjustSize('B', 'row', -1)">-</button>
+          <span id="rowsB">3</span>
+          <button class="dim-btn" onclick="adjustSize('B', 'row', 1)">+</button>
+          <span> x </span>
+          <button class="dim-btn" onclick="adjustSize('B', 'col', -1)">-</button>
+          <span id="colsB">3</span>
+          <button class="dim-btn" onclick="adjustSize('B', 'col', 1)">+</button>
+        </div>
+        <div class="matrix-grid" id="gridB">
+          <!-- Inputs populated dynamically -->
+        </div>
+        <div class="matrix-actions">
+          <button class="action-btn" onclick="calcSingle('B', 'determinant')">Det(B)</button>
+          <button class="action-btn" onclick="calcSingle('B', 'inverse')">Inv(B)</button>
+          <button class="action-btn" onclick="calcSingle('B', 'rank')">Rank(B)</button>
+          <button class="action-btn" onclick="calcSingle('B', 'transpose')">Transpose</button>
+          <button class="action-btn" onclick="calcSingle('B', 'power')">B^k</button>
+          <button class="action-btn" onclick="calcSingle('B', 'scalar')">k · B</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Binary Operations -->
+    <div class="binary-actions">
+      <button class="btn-calc" onclick="calcBinary('add')"><i class="fa-solid fa-plus"></i> Cộng A + B</button>
+      <button class="btn-calc" onclick="calcBinary('subtract')"><i class="fa-solid fa-minus"></i> Trừ A - B</button>
+      <button class="btn-calc" onclick="calcBinary('multiply')"><i class="fa-solid fa-times"></i> Nhân A · B</button>
+    </div>
+
+    <!-- Result Display Card -->
+    <div class="result-card" id="resultCard">
+      <h3 style="margin-top: 0; font-size: 1.25rem; font-weight: 700; color: var(--primary);">Kết quả phép tính</h3>
+      <div class="result-output" id="resultOutput">
+        <!-- Rendered LaTeX result -->
+      </div>
+      <button class="btn-sol" id="btnShowSolution"><i class="fa-solid fa-list-check"></i> Xem lời giải chi tiết</button>
+    </div>
+  </main>
+
+  <footer>© 2026 Vectoria. Học và trực quan hóa Không gian vector.</footer>
+
+  <!-- Solution Steps Overlay (Modal) -->
+  <div class="sol-overlay" id="solutionOverlay">
+    <div class="sol-panel">
+      <div class="sol-header">
+        <div class="sol-h1">
+          <span class="sol-badge">Lời giải</span>
+          <span>Chi tiết từng bước</span>
+        </div>
+        <button class="sol-close" id="btnOverlayClose" title="Đóng">&times;</button>
+      </div>
+      <div class="sol-body" id="solutionBody">
+        <!-- Solutions steps dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app/ui/matrix_calc.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // LOGIC THEME TOGGLE
+      const btnTheme = document.getElementById('btnThemeToggle');
+      if (btnTheme) {
+        btnTheme.addEventListener('click', () => {
+          if (window.ThemeManager && typeof ThemeManager.toggle === "function") {
+            ThemeManager.toggle();
+          } else {
+            const isDark = document.body.classList.contains('dark');
+            document.body.classList.toggle('dark', !isDark);
+            document.documentElement.classList.toggle('dark', !isDark);
+            localStorage.setItem('vec_theme', !isDark ? 'dark' : 'light');
+          }
+        });
+      }
+    });
+  </script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/utils/live-collab.js"></script>
+  <script src="js/app/ui/chatbot.js"></script>
+</body>
+
+</html>
