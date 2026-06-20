@@ -449,17 +449,27 @@
   function parseMarkdown(text) {
     let s = text;
     
-    // 1. Trích xuất Display Math ($$ ... $$)
+    // 1. Trích xuất Display Math ($$ ... $$ và \[ ... \])
     const displayMath = [];
     s = s.replace(/\$\$([\s\S]*?)\$\$/g, (match, p1) => {
       const id = `__DISPLAY_MATH_${displayMath.length}__`;
       displayMath.push(p1);
       return id;
     });
+    s = s.replace(/\\\[([\s\S]*?)\\\]/g, (match, p1) => {
+      const id = `__DISPLAY_MATH_${displayMath.length}__`;
+      displayMath.push(p1);
+      return id;
+    });
 
-    // 2. Trích xuất Inline Math ($ ... $)
+    // 2. Trích xuất Inline Math ($ ... $ và \( ... \))
     const inlineMath = [];
     s = s.replace(/\$([^$]+?)\$/g, (match, p1) => {
+      const id = `__INLINE_MATH_${inlineMath.length}__`;
+      inlineMath.push(p1);
+      return id;
+    });
+    s = s.replace(/\\\(([\s\S]*?)\\\)/g, (match, p1) => {
       const id = `__INLINE_MATH_${inlineMath.length}__`;
       inlineMath.push(p1);
       return id;

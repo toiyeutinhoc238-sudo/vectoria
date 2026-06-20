@@ -353,6 +353,18 @@
       PHẦN 4: CÁCH 2A - GIẢI HỆ (HTML Version - Text gốc)
       ======================================================================= */
   App.SolutionGen.buildBasisByEquationsGeneral = function (selectedItems, apiData) {
+    if (apiData && apiData.solution && apiData.solution.eq_general_latex) {
+      const n = selectedItems[0]?.vec?.length ?? 0;
+      let html = `<div class="sol-step-container">`;
+      html += `<div class="sol-math-block" style="overflow-x: auto; padding: 10px 0;">\\[ ${apiData.solution.eq_general_latex} \\]</div>`;
+      html += `</div>`;
+      return {
+        titleText: "Cơ sở & số chiều trong",
+        titleMath: `\\(\\mathbb{R}^{${n}}\\)`,
+        htmlContent: html
+      };
+    }
+
     const vecs = (selectedItems || []).map(it => (it.vec || []).slice());
     const n = vecs[0]?.length ?? 0;
     const m = vecs.length;
@@ -486,6 +498,18 @@
   }
 
   App.SolutionGen.buildBasisByEquationsStepwise = function (selectedItems, apiData) {
+    if (apiData && apiData.solution && apiData.solution.eq_step_latex) {
+      const n = selectedItems[0]?.vec?.length ?? 0;
+      let html = `<div class="sol-step-container">`;
+      html += `<div class="sol-math-block" style="overflow-x: auto; padding: 10px 0;">\\[ ${apiData.solution.eq_step_latex} \\]</div>`;
+      html += `</div>`;
+      return {
+        titleText: "Cơ sở & số chiều trong",
+        titleMath: `\\(\\mathbb{R}^{${n}}\\)`,
+        htmlContent: html
+      };
+    }
+
     const vecs = (selectedItems || []).map(it => (it.vec || []).slice());
     const n = vecs[0]?.length ?? 0;
     const m = vecs.length;

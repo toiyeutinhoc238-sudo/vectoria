@@ -10,6 +10,8 @@
   };
 
   let activeSolutionSteps = [];
+  let activeSolutionMethods = null;
+  let activeMethodIndex = 0;
 
   // Custom Input Modal logic thay thế cho prompt()
   function showInputModal(title, label, defaultValue, minVal, maxVal, isInt) {
@@ -216,13 +218,15 @@
   }
 
   // Hiển thị Card kết quả
-  function showResult(latexContent, steps) {
+  function showResult(latexContent, steps, methods = null) {
     const card = document.getElementById("resultCard");
     const output = document.getElementById("resultOutput");
     if (!card || !output) return;
 
     output.innerHTML = latexContent;
-    activeSolutionSteps = steps;
+    activeSolutionSteps = steps || [];
+    activeSolutionMethods = methods;
+    activeMethodIndex = 0;
     card.style.display = "block";
 
     // Trigger MathJax typeset cho kết quả vừa vẽ
@@ -246,7 +250,7 @@
         });
         const data = await res.json();
         if (data.status === "success") {
-          showResult(`$$\\det(${name}) = ${data.result}$$`, data.steps);
+          showResult(`$$\\det(${name}) = ${data.result}$$`, data.steps, data.methods);
         } else {
           alert(data.message || "Lỗi tính định thức.");
         }
@@ -264,7 +268,7 @@
         });
         const data = await res.json();
         if (data.status === "success") {
-          showResult(`$$${name}^{{-1}} = ${data.result_latex}$$`, data.steps);
+          showResult(`$$${name}^{{-1}} = ${data.result_latex}$$`, data.steps, data.methods);
         } else {
           alert(data.message || "Lỗi tính ma trận nghịch đảo.");
         }
@@ -360,6 +364,7 @@
           
           steps.push(`Tính $${name}^{${p}} = ${name}^{${p-1}} \\cdot ${name}$:`);
           
+          const elementSteps = [];
           for (let i = 0; i < dim; i++) {
             const newRow = [];
             for (let j = 0; j < dim; j++) {
@@ -370,10 +375,14 @@
                 multiplyTerms.push(`${formatNumberPretty(current[i][m])} \\cdot ${formatNumberPretty(matrix[m][j])}`);
               }
               newRow.push(dotSum);
+              elementSteps.push(`$$C_{${i+1},${j+1}} = ${multiplyTerms.join(" + ").replace(/\+\s*-/g, "- ")} = ${formatNumberPretty(dotSum)}$$`);
             }
             next.push(newRow);
           }
+          steps.push("Tính giá trị các phần tử bằng tích vô hướng:");
+          elementSteps.forEach(s => steps.push(s));
           current = next;
+          steps.push(`Kết quả tích lũy thừa bậc $${p}$ là:`);
           steps.push(`$$${name}^{${p}} = ${formatMatrixLatex(current)}$$`);
         }
       }
@@ -413,40 +422,90 @@
   function showSolutionOverlay() {
     const overlay = document.getElementById("solutionOverlay");
     const body = document.getElementById("solutionBody");
+    const toolbar = document.getElementById("solutionToolbar");
+    const tabsContainer = document.getElementById("solutionTabs");
     if (!overlay || !body) return;
 
-    body.innerHTML = "";
-    activeSolutionSteps.forEach((step, index) => {
-      const stepDiv = document.createElement("div");
-      stepDiv.className = "sol-text";
-      
-      // Nếu là dòng công thức toán $$...$$, bọc bằng class chuyên dụng
-      if (step.startsWith("$$") && step.endsWith("$$")) {
-        const mathBlock = document.createElement("div");
-        mathBlock.className = "sol-math-block";
-        mathBlock.innerText = step;
-        stepDiv.appendChild(mathBlock);
-      } else {
-        // Là chữ thông thường
-        const textSpan = document.createElement("span");
-        if (index > 0 && activeSolutionSteps[index-1].indexOf("$$") === -1 && !activeSolutionSteps[index-1].startsWith("Tính")) {
-          // Gắn nhãn các bước tính
-          if (step.startsWith("Biến đổi dòng") || step.startsWith("Hoán vị dòng") || step.startsWith("Chia dòng")) {
-            textSpan.className = "sol-bold";
-          }
-        }
-        textSpan.innerHTML = step;
-        stepDiv.appendChild(textSpan);
+    // Xử lý hiển thị toolbar phương pháp giải
+    if (activeSolutionMethods && activeSolutionMethods.length > 1) {
+      if (toolbar && tabsContainer) {
+        toolbar.style.display = "flex";
+        tabsContainer.innerHTML = "";
+        activeSolutionMethods.forEach((method, idx) => {
+          const tabBtn = document.createElement("button");
+          tabBtn.className = `sol-tab${idx === activeMethodIndex ? " is-active" : ""}`;
+          tabBtn.innerText = method.name;
+          tabBtn.addEventListener("click", () => {
+            // Đổi cách giải active
+            activeMethodIndex = idx;
+            // Render lại nội dung
+            renderActiveSteps();
+          });
+          tabsContainer.appendChild(tabBtn);
+        });
       }
-      body.appendChild(stepDiv);
-    });
+    } else {
+      if (toolbar) {
+        toolbar.style.display = "none";
+      }
+    }
+
+    // Hàm vẽ các bước giải của cách giải đang active
+    function renderActiveSteps() {
+      // Cập nhật lại trạng thái active của các nút tab
+      if (tabsContainer) {
+        const tabs = tabsContainer.querySelectorAll(".sol-tab");
+        tabs.forEach((tab, idx) => {
+          if (idx === activeMethodIndex) {
+            tab.classList.add("is-active");
+          } else {
+            tab.classList.remove("is-active");
+          }
+        });
+      }
+
+      body.innerHTML = "";
+      // Lấy danh sách các bước tương ứng
+      const currentSteps = (activeSolutionMethods && activeSolutionMethods[activeMethodIndex]) 
+        ? activeSolutionMethods[activeMethodIndex].steps 
+        : activeSolutionSteps;
+
+      currentSteps.forEach((step, index) => {
+        const trimmedStep = step.trim();
+        const stepDiv = document.createElement("div");
+        stepDiv.className = "sol-text";
+        
+        // Nếu là dòng công thức toán $$...$$, bọc bằng class chuyên dụng
+        if (trimmedStep.startsWith("$$") && trimmedStep.endsWith("$$")) {
+          const mathBlock = document.createElement("div");
+          mathBlock.className = "sol-math-block";
+          mathBlock.innerText = trimmedStep;
+          stepDiv.appendChild(mathBlock);
+        } else {
+          // Là chữ thông thường
+          const textSpan = document.createElement("span");
+          if (index > 0 && currentSteps[index-1].indexOf("$$") === -1 && !currentSteps[index-1].startsWith("Tính")) {
+            // Gắn nhãn các bước tính
+            if (trimmedStep.startsWith("Biến đổi dòng") || trimmedStep.startsWith("Hoán vị dòng") || trimmedStep.startsWith("Chia dòng") || trimmedStep.startsWith("Khử phần tử")) {
+              textSpan.className = "sol-bold";
+            }
+          }
+          textSpan.innerHTML = step;
+          stepDiv.appendChild(textSpan);
+        }
+        body.appendChild(stepDiv);
+      });
+
+      // Trigger MathJax typeset cho phần nội dung vừa render
+      if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
+        window.MathJax.typesetPromise([body]).catch(err => console.log(err));
+      }
+    }
+
+    // Lần đầu vẽ phương pháp giải active mặc định (mũi index = 0)
+    renderActiveSteps();
 
     overlay.classList.add("is-visible");
-
-    // Trigger MathJax typeset cho toàn bộ overlay
-    if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
-      window.MathJax.typesetPromise([body]).catch(err => console.log(err));
-    }
   }
 
   // Đóng overlay lời giải
